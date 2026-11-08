@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-08",
   "mode": "unsupervised",
-  "headline": "Phases 0–1 complete. Now: Phase 2 Academics (courses, batches, timetable).",
+  "headline": "Phases 0–2 complete. Now: Phase 3, our own live class room.",
   "phases": [
     {
       "id": "0",
@@ -229,91 +229,91 @@
     },
     {
       "p": "2",
-      "s": "dev",
+      "s": "done",
       "a": "Academics",
       "t": "Course catalogue",
       "d": "Courses with hours, syllabus modules, default fee; draft, publish, retire."
     },
     {
       "p": "2",
-      "s": "dev",
+      "s": "done",
       "a": "Academics",
       "t": "Branch course requests",
       "d": "Branch proposes a course; head office approves, rejects or sends back."
     },
     {
       "p": "2",
-      "s": "dev",
+      "s": "done",
       "a": "Academics",
       "t": "Batches: online, offline, hybrid",
       "d": "Teacher, days, times, room, capacity; sessions created automatically, skipping holidays."
     },
     {
       "p": "2",
-      "s": "dev",
+      "s": "done",
       "a": "Academics",
       "t": "Reschedule, cancel, substitute teacher",
       "d": "Per session; students notified; teacher and room clash warnings."
     },
     {
       "p": "2",
-      "s": "dev",
+      "s": "done",
       "a": "Academics",
       "t": "Enrolments",
       "d": "Enrol, move batch, hold, drop with reason; one student in many batches and branches."
     },
     {
       "p": "2",
-      "s": "dev",
+      "s": "done",
       "a": "Academics",
       "t": "Timetable calendar",
       "d": "Day, week and month views for students, teachers and the branch."
     },
     {
       "p": "3",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Our own class server",
       "d": "Self-hosted live video server; no Zoom, Meet or Teams."
     },
     {
       "p": "3",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Pre-join device check",
       "d": "Test camera, mic and speaker before entering."
     },
     {
       "p": "3",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Video, audio and screen share",
       "d": "Gallery and speaker views; teacher can let a student share."
     },
     {
       "p": "3",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "In-class chat, raise hand, reactions",
       "d": "Chat saved with the session; teacher can turn student chat off."
     },
     {
       "p": "3",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Teacher controls",
       "d": "Mute one/all, camera off, stop share, remove, lock room, allow mic/camera."
     },
     {
       "p": "3",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Who may enter",
       "d": "Only enrolled students, teacher, added guests and silent observers; a second device disconnects the first."
     },
     {
       "p": "3",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Phone browser support",
       "d": "Join and take part from Android and iPhone browsers."
@@ -639,6 +639,13 @@
       "a": "Testing",
       "t": "Phase 1 checks: 21 permission tests + 7 browser journeys",
       "d": "Every branch wall proven: Branch Admins refused other branches, staff and students refused head-office actions. Two real bugs found and fixed by tests."
+    },
+    {
+      "p": "2",
+      "s": "done",
+      "a": "Testing",
+      "t": "Phase 2 checks: 18 academics tests + 5 browser journeys",
+      "d": "Includes: two people enrolling at once can't overfill a batch, a cancelled class gets a make-up, students and other branches can't see batches that aren't theirs."
     }
   ],
   "screens": [
