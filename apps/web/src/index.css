@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Campus Connect tokens: deep teal ink + amber accent. RGB triplets for Tailwind alpha. */
+:root {
+  --bg: 243 246 246;
+  --surface: 255 255 255;
+  --surface-2: 232 238 239;
+  --line: 211 222 224;
+  --fg: 20 38 43;
+  --muted: 86 107 113;
+  --brand: 14 59 71;
+  --brand-fg: 255 255 255;
+  --brand-soft: 224 237 240;
+  --accent: 199 124 18;
+  --accent-soft: 251 239 217;
+  --ok: 23 120 74;
+  --ok-soft: 223 242 231;
+  --warn: 140 90 0;
+  --warn-soft: 255 242 210;
+  --bad: 178 48 47;
+  --bad-soft: 252 230 229;
+  --info: 29 99 184;
+  --info-soft: 225 236 250;
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  --bg: 11 22 25;
+  --surface: 18 33 38;
+  --surface-2: 25 44 50;
+  --line: 38 61 68;
+  --fg: 228 238 240;
+  --muted: 148 171 177;
+  --brand: 96 178 196;
+  --brand-fg: 7 31 38;
+  --brand-soft: 22 52 60;
+  --accent: 240 165 58;
+  --accent-soft: 58 42 16;
+  --ok: 98 211 154;
+  --ok-soft: 18 48 31;
+  --warn: 242 193 78;
+  --warn-soft: 53 42 15;
+  --bad: 255 142 138;
+  --bad-soft: 61 28 30;
+  --info: 125 178 255;
+  --info-soft: 22 41 74;
+  color-scheme: dark;
+}
+
+html, body, #root { height: 100%; }
+body {
+  @apply bg-bg text-fg font-sans antialiased;
+  font-size: 15px;
+  line-height: 1.5;
+}
+h1, h2, h3 { @apply font-display; text-wrap: balance; }
+:focus-visible { outline: 2px solid rgb(var(--accent)); outline-offset: 2px; }
+::selection { background: rgb(var(--accent) / 0.25); }
+
+@layer components {
+  .card { @apply bg-surface border border-line rounded-[10px]; }
+  .input {
+    @apply w-full min-w-0 rounded-lg border border-line bg-surface px-3 py-2 text-[15px] text-fg placeholder:text-muted/70
+      focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 disabled:opacity-60;
+  }
+  .label { @apply block text-[13px] font-semibold text-fg mb-1; }
+  .help { @apply text-[12.5px] text-muted mt-1; }
+  .err { @apply text-[12.5px] text-bad mt-1; }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .table-wrap { @apply overflow-x-auto rounded-[10px] border border-line bg-surface; }
+  .table { @apply w-full border-collapse text-[14px]; }
+  .table th { @apply bg-surface-2 text-left text-[11.5px] font-bold uppercase tracking-wider text-muted px-3 py-2.5 whitespace-nowrap; }
+  .table td { @apply border-t border-line px-3 py-2.5 align-top; }
+  .table tbody tr:hover td { @apply bg-surface-2/50; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

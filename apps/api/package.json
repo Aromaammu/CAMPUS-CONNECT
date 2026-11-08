@@ -1,0 +1,61 @@
+{
+  "name": "@cc/api",
+  "version": "0.1.0",
+  "private": true,
+  "prisma": {
+    "schema": "../../prisma/schema.prisma",
+    "seed": "node -r @swc-node/register src/seed/seed.ts"
+  },
+  "scripts": {
+    "dev": "node --watch -r @swc-node/register src/main.ts",
+    "start": "node -r @swc-node/register src/main.ts",
+    "build": "swc src -d dist --strip-leading-paths",
+    "typecheck": "tsc --noEmit -p .",
+    "migrate": "prisma migrate deploy",
+    "migrate:dev": "prisma migrate dev",
+    "generate": "prisma generate",
+    "seed": "node -r @swc-node/register src/seed/seed.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@cc/shared": "*",
+    "@nestjs/common": "11.1.6",
+    "@nestjs/core": "11.1.6",
+    "@nestjs/platform-express": "11.1.6",
+    "@nestjs/platform-socket.io": "11.1.6",
+    "@nestjs/websockets": "11.1.6",
+    "@prisma/client": "6.19.0",
+    "argon2": "0.44.0",
+    "cookie-parser": "1.4.7",
+    "exceljs": "4.4.0",
+    "helmet": "8.1.0",
+    "jsonwebtoken": "9.0.2",
+    "livekit-server-sdk": "2.14.0",
+    "multer": "2.0.2",
+    "nodemailer": "7.0.10",
+    "pdfmake": "0.2.20",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "socket.io": "4.8.1",
+    "web-push": "3.6.7",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@swc-node/register": "1.10.10",
+    "@swc/cli": "0.7.8",
+    "@swc/core": "1.13.5",
+    "@types/cookie-parser": "1.4.9",
+    "@types/express": "5.0.3",
+    "@types/jsonwebtoken": "9.0.10",
+    "@types/multer": "2.0.0",
+    "@types/node": "22.18.6",
+    "@types/nodemailer": "7.0.2",
+    "@types/pdfmake": "0.2.11",
+    "@types/supertest": "6.0.3",
+    "@types/web-push": "3.6.4",
+    "prisma": "6.19.0",
+    "supertest": "7.1.4",
+    "unplugin-swc": "1.5.7",
+    "vitest": "3.2.4"
+  }
+}

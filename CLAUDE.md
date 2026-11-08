@@ -36,9 +36,9 @@ The owner switches mode by saying **"supervised"** or **"unsupervised"** (also "
 | Repo | **npm workspaces** monorepo | `apps/web`, `apps/api`, `packages/shared` |
 | Web app | **React 18 + Vite + React Router + TanStack Query + Tailwind CSS + Radix UI primitives** | Fast, accessible, mobile-first |
 | Forms/validation | **react-hook-form + zod**. Zod schemas live in `packages/shared` and are reused by the API | Same rules on both sides |
-| API | **NestJS** (Fastify adapter) | Module-per-feature structure, scales with new modules |
+| API | **NestJS 11** (Express adapter), run with `@swc-node/register` | Module-per-feature structure, scales with new modules |
 | Database | **PostgreSQL 16** via **Prisma** | Relational data (hierarchy, attendance, money); migrations |
-| Background jobs | **pg-boss** (queue in Postgres) | No Redis needed on Windows dev; scheduled jobs run exactly once |
+| Background jobs | In-process scheduler + `JobRun` table (exactly-once keys) | No Redis needed; safe with several servers |
 | Realtime (chat, notifications, live-class signals) | **Socket.IO** (Redis adapter in production only) | Rooms, reconnection |
 | Live video | **LiveKit** open-source SFU, **self-hosted** (our own servers), `livekit-client` + `@livekit/components-react` | Our own meeting module, no third-party meeting service; scales horizontally to 200 rooms |
 | Recording | **LiveKit Egress** (room composite) → object storage → HLS playback | Needs Linux/Docker: tested on the Linux staging server (Decision D12) |
@@ -58,10 +58,15 @@ Don't add a library that duplicates one above. Before adding any new dependency,
 ## 4. Local environment (this machine)
 
 - **Windows Server 2022**, Node 24, npm 11, Git. **No Docker, no system Postgres.**
-- **Database in dev/test:** the `embedded-postgres` npm package, started by `npm run db:start`. Data lives in `.data/pg` (git-ignored). Keep the project **outside OneDrive**.
+- **Database in dev/test:** PostgreSQL 16 binaries from the `embedded-postgres` package, started through **pg_ctl** by `npm run db:start` (`tools/scripts/db.mjs`). pg_ctl is required because this machine runs as Administrator and `postgres.exe` refuses to start directly. Port **5433**, databases `cc_dev`, `cc_test`, `cc_e2e`. Data in `.data/pg` (git-ignored).
+- `node tools/scripts/recreate-db.mjs cc_dev|cc_test|cc_e2e` rebuilds one local database (Prisma blocks `migrate reset` for AI agents, so use this instead).
+- In Git Bash always `export MSYS_NO_PATHCONV=1` before passing URL paths like `/login` to scripts.
+- npm 11 blocks install scripts: approve new native packages with `npm approve-scripts <pkg>` (kept in root `allowScripts`).
 - **LiveKit in dev:** the `livekit-server` Windows binary in `tools/bin/` (git-ignored, downloaded by `npm run setup`), run with `--dev`. Recording (Egress) is **not available on Windows**: in dev, the recording service uses a fake that produces a sample video, so the rest of the flow (list, player, permissions, retention, delete) is fully testable. Real Egress is verified on the Linux staging server.
 - One command starts everything: **`npm run dev`** (db + api + web + livekit). Web: http://localhost:5173 · API: http://localhost:3000 · LiveKit: ws://localhost:7880.
 - `npm run seed` loads demo data: 3 branches, every role, courses, batches, sessions, students, fees. **Demo logins are printed and listed in `docs/demo-logins.md`.** Every password is `Demo@1234`.
+- Quick visual check of one screen: `node tools/scripts/shot.mjs /path email@demo.cc 390 out.png dark`.
+- Hub cards: `node tools/project-hub/set.mjs card "<title>" done` (see the file header for all commands).
 
 ## 5. Project structure
 
@@ -104,13 +109,14 @@ Feature module names follow the PRD: `auth, org (branches, rooms, departments, d
 ```
 npm run typecheck      # tsc across all workspaces: 0 errors
 npm run lint           # 0 errors
-npm run test           # Vitest unit + API integration (real Postgres test DB)
-npm run e2e            # Playwright headless, all specs green
+npm run test           # Vitest: shared unit + API integration (fresh cc_test DB + demo seed each run)
+npm run e2e            # Playwright headless against `stack.mjs e2e` (ports 5174/3100, fresh cc_e2e DB)
 ```
 
 - **Every feature ships with tests:** unit tests for rules, an integration test per endpoint (including permission refusals), and at least one **E2E user journey** per screen flow, run as the real role.
 - **Live class E2E:** Playwright launches Chromium with `--use-fake-ui-for-media-stream --use-fake-device-for-media-stream`, opens a teacher context and several student contexts, and asserts video tiles, chat, poll, raise hand, attendance marking and entry refusal.
-- **Visual check:** `npm run walkthrough` drives every screen of the finished phase for each role, saves screenshots (and a captioned video) to `docs/walkthrough/`, and **fails on any console error, failed network request or horizontal overflow at 360 px**. Look at the screenshots yourself before calling a phase done.
+- **Browser console:** the E2E fixture fails a test on any console error, page error or 5xx response (expected 4xx answers are allowed).
+- **Visual check:** `npm run walkthrough` (screens listed in `e2e/walkthrough/screens.ts`: add every new screen) drives every screen of the finished phase for each role, saves screenshots (and a captioned video) to `docs/walkthrough/`, and **fails on any console error, failed network request or horizontal overflow at 360 px**. Look at the screenshots yourself before calling a phase done.
 - **Load test (Phase 10):** a `k6`/LiveKit load-tester script simulates 200 rooms × 40 participants against staging.
 - A bug found anywhere gets a test that reproduces it **before** it's fixed.
 

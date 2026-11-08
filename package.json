@@ -1,0 +1,48 @@
+{
+  "name": "campus-connect",
+  "type": "module",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "setup": "node tools/scripts/setup.mjs",
+    "dev": "node tools/scripts/stack.mjs dev",
+    "db:start": "node tools/scripts/db.mjs",
+    "db:migrate": "npm run migrate -w @cc/api",
+    "seed": "npm run seed -w @cc/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint . --max-warnings=0",
+    "test": "node tools/scripts/test.mjs",
+    "e2e": "playwright test",
+    "walkthrough": "playwright test --config=playwright.walkthrough.config.ts",
+    "hub": "node tools/project-hub/build.mjs",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "@playwright/test": "1.56.1",
+    "embedded-postgres": "16.15.0-beta.19",
+    "eslint": "9.39.1",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "globals": "16.5.0",
+    "pg": "^8.16.3",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.4"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "allowScripts": {
+    "@embedded-postgres/windows-x64@16.15.0-beta.19": true,
+    "@prisma/client@6.19.0": true,
+    "@prisma/engines@6.19.0": true,
+    "@swc/core@1.13.5": true,
+    "argon2@0.44.0": true,
+    "esbuild@0.25.12": true,
+    "prisma@6.19.0": true
+  }
+}

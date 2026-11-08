@@ -1,0 +1,127 @@
+/** Every rule number in PRD §16. Stored in the Setting table; these are the defaults. */
+export const SETTINGS_DEFAULTS = {
+  'brand.name': 'Campus Connect',
+  'brand.tagline': 'Live learning for every branch',
+  'brand.primary': '#0E3B47',
+  'brand.accent': '#C77C12',
+  'brand.supportEmail': 'support@campusconnect.local',
+  'brand.supportPhone': '+91 00000 00000',
+  'org.legalName': 'Campus Connect Institute',
+  'org.address': 'Registered address to be added',
+  'privacy.grievanceOfficer': 'Grievance Officer',
+  'privacy.grievanceEmail': 'grievance@campusconnect.local',
+
+  'auth.lockoutAttempts': 5,
+  'auth.lockoutMinutes': 15,
+  'auth.sessionIdleMinutes': 120,
+
+  'attendance.presentPercent': 75,
+  'attendance.lateMinutes': 10,
+  'attendance.checkinSeconds': 120,
+  'attendance.lockHours': 48,
+  'attendance.requestDays': 3,
+  'attendance.escalateDays': 2,
+  'attendance.lowAlertPercent': 75,
+
+  'live.maxRooms': 200,
+  'live.maxPerRoom': 100,
+  'live.teacherEarlyMinutes': 15,
+  'live.studentEarlyMinutes': 10,
+  'live.punctualMinutes': 5,
+
+  'recordings.retentionDays': 180,
+  'recordings.recoverDays': 7,
+
+  'uploads.maxMb': 100,
+
+  'accounts.discountApprovalPercent': 10,
+  'accounts.reminderDaysBefore': 3,
+  'accounts.overdueReminderDays': 7,
+
+  'kpi.attendanceGreen': 85,
+  'kpi.attendanceAmber': 70,
+  'kpi.heldGreen': 95,
+  'kpi.heldAmber': 85,
+  'kpi.punctualGreen': 90,
+  'kpi.punctualAmber': 75,
+  'kpi.ratingGreen': 4.2,
+  'kpi.ratingAmber': 3.5,
+  'kpi.dropoutGreen': 5,
+  'kpi.dropoutAmber': 10,
+
+  'helpdesk.firstReplyBusinessDays': 1,
+  'helpdesk.escalateBusinessDays': 3,
+  'helpdesk.reopenDays': 7,
+
+  'chat.editMinutes': 15,
+  'feedback.showRaterToTeacher': false,
+
+  'ids.studentPrefix': 'STU',
+  'ids.employeePrefix': 'EMP',
+  'ids.receiptPrefix': 'RCPT',
+} as const;
+
+export type SettingKey = keyof typeof SETTINGS_DEFAULTS;
+export type SettingsMap = { -readonly [K in SettingKey]: (typeof SETTINGS_DEFAULTS)[K] extends number ? number : (typeof SETTINGS_DEFAULTS)[K] extends boolean ? boolean : string };
+
+export const SETTING_GROUPS: { title: string; keys: SettingKey[] }[] = [
+  { title: 'Branding', keys: ['brand.name', 'brand.tagline', 'brand.primary', 'brand.accent', 'brand.supportEmail', 'brand.supportPhone'] },
+  { title: 'Legal and privacy', keys: ['org.legalName', 'org.address', 'privacy.grievanceOfficer', 'privacy.grievanceEmail'] },
+  { title: 'Login and security', keys: ['auth.lockoutAttempts', 'auth.lockoutMinutes', 'auth.sessionIdleMinutes'] },
+  {
+    title: 'Attendance',
+    keys: ['attendance.presentPercent', 'attendance.lateMinutes', 'attendance.checkinSeconds', 'attendance.lockHours', 'attendance.requestDays', 'attendance.escalateDays', 'attendance.lowAlertPercent'],
+  },
+  { title: 'Live classes', keys: ['live.maxRooms', 'live.maxPerRoom', 'live.teacherEarlyMinutes', 'live.studentEarlyMinutes', 'live.punctualMinutes'] },
+  { title: 'Recordings and files', keys: ['recordings.retentionDays', 'recordings.recoverDays', 'uploads.maxMb'] },
+  { title: 'Accounts', keys: ['accounts.discountApprovalPercent', 'accounts.reminderDaysBefore', 'accounts.overdueReminderDays'] },
+  {
+    title: 'Branch KPI colours',
+    keys: ['kpi.attendanceGreen', 'kpi.attendanceAmber', 'kpi.heldGreen', 'kpi.heldAmber', 'kpi.punctualGreen', 'kpi.punctualAmber', 'kpi.ratingGreen', 'kpi.ratingAmber', 'kpi.dropoutGreen', 'kpi.dropoutAmber'],
+  },
+  { title: 'Help desk', keys: ['helpdesk.firstReplyBusinessDays', 'helpdesk.escalateBusinessDays', 'helpdesk.reopenDays'] },
+  { title: 'Messaging and feedback', keys: ['chat.editMinutes', 'feedback.showRaterToTeacher'] },
+  { title: 'ID formats', keys: ['ids.studentPrefix', 'ids.employeePrefix', 'ids.receiptPrefix'] },
+];
+
+export const SETTING_LABELS: Partial<Record<SettingKey, string>> = {
+  'brand.name': 'Product name',
+  'brand.tagline': 'Tagline',
+  'brand.primary': 'Primary colour',
+  'brand.accent': 'Accent colour',
+  'brand.supportEmail': 'Support email',
+  'brand.supportPhone': 'Support phone',
+  'org.legalName': 'Legal name',
+  'org.address': 'Registered address',
+  'privacy.grievanceOfficer': 'Grievance Officer name',
+  'privacy.grievanceEmail': 'Grievance Officer email',
+  'auth.lockoutAttempts': 'Wrong passwords before lockout',
+  'auth.lockoutMinutes': 'Lockout minutes',
+  'auth.sessionIdleMinutes': 'Log out after idle minutes',
+  'attendance.presentPercent': 'Present if in class for at least (%)',
+  'attendance.lateMinutes': 'Late after (minutes)',
+  'attendance.checkinSeconds': 'Check-in window (seconds)',
+  'attendance.lockHours': 'Attendance locks after (hours)',
+  'attendance.requestDays': 'Students may request attendance within (days)',
+  'attendance.escalateDays': 'Escalate undecided requests after (days)',
+  'attendance.lowAlertPercent': 'Low attendance alert below (%)',
+  'live.maxRooms': 'Maximum live classes at once',
+  'live.maxPerRoom': 'Maximum people per class',
+  'live.teacherEarlyMinutes': 'Teacher can open the room early (minutes)',
+  'live.studentEarlyMinutes': 'Students can join early (minutes)',
+  'live.punctualMinutes': 'Teacher counts as on time within (minutes)',
+  'recordings.retentionDays': 'Keep recordings for (days)',
+  'recordings.recoverDays': 'Deleted recordings recoverable for (days)',
+  'uploads.maxMb': 'Largest upload (MB)',
+  'accounts.discountApprovalPercent': 'Discounts above this % need approval',
+  'accounts.reminderDaysBefore': 'Fee reminder days before due date',
+  'accounts.overdueReminderDays': 'Repeat overdue reminder every (days)',
+  'helpdesk.firstReplyBusinessDays': 'First reply within (business days)',
+  'helpdesk.escalateBusinessDays': 'Escalate after (business days)',
+  'helpdesk.reopenDays': 'Students can reopen within (days)',
+  'chat.editMinutes': 'Edit or delete own message within (minutes)',
+  'feedback.showRaterToTeacher': 'Teachers can see who rated them',
+  'ids.studentPrefix': 'Student ID prefix',
+  'ids.employeePrefix': 'Employee ID prefix',
+  'ids.receiptPrefix': 'Receipt number prefix',
+};

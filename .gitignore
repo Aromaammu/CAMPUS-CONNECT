@@ -14,3 +14,5 @@ playwright-report/
 test-results/
 *.log
 tools/project-hub/project-hub.html
+test-results/
+shot.png
