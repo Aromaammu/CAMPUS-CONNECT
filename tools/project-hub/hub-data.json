@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-08",
   "mode": "unsupervised",
-  "headline": "Phase 0 complete (login, roles, audit log, tests). Now: Phase 1 Organisation.",
+  "headline": "Phases 0–1 complete. Now: Phase 2 Academics (courses, batches, timetable).",
   "phases": [
     {
       "id": "0",
@@ -173,98 +173,98 @@
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Admin",
       "t": "Branches and rooms",
       "d": "Create, edit and close branches; branch codes; rooms with capacity; branch holidays."
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Admin",
       "t": "Admins and module access",
       "d": "Super Admin creates Admins and ticks the modules each one controls (Head of Accounts = Accounts module)."
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Branch",
       "t": "Departments and designations",
       "d": "Head-office templates, branch additions, a permission set per designation."
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Branch",
       "t": "Employees",
       "d": "Add, edit, deactivate; home branch plus extra branches for teachers; welcome email/SMS."
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Branch",
       "t": "Students",
       "d": "Add, edit, statuses, guardian details (no guardian login), auto student ID."
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Branch",
       "t": "Excel bulk upload",
       "d": "Download template, upload, see row-by-row errors, import the good rows."
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Admin",
       "t": "Settings and holidays",
       "d": "Branding, ID formats, all rule numbers from the PRD, head-office holiday list."
     },
     {
       "p": "1",
-      "s": "dev",
+      "s": "done",
       "a": "Admin",
       "t": "Audit log screen",
       "d": "Search every recorded action by date, person, branch and action."
     },
     {
       "p": "2",
-      "s": "planned",
+      "s": "dev",
       "a": "Academics",
       "t": "Course catalogue",
       "d": "Courses with hours, syllabus modules, default fee; draft, publish, retire."
     },
     {
       "p": "2",
-      "s": "planned",
+      "s": "dev",
       "a": "Academics",
       "t": "Branch course requests",
       "d": "Branch proposes a course; head office approves, rejects or sends back."
     },
     {
       "p": "2",
-      "s": "planned",
+      "s": "dev",
       "a": "Academics",
       "t": "Batches: online, offline, hybrid",
       "d": "Teacher, days, times, room, capacity; sessions created automatically, skipping holidays."
     },
     {
       "p": "2",
-      "s": "planned",
+      "s": "dev",
       "a": "Academics",
       "t": "Reschedule, cancel, substitute teacher",
       "d": "Per session; students notified; teacher and room clash warnings."
     },
     {
       "p": "2",
-      "s": "planned",
+      "s": "dev",
       "a": "Academics",
       "t": "Enrolments",
       "d": "Enrol, move batch, hold, drop with reason; one student in many batches and branches."
     },
     {
       "p": "2",
-      "s": "planned",
+      "s": "dev",
       "a": "Academics",
       "t": "Timetable calendar",
       "d": "Day, week and month views for students, teachers and the branch."
@@ -632,6 +632,13 @@
       "a": "Testing",
       "t": "Phase 0 checks: 28 automated checks passing",
       "d": "17 security tests (login, lockout, first login, reset, SMS code, session theft protection, permanent audit log), 4 formatting tests, 7 browser tests and a 12-screen walkthrough on desktop and phone."
+    },
+    {
+      "p": "1",
+      "s": "done",
+      "a": "Testing",
+      "t": "Phase 1 checks: 21 permission tests + 7 browser journeys",
+      "d": "Every branch wall proven: Branch Admins refused other branches, staff and students refused head-office actions. Two real bugs found and fixed by tests."
     }
   ],
   "screens": [
