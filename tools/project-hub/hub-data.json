@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-08",
   "mode": "unsupervised",
-  "headline": "Unsupervised build running. Now: Phase 0 Foundation.",
+  "headline": "Phase 0 complete (login, roles, audit log, tests). Now: Phase 1 Organisation.",
   "phases": [
     {
       "id": "0",
@@ -117,112 +117,112 @@
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Setup",
       "t": "Project setup with one-command start",
       "d": "Website, server and shared rules in one project; local database and class server start together."
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Setup",
       "t": "Database structure for v1",
       "d": "Branches, people, courses, batches, sessions, attendance, money, messages, tickets; changes through migrations."
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Security",
       "t": "Secure login",
       "d": "Email or mobile + password, lockout after 5 wrong tries, first-login password change, forgot password."
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Security",
       "t": "Roles, modules and branch walls",
       "d": "Every request checked on the server; Branch Admins can never see another branch."
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Security",
       "t": "Permanent audit log",
       "d": "Who did what and when, for every important action."
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Design",
       "t": "Look and feel, menus per role",
       "d": "Phone-first layouts, sidebar menus for Super Admin, Admin, Branch Admin, Teacher, Accountant, Student."
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Testing",
       "t": "Automatic test setup",
       "d": "Unit, server and headless browser tests plus a recorded screen walkthrough, run before anything is called done."
     },
     {
       "p": "0",
-      "s": "dev",
+      "s": "done",
       "a": "Setup",
       "t": "Demo data and demo logins",
       "d": "3 branches and a login for every role so you can click through straight away."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Admin",
       "t": "Branches and rooms",
       "d": "Create, edit and close branches; branch codes; rooms with capacity; branch holidays."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Admin",
       "t": "Admins and module access",
       "d": "Super Admin creates Admins and ticks the modules each one controls (Head of Accounts = Accounts module)."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Branch",
       "t": "Departments and designations",
       "d": "Head-office templates, branch additions, a permission set per designation."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Branch",
       "t": "Employees",
       "d": "Add, edit, deactivate; home branch plus extra branches for teachers; welcome email/SMS."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Branch",
       "t": "Students",
       "d": "Add, edit, statuses, guardian details (no guardian login), auto student ID."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Branch",
       "t": "Excel bulk upload",
       "d": "Download template, upload, see row-by-row errors, import the good rows."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Admin",
       "t": "Settings and holidays",
       "d": "Branding, ID formats, all rule numbers from the PRD, head-office holiday list."
     },
     {
       "p": "1",
-      "s": "planned",
+      "s": "dev",
       "a": "Admin",
       "t": "Audit log screen",
       "d": "Search every recorded action by date, person, branch and action."
@@ -597,7 +597,7 @@
     },
     {
       "p": "10",
-      "s": "planned",
+      "s": "dev",
       "a": "Legal",
       "t": "Privacy Policy, Terms, consent",
       "d": "DPDP Act 2023 / Rules 2025; guardian consent for under-18s; data deletion requests."
@@ -625,6 +625,13 @@
       "t": "Your acceptance test and go-live",
       "d": "Click through every screen with the PRD checklist and sign off.",
       "w": "Your sign-off."
+    },
+    {
+      "p": "0",
+      "s": "done",
+      "a": "Testing",
+      "t": "Phase 0 checks: 28 automated checks passing",
+      "d": "17 security tests (login, lockout, first login, reset, SMS code, session theft protection, permanent audit log), 4 formatting tests, 7 browser tests and a 12-screen walkthrough on desktop and phone."
     }
   ],
   "screens": [
