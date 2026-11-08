@@ -170,6 +170,7 @@ export function FirstLoginPage() {
   const submit = f.handleSubmit(async (v) => {
     try { await post('/auth/change-password', v); await refetch(); nav('/', { replace: true }); } catch (e) { setServerErrors(e, f.setError as never, setTop); }
   });
+  if (me && !me.user.mustChangePassword && me.needsConsent) return <ConsentOnly />;
   return (
     <AuthLayout title={`Welcome, ${me ? firstName(me.user.name) : ''}`} subtitle="Before you start, set your own password." footer={<button type="button" className="font-semibold text-brand hover:underline" onClick={() => logout()}>Log out</button>}>
       <form onSubmit={submit} className="grid gap-4" noValidate>
@@ -188,6 +189,31 @@ export function FirstLoginPage() {
         )}
         <Button type="submit" loading={f.formState.isSubmitting} className="w-full">Save and continue</Button>
       </form>
+    </AuthLayout>
+  );
+}
+
+/** Password already chosen through a welcome link: only the consent step remains. */
+function ConsentOnly() {
+  const { me, refetch, logout } = useAuth();
+  const nav = useNavigate();
+  const [consent, setConsent] = useState(false);
+  const [guardian, setGuardian] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const submit = async () => {
+    setBusy(true); setErr('');
+    try { await post('/auth/consent', { consent, guardianConsent: guardian }); await refetch(); nav('/', { replace: true }); }
+    catch (e) { setErr((e as Error).message); setBusy(false); }
+  };
+  return (
+    <AuthLayout title={`Welcome, ${me ? firstName(me.user.name) : ''}`} subtitle="One last step before you start." footer={<button type="button" className="font-semibold text-brand hover:underline" onClick={() => logout()}>Log out</button>}>
+      <div className="grid gap-4">
+        {err && <Notice tone="bad">{err}</Notice>}
+        <Checkbox checked={consent} onChange={(e) => setConsent(e.target.checked)} label={<>I have read and agree to the <Link to="/privacy" target="_blank" className="font-semibold text-brand underline">Privacy Policy</Link> and <Link to="/terms" target="_blank" className="font-semibold text-brand underline">Terms</Link>, including that chats with staff may be reviewed for safety.</>} />
+        {me?.isMinor && <Checkbox checked={guardian} onChange={(e) => setGuardian(e.target.checked)} label="My parent or guardian has read these and agrees to my use of this app (required for students under 18)." />}
+        <Button onClick={submit} loading={busy} disabled={!consent || (!!me?.isMinor && !guardian)} className="w-full">Agree and continue</Button>
+      </div>
     </AuthLayout>
   );
 }

@@ -377,3 +377,8 @@ export function DefinitionList({ items, className }: { items: [ReactNode, ReactN
     </dl>
   );
 }
+
+/** Phone layout for lists: one card per row (tables show from the sm breakpoint up). */
+export function MobileCards<T>({ rows, render, keyOf }: { rows: T[]; render: (r: T) => ReactNode; keyOf: (r: T) => string }) {
+  return <ul className="grid gap-2 sm:hidden">{rows.map((r) => <li key={keyOf(r)} className="card px-4 py-3">{render(r)}</li>)}</ul>;
+}

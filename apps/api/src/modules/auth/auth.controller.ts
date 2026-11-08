@@ -94,6 +94,14 @@ export class AuthController {
     return { ok: true };
   }
 
+  @AllowMustChange()
+  @Post('consent')
+  @HttpCode(200)
+  async consent(@CurrentUser() user: SessionUser, @Body(new Zod(z.object({ consent: z.boolean().optional(), guardianConsent: z.boolean().optional() }))) body: { consent?: boolean; guardianConsent?: boolean }, @Req() req: Request) {
+    await this.auth.giveConsent(user.id, body, info(req));
+    return { ok: true };
+  }
+
   @Public()
   @Post('forgot-password')
   @HttpCode(200)

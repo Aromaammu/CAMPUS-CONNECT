@@ -70,6 +70,7 @@ h1, h2, h3 { @apply font-display; text-wrap: balance; }
   .tabular { font-variant-numeric: tabular-nums; }
   .table-wrap { @apply overflow-x-auto rounded-[10px] border border-line bg-surface; }
   .table { @apply w-full border-collapse text-[14px]; }
+  .table .font-mono { @apply whitespace-nowrap; }
   .table th { @apply bg-surface-2 text-left text-[11.5px] font-bold uppercase tracking-wider text-muted px-3 py-2.5 whitespace-nowrap; }
   .table td { @apply border-t border-line px-3 py-2.5 align-top; }
   .table tbody tr:hover td { @apply bg-surface-2/50; }

@@ -130,6 +130,17 @@ export class AuthService {
     });
   }
 
+  /** Consent only (users who already chose their password through a welcome link). */
+  async giveConsent(userId: string, input: { consent?: boolean; guardianConsent?: boolean }, client: ClientInfo) {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, include: { student: true, consents: true } });
+    if (user.consents.some((c) => c.policyVersion === POLICY_VERSION)) return;
+    if (!input.consent) throw new BadRequestException({ message: 'Please accept the Privacy Policy and Terms', fieldErrors: { consent: 'Please accept the Privacy Policy and Terms' } });
+    const minor = user.student?.dob ? ageOn(user.student.dob, new Date()) < 18 : false;
+    if (minor && !input.guardianConsent) throw new BadRequestException({ message: 'A parent or guardian must agree for students under 18', fieldErrors: { guardianConsent: 'A parent or guardian must agree for students under 18' } });
+    await this.prisma.consent.create({ data: { userId, policyVersion: POLICY_VERSION, guardianConsent: !!input.guardianConsent, ip: client.ip, userAgent: client.userAgent?.slice(0, 300) } });
+    await this.audit.record({ actorId: userId, action: 'privacy.consent', entity: 'User', entityId: userId, summary: 'Accepted the Privacy Policy and Terms', ip: client.ip });
+  }
+
   async forgot(identifier: string) {
     const user = await this.findByIdentifier(identifier);
     if (!user || user.status !== 'ACTIVE') return; // same response either way
@@ -150,7 +161,7 @@ export class AuthService {
     await this.prisma.$transaction(async (tx) => {
       const claimed = await tx.passwordReset.updateMany({ where: { id: row.id, usedAt: null }, data: { usedAt: new Date() } });
       if (claimed.count === 0) throw new BadRequestException('This link has already been used.');
-      await tx.user.update({ where: { id: row.userId }, data: { passwordHash: await hashPassword(newPassword), failedLogins: 0, lockedUntil: null } });
+      await tx.user.update({ where: { id: row.userId }, data: { passwordHash: await hashPassword(newPassword), failedLogins: 0, lockedUntil: null, mustChangePassword: false } });
       await tx.refreshToken.updateMany({ where: { userId: row.userId, revokedAt: null }, data: { revokedAt: new Date() } });
       await this.audit.record({ actorId: row.userId, action: 'auth.password_reset', entity: 'User', entityId: row.userId, summary: 'Reset password with a link', ip: client.ip }, tx);
     });

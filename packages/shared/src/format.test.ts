@@ -24,3 +24,17 @@ describe('Indian formatting', () => {
     expect(formatHHMM('14:05')).toBe('2:05 pm');
   });
 });
+
+import { parseDdMmYyyy } from './org-schemas';
+import { dateKeySchema } from './schemas';
+describe('dates from forms and Excel', () => {
+  it('accepts real dates and refuses impossible ones', () => {
+    expect(parseDdMmYyyy('15-08-2004')).toBe('2004-08-15');
+    expect(parseDdMmYyyy('5/3/2004')).toBe('2004-03-05');
+    expect(parseDdMmYyyy('31/31/2004')).toBe('invalid');
+    expect(parseDdMmYyyy('29-02-2023')).toBe('invalid');
+    expect(parseDdMmYyyy('29-02-2024')).toBe('2024-02-29');
+    expect(dateKeySchema.safeParse('2026-02-30').success).toBe(false);
+    expect(dateKeySchema.safeParse('2026-11-08').success).toBe(true);
+  });
+});
