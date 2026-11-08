@@ -3,135 +3,1160 @@
   "tagline": "Live classes, attendance, messaging and branch control for our institute and its franchise branches. Everything planned, built and waiting, in one place.",
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-08",
-  "mode": "supervised",
-  "headline": "Planning done: PRD and build rules written. Next: Phase 0 Foundation.",
+  "mode": "unsupervised",
+  "headline": "Unsupervised build running. Now: Phase 0 Foundation.",
   "phases": [
-    { "id": "0", "name": "Foundation", "summary": "Project setup, database, secure login, role menus, audit log, look and feel, test setup", "check": "Log in as each demo role and see the right menu on phone and laptop." },
-    { "id": "1", "name": "Organisation", "summary": "Branches, rooms, departments, designations, admins and modules, employees, students, Excel import, settings, holidays", "check": "Create a branch, add a Branch Admin, bulk-upload 20 students from Excel." },
-    { "id": "2", "name": "Academics", "summary": "Course catalogue, branch course requests, batches with automatic sessions, enrolments, timetable", "check": "Create the Python Full Stack course and Morning Batch A, enrol students, see the timetable." },
-    { "id": "3", "name": "Live class: core", "summary": "Our own class room: video, audio, screen share, chat, raise hand, teacher controls, entry restrictions", "check": "Run a class from two browsers (teacher + student), try every button, try joining as a non-enrolled student." },
-    { "id": "4", "name": "Live class: attendance, polls, whiteboard, recording", "summary": "Automatic and check-in attendance, offline and hybrid roster, attendance requests, polls, whiteboard, recordings", "check": "Hold a class, run a poll, request attendance as a student and approve it as the teacher, watch the recording." },
-    { "id": "5", "name": "Learning portal", "summary": "Materials, per-class performance, two-way feedback, final project approval, student reports", "check": "Upload notes, give marks and feedback, take a project from submission to Completed." },
-    { "id": "6", "name": "Messaging & staff meetings", "summary": "1-to-1 chat, batch groups, staff groups, announcements, files, moderation, meetings from chat", "check": "Chat as a student and a teacher, post an announcement, start a staff meeting." },
-    { "id": "7", "name": "Accounts", "summary": "Fee plans, instalments, manual payments, receipts, approvals, dues, collections reports", "check": "Set a fee plan, record a UPI payment, open the receipt, check the dues list." },
-    { "id": "8", "name": "Notifications & help desk", "summary": "Email, SMS, web push, notification centre, preferences, help desk tickets with SLA", "check": "Receive class and fee notifications; raise and resolve a help desk ticket." },
-    { "id": "9", "name": "Monitoring", "summary": "Network and branch KPI dashboards, live-now monitor, rankings, exports, weekly summary", "check": "Compare branches on all 7 KPIs and check the numbers against the demo data." },
-    { "id": "10", "name": "Hardening & launch", "summary": "Load test with 200 classes, security review, India hosting, backups, acceptance test, go-live", "check": "Final sign-off with the PRD acceptance checklist (§21)." },
-    { "id": "x", "name": "Planning & your extra requests", "summary": "Product plan, build rules and anything you ask for between phases", "check": "Read the PRD summary and confirm the decisions." }
+    {
+      "id": "0",
+      "name": "Foundation",
+      "summary": "Project setup, database, secure login, role menus, audit log, look and feel, test setup",
+      "check": "Log in as each demo role and see the right menu on phone and laptop."
+    },
+    {
+      "id": "1",
+      "name": "Organisation",
+      "summary": "Branches, rooms, departments, designations, admins and modules, employees, students, Excel import, settings, holidays",
+      "check": "Create a branch, add a Branch Admin, bulk-upload 20 students from Excel."
+    },
+    {
+      "id": "2",
+      "name": "Academics",
+      "summary": "Course catalogue, branch course requests, batches with automatic sessions, enrolments, timetable",
+      "check": "Create the Python Full Stack course and Morning Batch A, enrol students, see the timetable."
+    },
+    {
+      "id": "3",
+      "name": "Live class: core",
+      "summary": "Our own class room: video, audio, screen share, chat, raise hand, teacher controls, entry restrictions",
+      "check": "Run a class from two browsers (teacher + student), try every button, try joining as a non-enrolled student."
+    },
+    {
+      "id": "4",
+      "name": "Live class: attendance, polls, whiteboard, recording",
+      "summary": "Automatic and check-in attendance, offline and hybrid roster, attendance requests, polls, whiteboard, recordings",
+      "check": "Hold a class, run a poll, request attendance as a student and approve it as the teacher, watch the recording."
+    },
+    {
+      "id": "5",
+      "name": "Learning portal",
+      "summary": "Materials, per-class performance, two-way feedback, final project approval, student reports",
+      "check": "Upload notes, give marks and feedback, take a project from submission to Completed."
+    },
+    {
+      "id": "6",
+      "name": "Messaging & staff meetings",
+      "summary": "1-to-1 chat, batch groups, staff groups, announcements, files, moderation, meetings from chat",
+      "check": "Chat as a student and a teacher, post an announcement, start a staff meeting."
+    },
+    {
+      "id": "7",
+      "name": "Accounts",
+      "summary": "Fee plans, instalments, manual payments, receipts, approvals, dues, collections reports",
+      "check": "Set a fee plan, record a UPI payment, open the receipt, check the dues list."
+    },
+    {
+      "id": "8",
+      "name": "Notifications & help desk",
+      "summary": "Email, SMS, web push, notification centre, preferences, help desk tickets with SLA",
+      "check": "Receive class and fee notifications; raise and resolve a help desk ticket."
+    },
+    {
+      "id": "9",
+      "name": "Monitoring",
+      "summary": "Network and branch KPI dashboards, live-now monitor, rankings, exports, weekly summary",
+      "check": "Compare branches on all 7 KPIs and check the numbers against the demo data."
+    },
+    {
+      "id": "10",
+      "name": "Hardening & launch",
+      "summary": "Load test with 200 classes, security review, India hosting, backups, acceptance test, go-live",
+      "check": "Final sign-off with the PRD acceptance checklist (§21)."
+    },
+    {
+      "id": "x",
+      "name": "Planning & your extra requests",
+      "summary": "Product plan, build rules and anything you ask for between phases",
+      "check": "Read the PRD summary and confirm the decisions."
+    }
   ],
   "cards": [
-    { "p": "x", "s": "done", "a": "Planning", "t": "Requirements gathered", "d": "20 questions answered: size, roles, class types, attendance, recordings, fees, chat, KPIs, notifications." },
-    { "p": "x", "s": "done", "a": "Planning", "t": "Product plan (PRD.md)", "d": "Every role, screen, rule, notification and KPI for version 1, plus phases and the acceptance checklist." },
-    { "p": "x", "s": "done", "a": "Planning", "t": "Build rules (CLAUDE.md)", "d": "Technology choices, security rules, testing gates, Git rules and the supervised / unsupervised modes." },
-    { "p": "x", "s": "done", "a": "Planning", "t": "Project Hub", "d": "This page: phases, board, screens, decisions and code status." },
-    { "p": "x", "s": "test", "a": "Your task", "t": "Read the PRD and confirm decisions D1–D12", "d": "Defaults are already used; tell me anything you want changed.", "w": "Your turn: reply with any changes, or \"approved\"." },
-
-    { "p": "0", "s": "notstarted", "a": "Setup", "t": "Project setup with one-command start", "d": "Website, server and shared rules in one project; local database and class server start together." },
-    { "p": "0", "s": "notstarted", "a": "Setup", "t": "Database structure for v1", "d": "Branches, people, courses, batches, sessions, attendance, money, messages, tickets; changes through migrations." },
-    { "p": "0", "s": "notstarted", "a": "Security", "t": "Secure login", "d": "Email or mobile + password, lockout after 5 wrong tries, first-login password change, forgot password." },
-    { "p": "0", "s": "notstarted", "a": "Security", "t": "Roles, modules and branch walls", "d": "Every request checked on the server; Branch Admins can never see another branch." },
-    { "p": "0", "s": "notstarted", "a": "Security", "t": "Permanent audit log", "d": "Who did what and when, for every important action." },
-    { "p": "0", "s": "notstarted", "a": "Design", "t": "Look and feel, menus per role", "d": "Phone-first layouts, sidebar menus for Super Admin, Admin, Branch Admin, Teacher, Accountant, Student." },
-    { "p": "0", "s": "notstarted", "a": "Testing", "t": "Automatic test setup", "d": "Unit, server and headless browser tests plus a recorded screen walkthrough, run before anything is called done." },
-    { "p": "0", "s": "notstarted", "a": "Setup", "t": "Demo data and demo logins", "d": "3 branches and a login for every role so you can click through straight away." },
-
-    { "p": "1", "s": "planned", "a": "Admin", "t": "Branches and rooms", "d": "Create, edit and close branches; branch codes; rooms with capacity; branch holidays." },
-    { "p": "1", "s": "planned", "a": "Admin", "t": "Admins and module access", "d": "Super Admin creates Admins and ticks the modules each one controls (Head of Accounts = Accounts module)." },
-    { "p": "1", "s": "planned", "a": "Branch", "t": "Departments and designations", "d": "Head-office templates, branch additions, a permission set per designation." },
-    { "p": "1", "s": "planned", "a": "Branch", "t": "Employees", "d": "Add, edit, deactivate; home branch plus extra branches for teachers; welcome email/SMS." },
-    { "p": "1", "s": "planned", "a": "Branch", "t": "Students", "d": "Add, edit, statuses, guardian details (no guardian login), auto student ID." },
-    { "p": "1", "s": "planned", "a": "Branch", "t": "Excel bulk upload", "d": "Download template, upload, see row-by-row errors, import the good rows." },
-    { "p": "1", "s": "planned", "a": "Admin", "t": "Settings and holidays", "d": "Branding, ID formats, all rule numbers from the PRD, head-office holiday list." },
-    { "p": "1", "s": "planned", "a": "Admin", "t": "Audit log screen", "d": "Search every recorded action by date, person, branch and action." },
-
-    { "p": "2", "s": "planned", "a": "Academics", "t": "Course catalogue", "d": "Courses with hours, syllabus modules, default fee; draft, publish, retire." },
-    { "p": "2", "s": "planned", "a": "Academics", "t": "Branch course requests", "d": "Branch proposes a course; head office approves, rejects or sends back." },
-    { "p": "2", "s": "planned", "a": "Academics", "t": "Batches: online, offline, hybrid", "d": "Teacher, days, times, room, capacity; sessions created automatically, skipping holidays." },
-    { "p": "2", "s": "planned", "a": "Academics", "t": "Reschedule, cancel, substitute teacher", "d": "Per session; students notified; teacher and room clash warnings." },
-    { "p": "2", "s": "planned", "a": "Academics", "t": "Enrolments", "d": "Enrol, move batch, hold, drop with reason; one student in many batches and branches." },
-    { "p": "2", "s": "planned", "a": "Academics", "t": "Timetable calendar", "d": "Day, week and month views for students, teachers and the branch." },
-
-    { "p": "3", "s": "planned", "a": "Live class", "t": "Our own class server", "d": "Self-hosted live video server; no Zoom, Meet or Teams." },
-    { "p": "3", "s": "planned", "a": "Live class", "t": "Pre-join device check", "d": "Test camera, mic and speaker before entering." },
-    { "p": "3", "s": "planned", "a": "Live class", "t": "Video, audio and screen share", "d": "Gallery and speaker views; teacher can let a student share." },
-    { "p": "3", "s": "planned", "a": "Live class", "t": "In-class chat, raise hand, reactions", "d": "Chat saved with the session; teacher can turn student chat off." },
-    { "p": "3", "s": "planned", "a": "Live class", "t": "Teacher controls", "d": "Mute one/all, camera off, stop share, remove, lock room, allow mic/camera." },
-    { "p": "3", "s": "planned", "a": "Live class", "t": "Who may enter", "d": "Only enrolled students, teacher, added guests and silent observers; a second device disconnects the first." },
-    { "p": "3", "s": "planned", "a": "Live class", "t": "Phone browser support", "d": "Join and take part from Android and iPhone browsers." },
-
-    { "p": "4", "s": "planned", "a": "Attendance", "t": "Automatic attendance", "d": "Present at 75% time in class, Late after 10 minutes; reconnects counted correctly." },
-    { "p": "4", "s": "planned", "a": "Attendance", "t": "\"Mark your attendance\" check-in", "d": "Teacher opens a 2-minute window; students tap I'm present." },
-    { "p": "4", "s": "planned", "a": "Attendance", "t": "Offline and hybrid roster", "d": "Teacher marks the room on phone or laptop; each student marked once." },
-    { "p": "4", "s": "planned", "a": "Attendance", "t": "Attendance requests", "d": "Student requests within 3 days; teacher approves or rejects; escalates to Branch Admin after 2 days." },
-    { "p": "4", "s": "planned", "a": "Live class", "t": "Polls", "d": "Single or multiple choice, live results, saved with the session." },
-    { "p": "4", "s": "planned", "a": "Live class", "t": "Whiteboard", "d": "Shared drawing board; give a student the pen; save to materials." },
-    { "p": "4", "s": "planned", "a": "Recordings", "t": "Recording and player", "d": "Auto-record, batch-only access, no download, name watermark, 180-day retention.", "w": "Needs a Linux test server to verify real recordings (D12)." },
-    { "p": "4", "s": "planned", "a": "Recordings", "t": "Branch recording controls", "d": "Rename, hide, replace, delete (recoverable 7 days), all audited." },
-
-    { "p": "5", "s": "planned", "a": "Learning", "t": "Notes and materials", "d": "Files and links per batch, session or module; share across batches." },
-    { "p": "5", "s": "planned", "a": "Learning", "t": "Performance in each class", "d": "Quick grid for 1–5 marks and remarks; running average for the student." },
-    { "p": "5", "s": "planned", "a": "Learning", "t": "Two-way feedback", "d": "Teacher feedback to students; star rating after each class; end-of-course forms." },
-    { "p": "5", "s": "planned", "a": "Learning", "t": "Final project approval", "d": "Student submits, teacher reviews (changes or approve), Branch Admin gives final approval → Completed." },
-    { "p": "5", "s": "planned", "a": "Learning", "t": "Student reports (PDF)", "d": "Attendance, performance, payment and dues statements." },
-    { "p": "5", "s": "planned", "a": "Learning", "t": "Student and teacher dashboards", "d": "Next class with Join button, today's timetable, attendance %, dues, unread messages." },
-
-    { "p": "6", "s": "planned", "a": "Messaging", "t": "1-to-1 chat", "d": "Student ↔ teacher/staff, staff ↔ staff across branches; no student-to-student DMs." },
-    { "p": "6", "s": "planned", "a": "Messaging", "t": "Batch groups and staff groups", "d": "Auto group per batch (can be announcements-only); staff create their own groups." },
-    { "p": "6", "s": "planned", "a": "Messaging", "t": "Files, replies, read receipts, search", "d": "Everything you'd expect from Teams-style chat." },
-    { "p": "6", "s": "planned", "a": "Messaging", "t": "Announcements", "d": "Head office → branches, Branch Admin → branch or batches, with read counts." },
-    { "p": "6", "s": "planned", "a": "Messaging", "t": "Chat moderation", "d": "Admins review chats with students and hide messages, with a reason; audited." },
-    { "p": "6", "s": "planned", "a": "Meetings", "t": "Staff meetings", "d": "Instant or scheduled meetings for staff, and calls started from a chat." },
-
-    { "p": "7", "s": "planned", "a": "Accounts", "t": "Course and branch fees", "d": "Default fee from head office, branch prices, Head of Accounts can lock them." },
-    { "p": "7", "s": "planned", "a": "Accounts", "t": "Fee plans and instalments", "d": "Per enrolment; discounts above 10% need Head of Accounts approval." },
-    { "p": "7", "s": "planned", "a": "Accounts", "t": "Record a payment and receipt PDF", "d": "Cash, UPI, bank, card, cheque, DD; receipt number never repeats or skips; emailed to student." },
-    { "p": "7", "s": "planned", "a": "Accounts", "t": "Voids, refunds and approvals", "d": "Payments are never edited; voids need approval; everything audited." },
-    { "p": "7", "s": "planned", "a": "Accounts", "t": "Dues and reminders", "d": "Due soon, due today, overdue; automatic and one-click reminders." },
-    { "p": "7", "s": "planned", "a": "Accounts", "t": "Sales and collections reports", "d": "By branch, course, batch, date, method; day-close report; Excel export." },
-
-    { "p": "8", "s": "planned", "a": "Notifications", "t": "Notification centre and web push", "d": "Bell icon, browser push, preferences per person." },
-    { "p": "8", "s": "planned", "a": "Notifications", "t": "Email provider", "d": "Welcome, password, class changes, receipts, project and ticket emails.", "w": "Choose an email service (D9)." },
-    { "p": "8", "s": "planned", "a": "Notifications", "t": "SMS with our gateway", "d": "OTP, class changes, fee reminders, receipts with DLT templates.", "w": "DLT template IDs and wording for each SMS (D10)." },
-    { "p": "8", "s": "planned", "a": "Notifications", "t": "All 19 notifications N1–N19", "d": "Right people, right channels, editable wording." },
-    { "p": "8", "s": "planned", "a": "Help desk", "t": "Help desk tickets", "d": "Raise, reply, statuses, reopen within 7 days, attachments." },
-    { "p": "8", "s": "planned", "a": "Help desk", "t": "SLA and escalation", "d": "First reply within 1 business day; escalate to Help Desk Admin after 3." },
-
-    { "p": "9", "s": "planned", "a": "Monitoring", "t": "Network dashboard", "d": "All 7 KPIs, branch ranking, red/amber/green, trends." },
-    { "p": "9", "s": "planned", "a": "Monitoring", "t": "Branch drill-down", "d": "KPIs per batch and per teacher." },
-    { "p": "9", "s": "planned", "a": "Monitoring", "t": "Live-now monitor", "d": "Classes running, students in class, classes that should have started." },
-    { "p": "9", "s": "planned", "a": "Monitoring", "t": "Exports and weekly summary email", "d": "Every table to Excel; weekly email to Super Admin and Admins." },
-
-    { "p": "10", "s": "planned", "a": "Launch", "t": "Load test: 200 classes at once", "d": "Simulated 200 rooms × 40 people on the live-class servers." },
-    { "p": "10", "s": "planned", "a": "Launch", "t": "Security review", "d": "Every role and branch wall re-checked; dependency and configuration review." },
-    { "p": "10", "s": "planned", "a": "Launch", "t": "India hosting and backups", "d": "Servers, database, files and recordings in Mumbai; daily backups.", "w": "Hosting budget approval (D7)." },
-    { "p": "10", "s": "planned", "a": "Legal", "t": "Privacy Policy, Terms, consent", "d": "DPDP Act 2023 / Rules 2025; guardian consent for under-18s; data deletion requests." },
-    { "p": "10", "s": "planned", "a": "Launch", "t": "Your domain and HTTPS", "d": "The app at your own web address.", "w": "Your domain name (D8)." },
-    { "p": "10", "s": "planned", "a": "Launch", "t": "GitHub and production protection", "d": "Online copy of the code; production only changes through reviewed merges.", "w": "Your GitHub repository link (D11)." },
-    { "p": "10", "s": "planned", "a": "Your task", "t": "Your acceptance test and go-live", "d": "Click through every screen with the PRD checklist and sign off.", "w": "Your sign-off." }
+    {
+      "p": "x",
+      "s": "done",
+      "a": "Planning",
+      "t": "Requirements gathered",
+      "d": "20 questions answered: size, roles, class types, attendance, recordings, fees, chat, KPIs, notifications."
+    },
+    {
+      "p": "x",
+      "s": "done",
+      "a": "Planning",
+      "t": "Product plan (PRD.md)",
+      "d": "Every role, screen, rule, notification and KPI for version 1, plus phases and the acceptance checklist."
+    },
+    {
+      "p": "x",
+      "s": "done",
+      "a": "Planning",
+      "t": "Build rules (CLAUDE.md)",
+      "d": "Technology choices, security rules, testing gates, Git rules and the supervised / unsupervised modes."
+    },
+    {
+      "p": "x",
+      "s": "done",
+      "a": "Planning",
+      "t": "Project Hub",
+      "d": "This page: phases, board, screens, decisions and code status."
+    },
+    {
+      "p": "x",
+      "s": "done",
+      "a": "Your task",
+      "t": "Read the PRD and confirm decisions D1–D12",
+      "d": "Defaults are already used; tell me anything you want changed."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Setup",
+      "t": "Project setup with one-command start",
+      "d": "Website, server and shared rules in one project; local database and class server start together."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Setup",
+      "t": "Database structure for v1",
+      "d": "Branches, people, courses, batches, sessions, attendance, money, messages, tickets; changes through migrations."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Security",
+      "t": "Secure login",
+      "d": "Email or mobile + password, lockout after 5 wrong tries, first-login password change, forgot password."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Security",
+      "t": "Roles, modules and branch walls",
+      "d": "Every request checked on the server; Branch Admins can never see another branch."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Security",
+      "t": "Permanent audit log",
+      "d": "Who did what and when, for every important action."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Design",
+      "t": "Look and feel, menus per role",
+      "d": "Phone-first layouts, sidebar menus for Super Admin, Admin, Branch Admin, Teacher, Accountant, Student."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Testing",
+      "t": "Automatic test setup",
+      "d": "Unit, server and headless browser tests plus a recorded screen walkthrough, run before anything is called done."
+    },
+    {
+      "p": "0",
+      "s": "dev",
+      "a": "Setup",
+      "t": "Demo data and demo logins",
+      "d": "3 branches and a login for every role so you can click through straight away."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Admin",
+      "t": "Branches and rooms",
+      "d": "Create, edit and close branches; branch codes; rooms with capacity; branch holidays."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Admin",
+      "t": "Admins and module access",
+      "d": "Super Admin creates Admins and ticks the modules each one controls (Head of Accounts = Accounts module)."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Branch",
+      "t": "Departments and designations",
+      "d": "Head-office templates, branch additions, a permission set per designation."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Branch",
+      "t": "Employees",
+      "d": "Add, edit, deactivate; home branch plus extra branches for teachers; welcome email/SMS."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Branch",
+      "t": "Students",
+      "d": "Add, edit, statuses, guardian details (no guardian login), auto student ID."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Branch",
+      "t": "Excel bulk upload",
+      "d": "Download template, upload, see row-by-row errors, import the good rows."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Admin",
+      "t": "Settings and holidays",
+      "d": "Branding, ID formats, all rule numbers from the PRD, head-office holiday list."
+    },
+    {
+      "p": "1",
+      "s": "planned",
+      "a": "Admin",
+      "t": "Audit log screen",
+      "d": "Search every recorded action by date, person, branch and action."
+    },
+    {
+      "p": "2",
+      "s": "planned",
+      "a": "Academics",
+      "t": "Course catalogue",
+      "d": "Courses with hours, syllabus modules, default fee; draft, publish, retire."
+    },
+    {
+      "p": "2",
+      "s": "planned",
+      "a": "Academics",
+      "t": "Branch course requests",
+      "d": "Branch proposes a course; head office approves, rejects or sends back."
+    },
+    {
+      "p": "2",
+      "s": "planned",
+      "a": "Academics",
+      "t": "Batches: online, offline, hybrid",
+      "d": "Teacher, days, times, room, capacity; sessions created automatically, skipping holidays."
+    },
+    {
+      "p": "2",
+      "s": "planned",
+      "a": "Academics",
+      "t": "Reschedule, cancel, substitute teacher",
+      "d": "Per session; students notified; teacher and room clash warnings."
+    },
+    {
+      "p": "2",
+      "s": "planned",
+      "a": "Academics",
+      "t": "Enrolments",
+      "d": "Enrol, move batch, hold, drop with reason; one student in many batches and branches."
+    },
+    {
+      "p": "2",
+      "s": "planned",
+      "a": "Academics",
+      "t": "Timetable calendar",
+      "d": "Day, week and month views for students, teachers and the branch."
+    },
+    {
+      "p": "3",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Our own class server",
+      "d": "Self-hosted live video server; no Zoom, Meet or Teams."
+    },
+    {
+      "p": "3",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Pre-join device check",
+      "d": "Test camera, mic and speaker before entering."
+    },
+    {
+      "p": "3",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Video, audio and screen share",
+      "d": "Gallery and speaker views; teacher can let a student share."
+    },
+    {
+      "p": "3",
+      "s": "planned",
+      "a": "Live class",
+      "t": "In-class chat, raise hand, reactions",
+      "d": "Chat saved with the session; teacher can turn student chat off."
+    },
+    {
+      "p": "3",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Teacher controls",
+      "d": "Mute one/all, camera off, stop share, remove, lock room, allow mic/camera."
+    },
+    {
+      "p": "3",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Who may enter",
+      "d": "Only enrolled students, teacher, added guests and silent observers; a second device disconnects the first."
+    },
+    {
+      "p": "3",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Phone browser support",
+      "d": "Join and take part from Android and iPhone browsers."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Attendance",
+      "t": "Automatic attendance",
+      "d": "Present at 75% time in class, Late after 10 minutes; reconnects counted correctly."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Attendance",
+      "t": "\"Mark your attendance\" check-in",
+      "d": "Teacher opens a 2-minute window; students tap I'm present."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Attendance",
+      "t": "Offline and hybrid roster",
+      "d": "Teacher marks the room on phone or laptop; each student marked once."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Attendance",
+      "t": "Attendance requests",
+      "d": "Student requests within 3 days; teacher approves or rejects; escalates to Branch Admin after 2 days."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Polls",
+      "d": "Single or multiple choice, live results, saved with the session."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Live class",
+      "t": "Whiteboard",
+      "d": "Shared drawing board; give a student the pen; save to materials."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Recordings",
+      "t": "Recording and player",
+      "d": "Auto-record, batch-only access, no download, name watermark, 180-day retention.",
+      "w": "Needs a Linux test server to verify real recordings (D12)."
+    },
+    {
+      "p": "4",
+      "s": "planned",
+      "a": "Recordings",
+      "t": "Branch recording controls",
+      "d": "Rename, hide, replace, delete (recoverable 7 days), all audited."
+    },
+    {
+      "p": "5",
+      "s": "planned",
+      "a": "Learning",
+      "t": "Notes and materials",
+      "d": "Files and links per batch, session or module; share across batches."
+    },
+    {
+      "p": "5",
+      "s": "planned",
+      "a": "Learning",
+      "t": "Performance in each class",
+      "d": "Quick grid for 1–5 marks and remarks; running average for the student."
+    },
+    {
+      "p": "5",
+      "s": "planned",
+      "a": "Learning",
+      "t": "Two-way feedback",
+      "d": "Teacher feedback to students; star rating after each class; end-of-course forms."
+    },
+    {
+      "p": "5",
+      "s": "planned",
+      "a": "Learning",
+      "t": "Final project approval",
+      "d": "Student submits, teacher reviews (changes or approve), Branch Admin gives final approval → Completed."
+    },
+    {
+      "p": "5",
+      "s": "planned",
+      "a": "Learning",
+      "t": "Student reports (PDF)",
+      "d": "Attendance, performance, payment and dues statements."
+    },
+    {
+      "p": "5",
+      "s": "planned",
+      "a": "Learning",
+      "t": "Student and teacher dashboards",
+      "d": "Next class with Join button, today's timetable, attendance %, dues, unread messages."
+    },
+    {
+      "p": "6",
+      "s": "planned",
+      "a": "Messaging",
+      "t": "1-to-1 chat",
+      "d": "Student ↔ teacher/staff, staff ↔ staff across branches; no student-to-student DMs."
+    },
+    {
+      "p": "6",
+      "s": "planned",
+      "a": "Messaging",
+      "t": "Batch groups and staff groups",
+      "d": "Auto group per batch (can be announcements-only); staff create their own groups."
+    },
+    {
+      "p": "6",
+      "s": "planned",
+      "a": "Messaging",
+      "t": "Files, replies, read receipts, search",
+      "d": "Everything you'd expect from Teams-style chat."
+    },
+    {
+      "p": "6",
+      "s": "planned",
+      "a": "Messaging",
+      "t": "Announcements",
+      "d": "Head office → branches, Branch Admin → branch or batches, with read counts."
+    },
+    {
+      "p": "6",
+      "s": "planned",
+      "a": "Messaging",
+      "t": "Chat moderation",
+      "d": "Admins review chats with students and hide messages, with a reason; audited."
+    },
+    {
+      "p": "6",
+      "s": "planned",
+      "a": "Meetings",
+      "t": "Staff meetings",
+      "d": "Instant or scheduled meetings for staff, and calls started from a chat."
+    },
+    {
+      "p": "7",
+      "s": "planned",
+      "a": "Accounts",
+      "t": "Course and branch fees",
+      "d": "Default fee from head office, branch prices, Head of Accounts can lock them."
+    },
+    {
+      "p": "7",
+      "s": "planned",
+      "a": "Accounts",
+      "t": "Fee plans and instalments",
+      "d": "Per enrolment; discounts above 10% need Head of Accounts approval."
+    },
+    {
+      "p": "7",
+      "s": "planned",
+      "a": "Accounts",
+      "t": "Record a payment and receipt PDF",
+      "d": "Cash, UPI, bank, card, cheque, DD; receipt number never repeats or skips; emailed to student."
+    },
+    {
+      "p": "7",
+      "s": "planned",
+      "a": "Accounts",
+      "t": "Voids, refunds and approvals",
+      "d": "Payments are never edited; voids need approval; everything audited."
+    },
+    {
+      "p": "7",
+      "s": "planned",
+      "a": "Accounts",
+      "t": "Dues and reminders",
+      "d": "Due soon, due today, overdue; automatic and one-click reminders."
+    },
+    {
+      "p": "7",
+      "s": "planned",
+      "a": "Accounts",
+      "t": "Sales and collections reports",
+      "d": "By branch, course, batch, date, method; day-close report; Excel export."
+    },
+    {
+      "p": "8",
+      "s": "planned",
+      "a": "Notifications",
+      "t": "Notification centre and web push",
+      "d": "Bell icon, browser push, preferences per person."
+    },
+    {
+      "p": "8",
+      "s": "planned",
+      "a": "Notifications",
+      "t": "Email provider",
+      "d": "Welcome, password, class changes, receipts, project and ticket emails.",
+      "w": "Choose an email service (D9)."
+    },
+    {
+      "p": "8",
+      "s": "planned",
+      "a": "Notifications",
+      "t": "SMS with our gateway",
+      "d": "OTP, class changes, fee reminders, receipts with DLT templates.",
+      "w": "DLT template IDs and wording for each SMS (D10)."
+    },
+    {
+      "p": "8",
+      "s": "planned",
+      "a": "Notifications",
+      "t": "All 19 notifications N1–N19",
+      "d": "Right people, right channels, editable wording."
+    },
+    {
+      "p": "8",
+      "s": "planned",
+      "a": "Help desk",
+      "t": "Help desk tickets",
+      "d": "Raise, reply, statuses, reopen within 7 days, attachments."
+    },
+    {
+      "p": "8",
+      "s": "planned",
+      "a": "Help desk",
+      "t": "SLA and escalation",
+      "d": "First reply within 1 business day; escalate to Help Desk Admin after 3."
+    },
+    {
+      "p": "9",
+      "s": "planned",
+      "a": "Monitoring",
+      "t": "Network dashboard",
+      "d": "All 7 KPIs, branch ranking, red/amber/green, trends."
+    },
+    {
+      "p": "9",
+      "s": "planned",
+      "a": "Monitoring",
+      "t": "Branch drill-down",
+      "d": "KPIs per batch and per teacher."
+    },
+    {
+      "p": "9",
+      "s": "planned",
+      "a": "Monitoring",
+      "t": "Live-now monitor",
+      "d": "Classes running, students in class, classes that should have started."
+    },
+    {
+      "p": "9",
+      "s": "planned",
+      "a": "Monitoring",
+      "t": "Exports and weekly summary email",
+      "d": "Every table to Excel; weekly email to Super Admin and Admins."
+    },
+    {
+      "p": "10",
+      "s": "planned",
+      "a": "Launch",
+      "t": "Load test: 200 classes at once",
+      "d": "Simulated 200 rooms × 40 people on the live-class servers."
+    },
+    {
+      "p": "10",
+      "s": "planned",
+      "a": "Launch",
+      "t": "Security review",
+      "d": "Every role and branch wall re-checked; dependency and configuration review."
+    },
+    {
+      "p": "10",
+      "s": "planned",
+      "a": "Launch",
+      "t": "India hosting and backups",
+      "d": "Servers, database, files and recordings in Mumbai; daily backups.",
+      "w": "Hosting budget approval (D7)."
+    },
+    {
+      "p": "10",
+      "s": "planned",
+      "a": "Legal",
+      "t": "Privacy Policy, Terms, consent",
+      "d": "DPDP Act 2023 / Rules 2025; guardian consent for under-18s; data deletion requests."
+    },
+    {
+      "p": "10",
+      "s": "planned",
+      "a": "Launch",
+      "t": "Your domain and HTTPS",
+      "d": "The app at your own web address.",
+      "w": "Your domain name (D8)."
+    },
+    {
+      "p": "10",
+      "s": "planned",
+      "a": "Launch",
+      "t": "GitHub and production protection",
+      "d": "Online copy of the code; production only changes through reviewed merges.",
+      "w": "Your GitHub repository link (D11)."
+    },
+    {
+      "p": "10",
+      "s": "planned",
+      "a": "Your task",
+      "t": "Your acceptance test and go-live",
+      "d": "Click through every screen with the PRD checklist and sign off.",
+      "w": "Your sign-off."
+    }
   ],
   "screens": [
-    ["P1", "Login", "Public", "0"], ["P2", "Forgot / reset password", "Public", "0"], ["P3", "First-login set password + consent", "Public", "0"], ["P4", "Privacy Policy", "Public", "10"], ["P5", "Terms", "Public", "10"],
-    ["AD1", "Network dashboard (KPIs)", "Super Admin / Admin", "9"], ["AD2", "Live-now monitor", "Super Admin / Admin", "9"], ["AD3", "Branches", "Super Admin / Admin", "1"], ["AD4", "Branch detail & performance", "Super Admin / Admin", "9"], ["AD5", "Admins & module access", "Super Admin / Admin", "1"], ["AD6", "Course catalogue", "Super Admin / Admin", "2"], ["AD7", "Course requests", "Super Admin / Admin", "2"], ["AD8", "All batches", "Super Admin / Admin", "2"], ["AD9", "All employees", "Super Admin / Admin", "1"], ["AD10", "All students", "Super Admin / Admin", "1"], ["AD11", "Department & designation templates", "Super Admin / Admin", "1"], ["AD12", "Recordings (all)", "Super Admin / Admin", "4"], ["AD13", "Announcements", "Super Admin / Admin", "6"], ["AD14", "Chat moderation", "Super Admin / Admin", "6"], ["AD15", "Help desk (all)", "Super Admin / Admin", "8"], ["AD16", "Reports & exports", "Super Admin / Admin", "9"], ["AD17", "Settings", "Super Admin / Admin", "1"], ["AD18", "Holidays", "Super Admin / Admin", "1"], ["AD19", "Audit log", "Super Admin / Admin", "1"], ["AD20", "Data deletion requests", "Super Admin / Admin", "10"],
-    ["AC1", "Accounts dashboard", "Accounts", "7"], ["AC2", "Course & branch fees", "Accounts", "7"], ["AC3", "Student fee ledger", "Accounts", "7"], ["AC4", "Record payment", "Accounts", "7"], ["AC5", "Receipts", "Accounts", "7"], ["AC6", "Dues & reminders", "Accounts", "7"], ["AC7", "Collections & sales reports", "Accounts", "7"], ["AC8", "Approvals (voids, discounts)", "Accounts", "7"], ["AC9", "Day-close report", "Accounts", "7"],
-    ["BA1", "Branch dashboard", "Branch Admin", "9"], ["BA2", "Departments & designations", "Branch Admin", "1"], ["BA3", "Employees (+ bulk import)", "Branch Admin", "1"], ["BA4", "Students (+ bulk import)", "Branch Admin", "1"], ["BA5", "Enrolments", "Branch Admin", "2"], ["BA6", "Batches & sessions", "Branch Admin", "2"], ["BA7", "Branch timetable", "Branch Admin", "2"], ["BA8", "Rooms", "Branch Admin", "1"], ["BA9", "Course requests", "Branch Admin", "2"], ["BA10", "Project approvals", "Branch Admin", "5"], ["BA11", "Attendance overview & escalations", "Branch Admin", "4"], ["BA12", "Recordings (branch)", "Branch Admin", "4"], ["BA13", "Help desk", "Branch Admin", "8"], ["BA14", "Branch reports", "Branch Admin", "9"],
-    ["T1", "Dashboard (today)", "Teacher", "5"], ["T2", "My batches", "Teacher", "2"], ["T3", "Batch detail", "Teacher", "2"], ["T4", "Session detail (attendance, performance)", "Teacher", "4"], ["T5", "Attendance requests", "Teacher", "4"], ["T6", "Materials", "Teacher", "5"], ["T7", "Feedback", "Teacher", "5"], ["T8", "Project reviews", "Teacher", "5"], ["T9", "My timetable", "Teacher", "2"],
-    ["S1", "Dashboard", "Student", "5"], ["S2", "My courses", "Student", "2"], ["S3", "Course / batch page", "Student", "2"], ["S4", "Timetable", "Student", "2"], ["S5", "Attendance & requests", "Student", "4"], ["S6", "Performance & feedback", "Student", "5"], ["S7", "Payments & dues", "Student", "7"], ["S8", "Final project", "Student", "5"], ["S9", "Help desk", "Student", "8"], ["S10", "Profile & privacy", "Student", "1"],
-    ["C1", "Messages", "Everyone", "6"], ["C2", "Notification centre", "Everyone", "8"], ["C3", "Pre-join check", "Everyone", "3"], ["C4", "Live class room", "Everyone", "3"], ["C5", "Recording player", "Everyone", "4"], ["C6", "Staff meetings", "Staff", "6"], ["C7", "My profile & password", "Everyone", "0"]
+    [
+      "P1",
+      "Login",
+      "Public",
+      "0"
+    ],
+    [
+      "P2",
+      "Forgot / reset password",
+      "Public",
+      "0"
+    ],
+    [
+      "P3",
+      "First-login set password + consent",
+      "Public",
+      "0"
+    ],
+    [
+      "P4",
+      "Privacy Policy",
+      "Public",
+      "10"
+    ],
+    [
+      "P5",
+      "Terms",
+      "Public",
+      "10"
+    ],
+    [
+      "AD1",
+      "Network dashboard (KPIs)",
+      "Super Admin / Admin",
+      "9"
+    ],
+    [
+      "AD2",
+      "Live-now monitor",
+      "Super Admin / Admin",
+      "9"
+    ],
+    [
+      "AD3",
+      "Branches",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD4",
+      "Branch detail & performance",
+      "Super Admin / Admin",
+      "9"
+    ],
+    [
+      "AD5",
+      "Admins & module access",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD6",
+      "Course catalogue",
+      "Super Admin / Admin",
+      "2"
+    ],
+    [
+      "AD7",
+      "Course requests",
+      "Super Admin / Admin",
+      "2"
+    ],
+    [
+      "AD8",
+      "All batches",
+      "Super Admin / Admin",
+      "2"
+    ],
+    [
+      "AD9",
+      "All employees",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD10",
+      "All students",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD11",
+      "Department & designation templates",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD12",
+      "Recordings (all)",
+      "Super Admin / Admin",
+      "4"
+    ],
+    [
+      "AD13",
+      "Announcements",
+      "Super Admin / Admin",
+      "6"
+    ],
+    [
+      "AD14",
+      "Chat moderation",
+      "Super Admin / Admin",
+      "6"
+    ],
+    [
+      "AD15",
+      "Help desk (all)",
+      "Super Admin / Admin",
+      "8"
+    ],
+    [
+      "AD16",
+      "Reports & exports",
+      "Super Admin / Admin",
+      "9"
+    ],
+    [
+      "AD17",
+      "Settings",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD18",
+      "Holidays",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD19",
+      "Audit log",
+      "Super Admin / Admin",
+      "1"
+    ],
+    [
+      "AD20",
+      "Data deletion requests",
+      "Super Admin / Admin",
+      "10"
+    ],
+    [
+      "AC1",
+      "Accounts dashboard",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC2",
+      "Course & branch fees",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC3",
+      "Student fee ledger",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC4",
+      "Record payment",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC5",
+      "Receipts",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC6",
+      "Dues & reminders",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC7",
+      "Collections & sales reports",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC8",
+      "Approvals (voids, discounts)",
+      "Accounts",
+      "7"
+    ],
+    [
+      "AC9",
+      "Day-close report",
+      "Accounts",
+      "7"
+    ],
+    [
+      "BA1",
+      "Branch dashboard",
+      "Branch Admin",
+      "9"
+    ],
+    [
+      "BA2",
+      "Departments & designations",
+      "Branch Admin",
+      "1"
+    ],
+    [
+      "BA3",
+      "Employees (+ bulk import)",
+      "Branch Admin",
+      "1"
+    ],
+    [
+      "BA4",
+      "Students (+ bulk import)",
+      "Branch Admin",
+      "1"
+    ],
+    [
+      "BA5",
+      "Enrolments",
+      "Branch Admin",
+      "2"
+    ],
+    [
+      "BA6",
+      "Batches & sessions",
+      "Branch Admin",
+      "2"
+    ],
+    [
+      "BA7",
+      "Branch timetable",
+      "Branch Admin",
+      "2"
+    ],
+    [
+      "BA8",
+      "Rooms",
+      "Branch Admin",
+      "1"
+    ],
+    [
+      "BA9",
+      "Course requests",
+      "Branch Admin",
+      "2"
+    ],
+    [
+      "BA10",
+      "Project approvals",
+      "Branch Admin",
+      "5"
+    ],
+    [
+      "BA11",
+      "Attendance overview & escalations",
+      "Branch Admin",
+      "4"
+    ],
+    [
+      "BA12",
+      "Recordings (branch)",
+      "Branch Admin",
+      "4"
+    ],
+    [
+      "BA13",
+      "Help desk",
+      "Branch Admin",
+      "8"
+    ],
+    [
+      "BA14",
+      "Branch reports",
+      "Branch Admin",
+      "9"
+    ],
+    [
+      "T1",
+      "Dashboard (today)",
+      "Teacher",
+      "5"
+    ],
+    [
+      "T2",
+      "My batches",
+      "Teacher",
+      "2"
+    ],
+    [
+      "T3",
+      "Batch detail",
+      "Teacher",
+      "2"
+    ],
+    [
+      "T4",
+      "Session detail (attendance, performance)",
+      "Teacher",
+      "4"
+    ],
+    [
+      "T5",
+      "Attendance requests",
+      "Teacher",
+      "4"
+    ],
+    [
+      "T6",
+      "Materials",
+      "Teacher",
+      "5"
+    ],
+    [
+      "T7",
+      "Feedback",
+      "Teacher",
+      "5"
+    ],
+    [
+      "T8",
+      "Project reviews",
+      "Teacher",
+      "5"
+    ],
+    [
+      "T9",
+      "My timetable",
+      "Teacher",
+      "2"
+    ],
+    [
+      "S1",
+      "Dashboard",
+      "Student",
+      "5"
+    ],
+    [
+      "S2",
+      "My courses",
+      "Student",
+      "2"
+    ],
+    [
+      "S3",
+      "Course / batch page",
+      "Student",
+      "2"
+    ],
+    [
+      "S4",
+      "Timetable",
+      "Student",
+      "2"
+    ],
+    [
+      "S5",
+      "Attendance & requests",
+      "Student",
+      "4"
+    ],
+    [
+      "S6",
+      "Performance & feedback",
+      "Student",
+      "5"
+    ],
+    [
+      "S7",
+      "Payments & dues",
+      "Student",
+      "7"
+    ],
+    [
+      "S8",
+      "Final project",
+      "Student",
+      "5"
+    ],
+    [
+      "S9",
+      "Help desk",
+      "Student",
+      "8"
+    ],
+    [
+      "S10",
+      "Profile & privacy",
+      "Student",
+      "1"
+    ],
+    [
+      "C1",
+      "Messages",
+      "Everyone",
+      "6"
+    ],
+    [
+      "C2",
+      "Notification centre",
+      "Everyone",
+      "8"
+    ],
+    [
+      "C3",
+      "Pre-join check",
+      "Everyone",
+      "3"
+    ],
+    [
+      "C4",
+      "Live class room",
+      "Everyone",
+      "3"
+    ],
+    [
+      "C5",
+      "Recording player",
+      "Everyone",
+      "4"
+    ],
+    [
+      "C6",
+      "Staff meetings",
+      "Staff",
+      "6"
+    ],
+    [
+      "C7",
+      "My profile & password",
+      "Everyone",
+      "0"
+    ]
   ],
   "decisions": [
-    { "id": "D1", "text": "Product name, logo and brand colours", "default": "\"Campus Connect\" placeholder, neutral colours", "state": "needed" },
-    { "id": "D2", "text": "Attendance rules: Present at 75% of class time, Late after 10 min, 2-minute check-in", "default": "As stated", "state": "confirm" },
-    { "id": "D3", "text": "Recordings kept 180 days, no download, viewer-name watermark", "default": "As stated", "state": "confirm" },
-    { "id": "D4", "text": "Discounts above 10% need Head of Accounts approval", "default": "10%", "state": "confirm" },
-    { "id": "D5", "text": "Teachers see average ratings only, not who rated them", "default": "Averages only", "state": "confirm" },
-    { "id": "D6", "text": "Do we have students under 18? (guardian consent under the DPDP Act)", "default": "Assume yes: guardian consent checkbox", "state": "needed" },
-    { "id": "D7", "text": "Monthly hosting budget for live video and recording servers (200 classes)", "default": "Self-hosted in AWS Mumbai; estimate given in Phase 10", "state": "needed" },
-    { "id": "D8", "text": "Domain name for the app", "default": "Needed before Phase 10", "state": "needed" },
-    { "id": "D9", "text": "Email sending service", "default": "Chosen in Phase 8 (e.g. Amazon SES)", "state": "needed" },
-    { "id": "D10", "text": "Reuse our existing SMS gateway account and DLT templates", "default": "Yes", "state": "confirm" },
-    { "id": "D11", "text": "GitHub repository for the code", "default": "Needed before Phase 10", "state": "needed" },
-    { "id": "D12", "text": "A Linux test server so real class recordings can be tested", "default": "Needed by Phase 4; dev uses a sample recording until then", "state": "needed" },
-    { "id": "T1", "text": "Technology: React web app, Node.js (NestJS) server, PostgreSQL database, self-hosted LiveKit for live video", "default": "Decided (CLAUDE.md §3)", "state": "done" },
-    { "id": "T2", "text": "Working modes: say \"supervised\" (stop after each phase) or \"unsupervised\" (build phase after phase, test everything, stop only for things only you can give)", "default": "Supervised until you say otherwise", "state": "done" }
+    {
+      "id": "D1",
+      "text": "Product name, logo and brand colours",
+      "default": "\"Campus Connect\" name, teal and amber colours (change any time in Settings)",
+      "state": "done"
+    },
+    {
+      "id": "D2",
+      "text": "Attendance rules: Present at 75% of class time, Late after 10 min, 2-minute check-in",
+      "default": "As stated",
+      "state": "done"
+    },
+    {
+      "id": "D3",
+      "text": "Recordings kept 180 days, no download, viewer-name watermark",
+      "default": "As stated",
+      "state": "done"
+    },
+    {
+      "id": "D4",
+      "text": "Discounts above 10% need Head of Accounts approval",
+      "default": "10%",
+      "state": "done"
+    },
+    {
+      "id": "D5",
+      "text": "Teachers see average ratings only, not who rated them",
+      "default": "Averages only",
+      "state": "done"
+    },
+    {
+      "id": "D6",
+      "text": "Do we have students under 18? (guardian consent under the DPDP Act)",
+      "default": "Guardian consent checkbox for students under 18",
+      "state": "done"
+    },
+    {
+      "id": "D7",
+      "text": "Monthly hosting budget for live video and recording servers (200 classes)",
+      "default": "Self-hosted in AWS Mumbai; cost estimate given in Phase 10",
+      "state": "needed"
+    },
+    {
+      "id": "D8",
+      "text": "Domain name for the app",
+      "default": "Needed before Phase 10",
+      "state": "needed"
+    },
+    {
+      "id": "D9",
+      "text": "Email sending service",
+      "default": "Amazon SES (account needed only at launch, Phase 10)",
+      "state": "done"
+    },
+    {
+      "id": "D10",
+      "text": "Reuse our existing SMS gateway account and DLT templates",
+      "default": "Yes",
+      "state": "done"
+    },
+    {
+      "id": "D11",
+      "text": "GitHub repository for the code",
+      "default": "Needed before Phase 10",
+      "state": "needed"
+    },
+    {
+      "id": "D12",
+      "text": "A Linux test server so real class recordings can be tested",
+      "default": "Until then recordings are tested with a sample video",
+      "state": "needed"
+    },
+    {
+      "id": "T1",
+      "text": "Technology: React web app, Node.js (NestJS) server, PostgreSQL database, self-hosted LiveKit for live video",
+      "default": "Decided (CLAUDE.md §3)",
+      "state": "done"
+    },
+    {
+      "id": "T2",
+      "text": "Working modes: say \"supervised\" (stop after each phase) or \"unsupervised\" (build phase after phase, test everything, stop only for things only you can give)",
+      "default": "Supervised until you say otherwise",
+      "state": "done"
+    }
   ]
 }
