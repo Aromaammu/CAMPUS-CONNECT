@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.*
+!.env.example
+.data/
+tools/bin/
+uploads/
+recordings/
+docs/walkthrough/
+playwright-report/
+test-results/
+*.log
+tools/project-hub/project-hub.html

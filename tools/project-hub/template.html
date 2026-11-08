@@ -1,0 +1,484 @@
+<title>Campus Connect Project Hub</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  /* Layout: deep-teal header band with progress strip, sticky tab bar, then one view at a time (overview, board, phases, screens, decisions, code) */
+  :root {
+    --bg: #F3F6F6;
+    --surface: #FFFFFF;
+    --surface-2: #E8EEEF;
+    --fg: #14262B;
+    --muted: #566B71;
+    --line: #D3DEE0;
+    --band: #0E3B47;
+    --band-fg: #FFFFFF;
+    --band-muted: #A9C7CE;
+    --accent: #C77C12;
+    --accent-soft: #FBEFD9;
+    --ok: #17784A; --ok-soft: #DFF2E7;
+    --test: #8C5A00; --test-soft: #FFF2D2;
+    --dev: #1D63B8; --dev-soft: #E1ECFA;
+    --todo: #3D5560; --todo-soft: #E2EAEC;
+    --plan: #6E6A8A; --plan-soft: #ECEAF4;
+    --wait: #B2302F; --wait-soft: #FCE6E5;
+    --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+    --font-body: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1619; --surface: #122126; --surface-2: #192C32; --fg: #E4EEF0; --muted: #94ABB1; --line: #263D44;
+      --band: #071F26; --band-fg: #FFFFFF; --band-muted: #8FB3BB; --accent: #F0A53A; --accent-soft: #3A2A10;
+      --ok: #62D39A; --ok-soft: #12301F; --test: #F2C14E; --test-soft: #352A0F; --dev: #7DB2FF; --dev-soft: #16294A;
+      --todo: #A8C0C8; --todo-soft: #1C2F35; --plan: #B9B2E6; --plan-soft: #25233A; --wait: #FF8E8A; --wait-soft: #3D1C1E; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1619; --surface: #122126; --surface-2: #192C32; --fg: #E4EEF0; --muted: #94ABB1; --line: #263D44;
+    --band: #071F26; --band-fg: #FFFFFF; --band-muted: #8FB3BB; --accent: #F0A53A; --accent-soft: #3A2A10;
+    --ok: #62D39A; --ok-soft: #12301F; --test: #F2C14E; --test-soft: #352A0F; --dev: #7DB2FF; --dev-soft: #16294A;
+    --todo: #A8C0C8; --todo-soft: #1C2F35; --plan: #B9B2E6; --plan-soft: #25233A; --wait: #FF8E8A; --wait-soft: #3D1C1E; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+  h1, h2, h3, h4 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.25; }
+  .wrap { max-width: 1260px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .mono { font-family: var(--font-mono); font-size: 12.5px; }
+
+  .band { background: var(--band); color: var(--band-fg); }
+  .band .wrap { padding-block: 26px 22px; display: grid; gap: 18px; }
+  .band-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; }
+  .brand { font: 700 25px var(--font-display); letter-spacing: -0.01em; }
+  .brand small { font: 500 15px var(--font-body); color: var(--band-muted); margin-left: 8px; }
+  .band-sub { color: var(--band-muted); font-size: 14.5px; max-width: 70ch; margin-top: 4px; }
+  .band-meta { font-size: 12px; color: var(--band-muted); text-transform: uppercase; letter-spacing: 0.08em; display: grid; gap: 4px; justify-items: end; }
+  .mode { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--accent); color: #1B1405; font-weight: 700; letter-spacing: 0.06em; }
+  .progress { display: grid; gap: 8px; }
+  .progress-row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13.5px; color: var(--band-muted); }
+  .progress-row b { color: var(--band-fg); }
+  .progress-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,0.12); }
+  .progress-bar span { display: block; height: 100%; }
+
+  .tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--band); }
+  .tabs .wrap { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  .tab { font: 600 14.5px var(--font-body); color: var(--muted); padding: 13px 14px 11px; border-bottom: 3px solid transparent; white-space: nowrap; text-decoration: none; }
+  .tab:hover { color: var(--fg); }
+  .tab[aria-current="page"] { color: var(--fg); border-bottom-color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  main .wrap { padding-block: 24px 56px; }
+  .view { display: grid; gap: 22px; }
+  .section-title { font-size: 19px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+  .section-title small { font: 400 14px var(--font-body); color: var(--muted); }
+  .eyebrow { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 700; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; min-width: 0; }
+  .panel h3 { font-size: 15.5px; margin-bottom: 10px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+  .stat b { display: block; font: 700 24px var(--font-display); font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 13px; color: var(--muted); }
+  dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; font-size: 14.5px; }
+  dl.facts dt { color: var(--muted); }
+  dl.facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  ul.clean { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14.5px; }
+  .tree { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; background: var(--surface-2); border-radius: 8px; padding: 12px 14px; overflow-x: auto; white-space: pre; margin: 0; }
+  .note { font-size: 13.5px; color: var(--muted); }
+
+  .phase-strip { display: grid; gap: 8px; }
+  .phase-line { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+  .phase-line:hover { border-color: var(--accent); }
+  .phase-num { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font: 700 13px var(--font-display); background: var(--surface-2); }
+  .phase-num.done { background: var(--ok-soft); color: var(--ok); }
+  .phase-num.next { background: var(--accent-soft); color: var(--accent); }
+  .phase-line .t { font-weight: 700; }
+  .phase-line .d { font-size: 13px; color: var(--muted); }
+  .phase-right { display: grid; justify-items: end; gap: 4px; }
+  .mini-bar { width: 110px; height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; display: flex; }
+  .mini-bar span { height: 100%; }
+  .mini-label { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .s-planned { color: var(--plan); background: var(--plan-soft); }
+  .s-notstarted { color: var(--todo); background: var(--todo-soft); }
+  .s-dev { color: var(--dev); background: var(--dev-soft); }
+  .s-test { color: var(--test); background: var(--test-soft); }
+  .s-done { color: var(--ok); background: var(--ok-soft); }
+  .s-needed { color: var(--wait); background: var(--wait-soft); }
+  .s-confirm { color: var(--test); background: var(--test-soft); }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: 600 13px var(--font-body); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+  .chip:hover { border-color: var(--accent); }
+  .chip[aria-pressed="true"] { background: var(--band); border-color: var(--band); color: var(--band-fg); }
+  .field { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; font-size: 14px; min-width: 0; }
+  input.field { flex: 1 1 220px; max-width: 340px; }
+  .check { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+
+  .board-scroll { overflow-x: auto; padding-bottom: 6px; }
+  .board { display: grid; grid-template-columns: repeat(5, minmax(230px, 1fr)); gap: 12px; min-width: 1180px; }
+  .col { background: var(--surface-2); border-radius: var(--radius); padding: 10px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .col-head { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 0; }
+  .col-head b { font: 700 14px var(--font-display); }
+  .count { font-size: 12px; font-weight: 700; color: var(--muted); background: var(--surface); border-radius: 999px; padding: 1px 8px; font-variant-numeric: tabular-nums; }
+  .col-note { font-size: 12px; color: var(--muted); padding: 0 4px 4px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; display: grid; gap: 6px; min-width: 0; }
+  .card h4 { font: 700 14px var(--font-body); line-height: 1.35; }
+  .card p { margin: 0; font-size: 13px; color: var(--muted); }
+  .meta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+  .tag { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 5px; background: var(--surface-2); color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .tag.phase { background: var(--todo-soft); color: var(--todo); }
+  .waiting { font-size: 12.5px; color: var(--wait); background: var(--wait-soft); border-radius: 6px; padding: 5px 8px; }
+  .empty { font-size: 13px; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; padding: 14px; text-align: center; background: var(--surface); }
+
+  .phase-block { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .phase-block header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .phase-block header .t { display: flex; align-items: center; gap: 12px; }
+  .phase-block h3 { font-size: 16px; }
+  .phase-block .checkline { font-size: 13.5px; color: var(--muted); padding: 10px 18px 0; }
+  .phase-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 10px; padding: 14px 18px 18px; }
+
+  .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); background: var(--surface-2); font-weight: 700; }
+  tr:last-child td { border-bottom: 0; }
+  td .sub { display: block; font-size: 12.5px; color: var(--muted); }
+  @media (prefers-reduced-motion: no-preference) { .card, .chip, .phase-line { transition: border-color .15s, background .15s; } }
+</style>
+
+<header class="band">
+  <div class="wrap">
+    <div class="band-top">
+      <div>
+        <div class="brand" id="brand"></div>
+        <div class="band-sub" id="tagline"></div>
+      </div>
+      <div class="band-meta"><span id="mode"></span><span id="updated"></span></div>
+    </div>
+    <div class="progress" aria-label="Overall progress">
+      <div class="progress-row"><span id="progress-label"></span><span id="progress-phases"></span></div>
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Views">
+  <div class="wrap">
+    <a class="tab" href="#overview" data-view="overview">Overview</a>
+    <a class="tab" href="#board" data-view="board">Board</a>
+    <a class="tab" href="#phases" data-view="phases">By phase</a>
+    <a class="tab" href="#screens" data-view="screens">Screens</a>
+    <a class="tab" href="#decisions" data-view="decisions">Decisions</a>
+    <a class="tab" href="#code" data-view="code">Code</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <section class="view" id="view-overview">
+      <h2 class="section-title">Overview <small id="headline"></small></h2>
+      <div class="stats" id="stats"></div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>The product</h3>
+          <p style="margin:0 0 10px">Our own live-class and messaging platform for the institute and its franchise branches. Head office controls every branch. Teachers run classes inside the app with automatic attendance, recordings, chat, polls and a whiteboard. Students see their courses, timetable, attendance, performance, fees and final project.</p>
+          <dl class="facts">
+            <dt>Size</dt><dd>70+ branches · 200 live classes at once · 30+ students per class</dd>
+            <dt>Class types</dt><dd>Online, offline and hybrid</dd>
+            <dt>Platform</dt><dd>Web app only (laptop, tablet, phone browser) · India</dd>
+            <dt>Fees</dt><dd>Recorded by hand (no online payments in v1)</dd>
+            <dt>Messages</dt><dd>In-app, web push, email, SMS</dd>
+          </dl>
+        </div>
+        <div class="panel">
+          <h3>Who controls what</h3>
+<pre class="tree">Super Admin (Director)
+ └ Admins: one or more modules, all branches
+   (Academics · People · Accounts · Monitoring
+    Communication · Help Desk · Settings)
+   └ Branches (70+)
+     └ Branch Admin: own branch only
+       └ Departments → Designations → Employees
+         (Teachers · Accountants · Staff)
+         └ Students</pre>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Build phases</h3>
+          <div class="phase-strip" id="phase-strip"></div>
+        </div>
+        <div class="panel">
+          <h3>How I work</h3>
+          <ul class="clean">
+            <li><b>Supervised:</b> I finish one phase, test it, and stop with a "what to check" list for you.</li>
+            <li><b>Unsupervised:</b> I go phase after phase on my own. Every card is tested (unit, server and headless browser tests plus a screen walkthrough) before it moves to Completed. I only pause for things only you can give.</li>
+            <li>Say <b>"supervised"</b> or <b>"unsupervised"</b> at any time to switch.</li>
+            <li>"Ready for test" means it is built and passes my tests, and now needs you (or something from you).</li>
+          </ul>
+          <h3 style="margin-top:16px">How work is saved</h3>
+          <ul class="clean">
+            <li>Two branches: <b>development</b> for all work, <b>production</b> for the live app.</li>
+            <li>A checkpoint is saved before every phase.</li>
+            <li>Production only changes by merging development after a review, when you say so.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-board" hidden>
+      <h2 class="section-title">Board <small>Every piece of work as a card, by status</small></h2>
+      <div class="chips" id="phase-chips" role="group" aria-label="Filter by phase"></div>
+      <div class="filters">
+        <label class="eyebrow" for="area-filter">Area</label>
+        <select class="field" id="area-filter"><option value="all">All areas</option></select>
+        <input class="field" id="search" type="search" placeholder="Search cards, e.g. attendance, receipt" aria-label="Search cards">
+        <label class="check"><input type="checkbox" id="wait-only"> Waiting on you only</label>
+        <span class="note" id="board-count"></span>
+      </div>
+      <div class="board-scroll"><div class="board" id="board"></div></div>
+      <p class="note">On a phone, scroll sideways to see all five columns.</p>
+    </section>
+
+    <section class="view" id="view-phases" hidden>
+      <h2 class="section-title">By phase <small>Each phase with its cards and what you check at the end</small></h2>
+      <div id="phase-list" class="view"></div>
+    </section>
+
+    <section class="view" id="view-screens" hidden>
+      <h2 class="section-title">Screens <small>Every screen in PRD §19 and the phase that builds it</small></h2>
+      <div class="chips" id="screen-chips" role="group" aria-label="Filter by role"></div>
+      <div class="table-wrap"><table id="screens-table"></table></div>
+    </section>
+
+    <section class="view" id="view-decisions" hidden>
+      <h2 class="section-title">Decisions <small>Choices made for you and things only you can provide</small></h2>
+      <div class="table-wrap"><table id="decisions-table"></table></div>
+      <p class="note">Reply in chat with the codes you want to confirm or change, e.g. "D2 approved, D4 use 15%".</p>
+    </section>
+
+    <section class="view" id="view-code" hidden>
+      <h2 class="section-title">Code <small>What is saved on development, what is live on production</small></h2>
+      <div class="stats" id="code-stats"></div>
+      <div class="grid-2">
+        <div class="panel"><h3>Branches</h3><dl class="facts" id="code-branches"></dl></div>
+        <div class="panel"><h3>Phase checkpoints</h3><div id="code-checkpoints"></div></div>
+      </div>
+      <div><h3 class="section-title" style="font-size:16px;margin-bottom:10px">Latest changes on development</h3><div class="table-wrap"><table id="code-recent"></table></div></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  const HUB = /*__HUB_DATA__*/null;
+
+  const STATUSES = [
+    { id: 'planned', label: 'Planned', note: 'Scheduled for a later phase', color: 'var(--plan)' },
+    { id: 'notstarted', label: 'Not started', note: 'Next up', color: 'var(--todo)' },
+    { id: 'dev', label: 'In development', note: 'Being built right now', color: 'var(--dev)' },
+    { id: 'test', label: 'Ready for test', note: 'Built and tested by me; needs you', color: 'var(--test)' },
+    { id: 'done', label: 'Completed', note: 'Built, all tests passing, saved', color: 'var(--ok)' },
+  ];
+  const STATUS = Object.fromEntries(STATUSES.map((s) => [s.id, s]));
+  const PHASE = Object.fromEntries(HUB.phases.map((p) => [p.id, p]));
+  const phaseLabel = (id) => (id === 'x' ? 'Planning' : 'Phase ' + id);
+
+  const el = (tag, attrs = {}, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+      else if (v !== false && v != null) n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(kid));
+    return n;
+  };
+  const pill = (s, label) => el('span', { class: 'pill s-' + s, text: label || (STATUS[s] ? STATUS[s].label : s) });
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('cc-hub:' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('cc-hub:' + k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } },
+  };
+  const fmtDate = (iso) => { if (!iso) return ''; const [y, m, d] = iso.slice(0, 10).split('-'); return d + '-' + m + '-' + y; };
+
+  function phaseStatus(id) {
+    const cards = HUB.cards.filter((c) => c.p === id);
+    if (!cards.length) return 'planned';
+    if (cards.every((c) => c.s === 'done' || (c.s === 'test' && c.w))) return 'done';
+    if (cards.some((c) => c.s === 'dev')) return 'dev';
+    if (cards.some((c) => c.s === 'test')) return 'test';
+    if (cards.every((c) => c.s === 'planned')) return 'planned';
+    return 'notstarted';
+  }
+  function segBar(cards, cls) {
+    const bar = el('div', { class: cls });
+    STATUSES.slice().reverse().forEach((s) => {
+      const n = cards.filter((c) => c.s === s.id).length;
+      if (n) bar.append(el('span', { style: 'width:' + (n / cards.length) * 100 + '%;background:' + s.color, title: s.label + ': ' + n }));
+    });
+    return bar;
+  }
+
+  // Header
+  document.getElementById('brand').replaceChildren(HUB.product, el('small', { text: 'Project Hub' }));
+  document.getElementById('tagline').textContent = HUB.tagline;
+  document.getElementById('mode').replaceChildren(el('span', { class: 'mode', text: (HUB.mode || 'supervised').toUpperCase() + ' MODE' }));
+  document.getElementById('updated').textContent = 'Updated ' + fmtDate(HUB.statusDate);
+  document.getElementById('headline').textContent = HUB.headline;
+  const done = HUB.cards.filter((c) => c.s === 'done').length;
+  const phasesDone = HUB.phases.filter((p) => p.id !== 'x' && phaseStatus(p.id) === 'done').length;
+  document.getElementById('progress-label').replaceChildren(el('b', { text: done + ' of ' + HUB.cards.length }), ' items completed');
+  document.getElementById('progress-phases').textContent = phasesDone + ' of ' + HUB.phases.filter((p) => p.id !== 'x').length + ' build phases complete';
+  document.getElementById('progress-bar').replaceWith(Object.assign(segBar(HUB.cards, 'progress-bar'), { id: 'progress-bar' }));
+
+  // Overview
+  const waiting = HUB.cards.filter((c) => c.w && c.s !== 'done').length;
+  document.getElementById('stats').replaceChildren(
+    ...STATUSES.map((s) => el('div', { class: 'stat' }, el('b', { text: String(HUB.cards.filter((c) => c.s === s.id).length) }), el('span', { text: s.label }))),
+    el('div', { class: 'stat' }, el('b', { text: String(waiting) }), el('span', { text: 'Waiting on you' })),
+    el('div', { class: 'stat' }, el('b', { text: String(HUB.screens.length) }), el('span', { text: 'Screens planned' })),
+  );
+  const firstOpen = HUB.phases.find((p) => p.id !== 'x' && phaseStatus(p.id) !== 'done');
+  document.getElementById('phase-strip').replaceChildren(
+    ...HUB.phases.map((p) => {
+      const cards = HUB.cards.filter((c) => c.p === p.id);
+      const st = phaseStatus(p.id);
+      const numCls = 'phase-num' + (st === 'done' ? ' done' : firstOpen && firstOpen.id === p.id ? ' next' : '');
+      return el('button', { class: 'phase-line', type: 'button', onclick: () => openPhase(p.id) },
+        el('span', { class: numCls, text: p.id === 'x' ? '✎' : p.id }),
+        el('span', {}, el('span', { class: 't', text: p.name }), el('span', { class: 'd', style: 'display:block', text: p.summary })),
+        el('span', { class: 'phase-right' }, segBar(cards, 'mini-bar'), el('span', { class: 'mini-label', text: cards.filter((c) => c.s === 'done').length + ' / ' + cards.length })),
+      );
+    }),
+  );
+
+  // Board
+  const state = { phase: store.get('phase', 'all'), area: store.get('area', 'all'), q: '', wait: false };
+  const areas = [...new Set(HUB.cards.map((c) => c.a))].sort();
+  const areaSel = document.getElementById('area-filter');
+  areas.forEach((a) => areaSel.append(el('option', { value: a, text: a })));
+  areaSel.value = areas.includes(state.area) ? state.area : 'all';
+  areaSel.addEventListener('change', () => { state.area = areaSel.value; store.set('area', state.area); renderBoard(); });
+  document.getElementById('search').addEventListener('input', (e) => { state.q = e.target.value; renderBoard(); });
+  document.getElementById('wait-only').addEventListener('change', (e) => { state.wait = e.target.checked; renderBoard(); });
+
+  function cardEl(c, showStatus) {
+    return el('article', { class: 'card' },
+      el('div', { class: 'meta' }, el('span', { class: 'tag phase', text: phaseLabel(c.p) }), el('span', { class: 'tag', text: c.a }), showStatus ? pill(c.s) : null),
+      el('h4', { text: c.t }),
+      el('p', { text: c.d }),
+      c.w ? el('div', { class: 'waiting' }, el('b', { text: 'Waiting on you: ' }), c.w) : null,
+    );
+  }
+  function renderBoard() {
+    document.getElementById('phase-chips').replaceChildren(
+      ...[{ id: 'all', name: 'All phases' }].concat(HUB.phases).map((p) =>
+        el('button', { class: 'chip', type: 'button', 'aria-pressed': String(state.phase === p.id), onclick: () => { state.phase = p.id; store.set('phase', p.id); renderBoard(); } },
+          p.id === 'all' ? p.name : phaseLabel(p.id) + ' · ' + p.name)),
+    );
+    const q = state.q.trim().toLowerCase();
+    const list = HUB.cards.filter((c) =>
+      (state.phase === 'all' || c.p === state.phase) && (state.area === 'all' || c.a === state.area) &&
+      (!state.wait || c.w) && (!q || (c.t + ' ' + c.d + ' ' + c.a).toLowerCase().includes(q)));
+    document.getElementById('board-count').textContent = list.length + ' card' + (list.length === 1 ? '' : 's');
+    document.getElementById('board').replaceChildren(
+      ...STATUSES.map((s) => {
+        const cards = list.filter((c) => c.s === s.id);
+        return el('div', { class: 'col' },
+          el('div', { class: 'col-head' }, el('b', { text: s.label }), el('span', { class: 'count', text: String(cards.length) })),
+          el('div', { class: 'col-note', text: s.note }),
+          cards.length ? cards.map((c) => cardEl(c, false)) : el('div', { class: 'empty', text: 'Nothing here' }),
+        );
+      }),
+    );
+  }
+
+  // By phase
+  document.getElementById('phase-list').replaceChildren(
+    ...HUB.phases.map((p) => {
+      const cards = HUB.cards.filter((c) => c.p === p.id);
+      return el('section', { class: 'phase-block', id: 'phase-' + p.id },
+        el('header', {},
+          el('div', { class: 't' }, el('span', { class: 'tag phase', text: phaseLabel(p.id) }), el('h3', { text: p.name })),
+          pill(phaseStatus(p.id))),
+        el('div', { class: 'checkline' }, el('b', { text: 'You check: ' }), p.check),
+        el('div', { class: 'phase-cards' }, cards.map((c) => cardEl(c, true))),
+      );
+    }),
+  );
+  function openPhase(id) { state.phase = id; store.set('phase', id); location.hash = 'board'; }
+
+  // Screens
+  const roles = [...new Set(HUB.screens.map((s) => s[2]))];
+  let screenRole = 'all';
+  function screenStatus(phaseId) { const st = phaseStatus(phaseId); return st === 'done' ? 'done' : st === 'dev' || st === 'test' ? st : st; }
+  function renderScreens() {
+    document.getElementById('screen-chips').replaceChildren(
+      ...['all'].concat(roles).map((r) => el('button', { class: 'chip', type: 'button', 'aria-pressed': String(screenRole === r), onclick: () => { screenRole = r; renderScreens(); } }, r === 'all' ? 'All roles' : r)),
+    );
+    const rows = HUB.screens.filter((s) => screenRole === 'all' || s[2] === screenRole);
+    document.getElementById('screens-table').replaceChildren(
+      el('thead', {}, el('tr', {}, el('th', { text: 'Code' }), el('th', { text: 'Screen' }), el('th', { text: 'Used by' }), el('th', { text: 'Built in' }), el('th', { text: 'Status' }))),
+      el('tbody', {}, rows.map(([code, name, role, ph]) => el('tr', {},
+        el('td', { class: 'mono', text: code }), el('td', { text: name }), el('td', { text: role }),
+        el('td', { text: phaseLabel(ph) + ' · ' + (PHASE[ph] ? PHASE[ph].name : '') }), el('td', {}, pill(screenStatus(ph)))))),
+    );
+  }
+
+  // Decisions
+  const DSTATE = { needed: 'Needed from you', confirm: 'Please confirm', done: 'Settled' };
+  document.getElementById('decisions-table').replaceChildren(
+    el('thead', {}, el('tr', {}, el('th', { text: '#' }), el('th', { text: 'Decision' }), el('th', { text: 'What I am using now' }), el('th', { text: 'State' }))),
+    el('tbody', {}, HUB.decisions.map((d) => el('tr', {},
+      el('td', { class: 'mono', text: d.id }), el('td', { text: d.text }), el('td', { class: 'sub', text: d.default }),
+      el('td', {}, pill(d.state === 'done' ? 'done' : d.state, DSTATE[d.state]))))),
+  );
+
+  // Code
+  const g = HUB.git;
+  if (!g) {
+    document.getElementById('code-stats').replaceChildren(el('div', { class: 'empty', text: 'Git information appears after the first build.' }));
+  } else {
+    document.getElementById('code-stats').replaceChildren(
+      el('div', { class: 'stat' }, el('b', { text: String(g.totalCommits) }), el('span', { text: 'Saved changes on development' })),
+      el('div', { class: 'stat' }, el('b', { text: String(g.pendingForProduction) }), el('span', { text: 'Waiting to go to production' })),
+      el('div', { class: 'stat' }, el('b', { text: String(g.checkpoints.length) }), el('span', { text: 'Phase checkpoints' })),
+      el('div', { class: 'stat' }, el('b', { text: g.remote ? 'Yes' : 'Not yet' }), el('span', { text: 'Online copy (GitHub)' })),
+    );
+    const row = (k, v) => [el('dt', { text: k }), el('dd', {}, v)];
+    document.getElementById('code-branches').replaceChildren(
+      ...row('Development', el('span', {}, el('span', { class: 'mono', text: g.head.hash }), ' · ' + g.head.subject)),
+      ...row('Production', g.production ? el('span', {}, el('span', { class: 'mono', text: g.production.hash }), ' · ' + g.production.subject) : 'Not created yet'),
+      ...row('Online copy', g.remote ? el('span', { class: 'mono', text: g.remote }) : pill('needed', 'Waiting for your GitHub link')),
+    );
+    document.getElementById('code-checkpoints').replaceChildren(
+      g.checkpoints.length ? el('ul', { class: 'clean' }, g.checkpoints.map((c) => el('li', {}, el('span', { class: 'mono', text: c.hash }), ' ' + fmtDate(c.date) + ' · ' + c.subject)))
+        : el('p', { class: 'note', style: 'margin:0', text: 'The first checkpoint is saved when Phase 0 starts.' }),
+    );
+    document.getElementById('code-recent').replaceChildren(
+      el('thead', {}, el('tr', {}, el('th', { text: 'Change' }), el('th', { text: 'Date' }), el('th', { text: 'What changed' }))),
+      el('tbody', {}, g.recent.map((c) => el('tr', {}, el('td', { class: 'mono', text: c.hash }), el('td', { style: 'white-space:nowrap', text: fmtDate(c.date) }), el('td', { text: c.subject })))),
+    );
+  }
+
+  // Routing
+  const VIEWS = ['overview', 'board', 'phases', 'screens', 'decisions', 'code'];
+  function route() {
+    const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'overview';
+    VIEWS.forEach((x) => { document.getElementById('view-' + x).hidden = x !== v; });
+    document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-current', t.dataset.view === v ? 'page' : 'false'));
+    if (v === 'board') renderBoard();
+  }
+  renderBoard(); renderScreens();
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>
