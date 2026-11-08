@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-08",
   "mode": "unsupervised",
-  "headline": "Phases 0–2 complete. Now: Phase 3, our own live class room.",
+  "headline": "Phases 0–2 complete. Phase 3 in progress: live-class server download needs your OK.",
   "phases": [
     {
       "id": "0",
@@ -646,6 +646,14 @@
       "a": "Testing",
       "t": "Phase 2 checks: 18 academics tests + 5 browser journeys",
       "d": "Includes: two people enrolling at once can't overfill a batch, a cancelled class gets a make-up, students and other branches can't see batches that aren't theirs."
+    },
+    {
+      "p": "3",
+      "s": "test",
+      "a": "Your task",
+      "t": "Allow the live-class server download",
+      "d": "The class room runs on LiveKit, a free open-source video server. Claude's safety settings blocked downloading and running it automatically. Run \"npm run setup\" in the project folder once (or tell Claude it may), then the real video tests run.",
+      "w": "Your turn: run npm run setup once, or allow Claude to run it."
     }
   ],
   "screens": [
@@ -1164,7 +1172,7 @@
     {
       "id": "D12",
       "text": "A Linux test server so real class recordings can be tested",
-      "default": "Until then recordings are tested with a sample video",
+      "default": "Until then recordings are tested with a sample video; live video also needs the LiveKit download (see Board)",
       "state": "needed"
     },
     {

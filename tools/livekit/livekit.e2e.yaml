@@ -1,0 +1,20 @@
+# Local LiveKit server (e2e). Production config lives with the deployment (Phase 10).
+port: 7890
+bind_addresses: ["127.0.0.1"]
+rtc:
+  tcp_port: 7891
+  port_range_start: 50200
+  port_range_end: 50399
+  use_external_ip: false
+  node_ip: 127.0.0.1
+keys:
+  devkey: secret_dev_livekit_key_0123456789abcdef
+room:
+  empty_timeout: 300
+  max_participants: 150
+webhook:
+  api_key: devkey
+  urls:
+    - http://127.0.0.1:3100/api/livekit/webhook
+logging:
+  level: warn
