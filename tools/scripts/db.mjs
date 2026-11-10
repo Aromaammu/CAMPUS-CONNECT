@@ -19,6 +19,8 @@ export const DB_PORT = Number(process.env.CC_DB_PORT || 5433);
 export const DB_USER = 'cc';
 export const DB_PASSWORD = 'cc_local_dev';
 export const DATABASES = ['cc_dev', 'cc_test', 'cc_e2e'];
+/** Always Unicode, whatever the computer's language settings. */
+export const createDbSql = (name) => `CREATE DATABASE ${name} ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0`;
 export const dbUrl = (name) => `postgresql://${DB_USER}:${DB_PASSWORD}@127.0.0.1:${DB_PORT}/${name}`;
 
 export function portOpen(port, host = '127.0.0.1') {
@@ -45,7 +47,16 @@ export async function ensureDb() {
   const client = new pgPkg.Client({ connectionString: dbUrl('postgres') });
   await client.connect();
   const { rows } = await client.query('SELECT datname FROM pg_database');
-  for (const name of DATABASES) if (!rows.some((r) => r.datname === name)) await client.query(`CREATE DATABASE ${name}`);
+  for (const name of DATABASES) if (!rows.some((r) => r.datname === name)) await client.query(createDbSql(name));
+  // Databases made before 10-11-2026 used the Windows code page and could not store ₹, Indian scripts or emoji.
+  // They only ever hold demo data, so rebuild them as Unicode (the API re-seeds an empty database).
+  const { rows: enc } = await client.query("SELECT datname FROM pg_database WHERE datname = ANY($1) AND pg_encoding_to_char(encoding) <> 'UTF8'", [DATABASES]);
+  for (const { datname } of enc) {
+    console.log(`[db] rebuilding ${datname} as Unicode (UTF-8)`);
+    await client.query(`SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = $1`, [datname]);
+    await client.query(`DROP DATABASE ${datname}`);
+    await client.query(createDbSql(datname));
+  }
   await client.end();
 }
 

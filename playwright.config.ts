@@ -23,7 +23,7 @@ export default defineConfig({
     url: 'http://localhost:5174/api/public/health',
     timeout: 240_000,
     reuseExistingServer: false,
-    stdout: 'ignore',
+    stdout: process.env.PW_SERVER_LOG ? 'pipe' : 'ignore',
     stderr: 'pipe',
   },
 });
