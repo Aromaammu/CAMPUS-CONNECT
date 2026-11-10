@@ -63,6 +63,7 @@ model User {
   announcements      Announcement[]
   announcementReads  AnnouncementRead[]
   feedbackGiven      Feedback[]           @relation("FeedbackFrom")
+  projectReviews ProjectReview[] @relation("ProjectReviewer")
 }
 
 model AdminModuleGrant {
@@ -833,6 +834,7 @@ model ProjectReview {
   comment    String?
   createdAt  DateTime @default(now())
   project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reviewer   User     @relation("ProjectReviewer", fields: [reviewerId], references: [id])
 }
 
 // ───────────────────────────── Accounts ─────────────────────────────
