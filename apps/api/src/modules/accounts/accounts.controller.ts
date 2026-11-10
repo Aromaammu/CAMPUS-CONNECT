@@ -10,7 +10,6 @@ import { z } from 'zod';
 import { AuditService } from '../../common/audit.service';
 import { CurrentUser, RequirePerm, branchesFor } from '../../common/auth';
 import { Zod, clientIp } from '../../common/http';
-import { PdfService } from '../../common/pdf.service';
 import { PrismaService } from '../../common/prisma.service';
 import { SettingsService } from '../../common/settings.service';
 import { NotifyService } from '../notifications/notify.service';

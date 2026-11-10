@@ -59,16 +59,16 @@ describe('watching', () => {
   it('students of the batch watch through a private link with their name as watermark; nobody else can', async () => {
     const r = await seeded();
     const play = await (await as(DEMO.arjun)).get(`/api/recordings/${r.id}/play`);
-    expect(play.status).toBe(200);
+    expect(play.status, `student plays ${r.title}: ${JSON.stringify(play.body)}`).toBe(200);
     expect(play.body.watermark).toMatch(/Arjun Nair/);
     const video = await (await anon()).get(play.body.url).set('Range', 'bytes=0-99');
-    expect(video.status).toBe(206);
+    expect(video.status, 'video range request').toBe(206);
     expect(video.headers['content-type']).toBe('video/webm');
     expect(video.headers['content-disposition']).toMatch(/^inline/);
     for (const who of [DEMO.newStudent, DEMO.tvmAdmin, DEMO.sanjay, DEMO.accounts]) {
       expect((await (await as(who)).get(`/api/recordings/${r.id}/play`)).status, who).toBe(403);
     }
-    expect((await (await as(DEMO.anita)).get(`/api/recordings/${r.id}/play`)).status).toBe(200);
+    expect((await (await as(DEMO.anita)).get(`/api/recordings/${r.id}/play`)).status, 'teacher plays').toBe(200);
   });
 
   it('hidden recordings disappear for students but not for the branch', async () => {
