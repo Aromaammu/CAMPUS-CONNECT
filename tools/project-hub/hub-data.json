@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-11",
   "mode": "unsupervised",
-  "headline": "Phases 0–6 complete: classes, attendance, recordings, learning portal, messaging and staff meetings. Next: Phase 7 (accounts).",
+  "headline": "Phases 0–7 complete: classes, attendance, recordings, learning, messaging, meetings and accounts. Next: Phase 8 (notifications & help desk).",
   "phases": [
     {
       "id": "0",
@@ -461,56 +461,56 @@
     },
     {
       "p": "7",
-      "s": "dev",
+      "s": "done",
       "a": "Accounts",
       "t": "Course and branch fees",
       "d": "Default fee from head office, branch prices, Head of Accounts can lock them."
     },
     {
       "p": "7",
-      "s": "dev",
+      "s": "done",
       "a": "Accounts",
       "t": "Fee plans and instalments",
       "d": "Per enrolment; discounts above 10% need Head of Accounts approval."
     },
     {
       "p": "7",
-      "s": "dev",
+      "s": "done",
       "a": "Accounts",
       "t": "Record a payment and receipt PDF",
       "d": "Cash, UPI, bank, card, cheque, DD; receipt number never repeats or skips; emailed to student."
     },
     {
       "p": "7",
-      "s": "dev",
+      "s": "done",
       "a": "Accounts",
       "t": "Voids, refunds and approvals",
       "d": "Payments are never edited; voids need approval; everything audited."
     },
     {
       "p": "7",
-      "s": "dev",
+      "s": "done",
       "a": "Accounts",
       "t": "Dues and reminders",
       "d": "Due soon, due today, overdue; automatic and one-click reminders."
     },
     {
       "p": "7",
-      "s": "dev",
+      "s": "done",
       "a": "Accounts",
       "t": "Sales and collections reports",
       "d": "By branch, course, batch, date, method; day-close report; Excel export."
     },
     {
       "p": "8",
-      "s": "planned",
+      "s": "dev",
       "a": "Notifications",
       "t": "Notification centre and web push",
       "d": "Bell icon, browser push, preferences per person."
     },
     {
       "p": "8",
-      "s": "planned",
+      "s": "dev",
       "a": "Notifications",
       "t": "Email provider",
       "d": "Welcome, password, class changes, receipts, project and ticket emails.",
@@ -518,7 +518,7 @@
     },
     {
       "p": "8",
-      "s": "planned",
+      "s": "dev",
       "a": "Notifications",
       "t": "SMS with our gateway",
       "d": "OTP, class changes, fee reminders, receipts with DLT templates.",
@@ -526,21 +526,21 @@
     },
     {
       "p": "8",
-      "s": "planned",
+      "s": "dev",
       "a": "Notifications",
       "t": "All 19 notifications N1–N19",
       "d": "Right people, right channels, editable wording."
     },
     {
       "p": "8",
-      "s": "planned",
+      "s": "dev",
       "a": "Help desk",
       "t": "Help desk tickets",
       "d": "Raise, reply, statuses, reopen within 7 days, attachments."
     },
     {
       "p": "8",
-      "s": "planned",
+      "s": "dev",
       "a": "Help desk",
       "t": "SLA and escalation",
       "d": "First reply within 1 business day; escalate to Help Desk Admin after 3."
@@ -684,7 +684,7 @@
     },
     {
       "p": "7",
-      "s": "dev",
+      "s": "done",
       "a": "Accounts",
       "t": "Payment and dues statements (PDF)",
       "d": "Added to the student's reports once fees and payments exist."
@@ -702,6 +702,13 @@
       "a": "Testing",
       "t": "Phase 6 checks: 11 messaging and meeting tests + 6 browser journeys",
       "d": "Two browsers chatting live (unread badge, reply, read receipt, file), teachers-only groups, announcements with read counts, moderation, a staff meeting. Fixed: the director's greeting expectation, and meeting wording."
+    },
+    {
+      "p": "7",
+      "s": "done",
+      "a": "Testing",
+      "t": "Phase 7 checks: 10 accounts tests + 4 browser journeys",
+      "d": "Includes two people paying the last balance at the same moment (only one succeeds, no receipt number skipped), voids reversing dues, and every branch wall."
     }
   ],
   "screens": [
@@ -1323,6 +1330,30 @@
       "id": "M3",
       "text": "Calls with students",
       "default": "A teacher can start a call from a chat with a student; only the people in that chat can join. Other meetings are staff-only.",
+      "state": "done"
+    },
+    {
+      "id": "F1",
+      "text": "Receipt emails",
+      "default": "The student gets an email and SMS saying the payment was received with the receipt number; the receipt PDF is in their portal. Attaching the PDF to the email comes with the real email provider (D9).",
+      "state": "done"
+    },
+    {
+      "id": "F2",
+      "text": "Changing a fee plan",
+      "default": "Allowed only before any payment. Afterwards, use an adjustment (reduces dues) or a refund; payments are never edited, only voided with approval.",
+      "state": "done"
+    },
+    {
+      "id": "F3",
+      "text": "Rejected discount",
+      "default": "The discount is removed and its amount is added to the last instalment.",
+      "state": "done"
+    },
+    {
+      "id": "F4",
+      "text": "Automatic fee reminders",
+      "default": "Sent between 9 am and 8 pm IST: 3 days before, on the due date, then every 7 days while overdue (all in Settings).",
       "state": "done"
     }
   ]
