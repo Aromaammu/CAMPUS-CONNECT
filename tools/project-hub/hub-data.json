@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-10",
   "mode": "unsupervised",
-  "headline": "Phases 0–3 complete. The live class room works: try it from the test tools page. Next: Phase 4 (attendance, polls, whiteboard, recordings).",
+  "headline": "Phases 0–3 complete. Phase 4: attendance done (automatic, check-in, roster, requests, alerts); polls, whiteboard and recordings next.",
   "phases": [
     {
       "id": "0",
@@ -320,28 +320,28 @@
     },
     {
       "p": "4",
-      "s": "dev",
+      "s": "done",
       "a": "Attendance",
       "t": "Automatic attendance",
       "d": "Present at 75% time in class, Late after 10 minutes; reconnects counted correctly."
     },
     {
       "p": "4",
-      "s": "dev",
+      "s": "done",
       "a": "Attendance",
       "t": "\"Mark your attendance\" check-in",
       "d": "Teacher opens a 2-minute window; students tap I'm present."
     },
     {
       "p": "4",
-      "s": "dev",
+      "s": "done",
       "a": "Attendance",
       "t": "Offline and hybrid roster",
       "d": "Teacher marks the room on phone or laptop; each student marked once."
     },
     {
       "p": "4",
-      "s": "dev",
+      "s": "done",
       "a": "Attendance",
       "t": "Attendance requests",
       "d": "Student requests within 3 days; teacher approves or rejects; escalates to Branch Admin after 2 days."
@@ -667,6 +667,20 @@
       "a": "Live class",
       "t": "A practice class you can start any time",
       "d": "On the test tools page (/dev/mailbox) press \"Start the demo class now\" and try the room as teacher and student."
+    },
+    {
+      "p": "4",
+      "s": "done",
+      "a": "Attendance",
+      "t": "Low attendance alerts and Branch Admin overview",
+      "d": "Students below 75% and their Branch Admin are alerted once a week; the Attendance page shows requests waiting, attendance by batch and students below the minimum."
+    },
+    {
+      "p": "4",
+      "s": "done",
+      "a": "Testing",
+      "t": "Found and fixed: databases on this computer couldn't store ₹ or Malayalam",
+      "d": "A browser test caught it; all local databases are now Unicode, with a test that saves Malayalam, Hindi, emoji and ₹."
     }
   ],
   "screens": [
