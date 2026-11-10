@@ -2,9 +2,9 @@
   "product": "Campus Connect",
   "tagline": "Live classes, attendance, messaging and branch control for our institute and its franchise branches. Everything planned, built and waiting, in one place.",
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
-  "statusDate": "2026-11-08",
+  "statusDate": "2026-11-10",
   "mode": "unsupervised",
-  "headline": "Phases 0–2 complete. Phase 3 in progress: live-class server download needs your OK.",
+  "headline": "Phases 0–3 complete. The live class room works: try it from the test tools page. Next: Phase 4 (attendance, polls, whiteboard, recordings).",
   "phases": [
     {
       "id": "0",
@@ -271,98 +271,98 @@
     },
     {
       "p": "3",
-      "s": "dev",
+      "s": "done",
       "a": "Live class",
       "t": "Our own class server",
       "d": "Self-hosted live video server; no Zoom, Meet or Teams."
     },
     {
       "p": "3",
-      "s": "dev",
+      "s": "done",
       "a": "Live class",
       "t": "Pre-join device check",
       "d": "Test camera, mic and speaker before entering."
     },
     {
       "p": "3",
-      "s": "dev",
+      "s": "done",
       "a": "Live class",
       "t": "Video, audio and screen share",
       "d": "Gallery and speaker views; teacher can let a student share."
     },
     {
       "p": "3",
-      "s": "dev",
+      "s": "done",
       "a": "Live class",
       "t": "In-class chat, raise hand, reactions",
       "d": "Chat saved with the session; teacher can turn student chat off."
     },
     {
       "p": "3",
-      "s": "dev",
+      "s": "done",
       "a": "Live class",
       "t": "Teacher controls",
       "d": "Mute one/all, camera off, stop share, remove, lock room, allow mic/camera."
     },
     {
       "p": "3",
-      "s": "dev",
+      "s": "done",
       "a": "Live class",
       "t": "Who may enter",
       "d": "Only enrolled students, teacher, added guests and silent observers; a second device disconnects the first."
     },
     {
       "p": "3",
-      "s": "dev",
+      "s": "done",
       "a": "Live class",
       "t": "Phone browser support",
       "d": "Join and take part from Android and iPhone browsers."
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Attendance",
       "t": "Automatic attendance",
       "d": "Present at 75% time in class, Late after 10 minutes; reconnects counted correctly."
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Attendance",
       "t": "\"Mark your attendance\" check-in",
       "d": "Teacher opens a 2-minute window; students tap I'm present."
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Attendance",
       "t": "Offline and hybrid roster",
       "d": "Teacher marks the room on phone or laptop; each student marked once."
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Attendance",
       "t": "Attendance requests",
       "d": "Student requests within 3 days; teacher approves or rejects; escalates to Branch Admin after 2 days."
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Polls",
       "d": "Single or multiple choice, live results, saved with the session."
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Live class",
       "t": "Whiteboard",
       "d": "Shared drawing board; give a student the pen; save to materials."
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Recordings",
       "t": "Recording and player",
       "d": "Auto-record, batch-only access, no download, name watermark, 180-day retention.",
@@ -370,7 +370,7 @@
     },
     {
       "p": "4",
-      "s": "planned",
+      "s": "dev",
       "a": "Recordings",
       "t": "Branch recording controls",
       "d": "Rename, hide, replace, delete (recoverable 7 days), all audited."
@@ -649,11 +649,24 @@
     },
     {
       "p": "3",
-      "s": "test",
+      "s": "done",
       "a": "Your task",
       "t": "Allow the live-class server download",
-      "d": "The class room runs on LiveKit, a free open-source video server. Claude's safety settings blocked downloading and running it automatically. Run \"npm run setup\" in the project folder once (or tell Claude it may), then the real video tests run.",
-      "w": "Your turn: run npm run setup once, or allow Claude to run it."
+      "d": "The class room runs on LiveKit, a free open-source video server. Claude's safety settings blocked downloading and running it automatically. Run \"npm run setup\" in the project folder once (or tell Claude it may), then the real video tests run."
+    },
+    {
+      "p": "3",
+      "s": "done",
+      "a": "Testing",
+      "t": "Phase 3 checks: 22 class-room tests + 5 browser journeys with real video",
+      "d": "Teacher and students in separate browsers with test cameras: video, screen share, chat, raised hands, reactions, every teacher control, outsiders refused, a second device taking over, and a phone at 360 px. Found and fixed: a branch picker that showed a branch the form hadn't chosen."
+    },
+    {
+      "p": "3",
+      "s": "done",
+      "a": "Live class",
+      "t": "A practice class you can start any time",
+      "d": "On the test tools page (/dev/mailbox) press \"Start the demo class now\" and try the room as teacher and student."
     }
   ],
   "screens": [
@@ -1172,7 +1185,7 @@
     {
       "id": "D12",
       "text": "A Linux test server so real class recordings can be tested",
-      "default": "Until then recordings are tested with a sample video; live video also needs the LiveKit download (see Board)",
+      "default": "Until then recordings are tested with a sample video. Live video now runs on this computer (LiveKit installed).",
       "state": "needed"
     },
     {
@@ -1185,6 +1198,36 @@
       "id": "T2",
       "text": "Working modes: say \"supervised\" (stop after each phase) or \"unsupervised\" (build phase after phase, test everything, stop only for things only you can give)",
       "default": "Supervised until you say otherwise",
+      "state": "done"
+    },
+    {
+      "id": "L1",
+      "text": "Who can enter a class silently as an observer",
+      "default": "Admins with Academics or Monitoring, plus the Branch Admin for their own branch. Academics admins and Branch Admins can also use teacher controls.",
+      "state": "done"
+    },
+    {
+      "id": "L2",
+      "text": "Locked class: can students who dropped out get back in?",
+      "default": "Yes. Locking stops new people; anyone already in the class can reconnect.",
+      "state": "done"
+    },
+    {
+      "id": "L3",
+      "text": "Removed student",
+      "default": "Cannot rejoin that class until the teacher presses \"Let back in\". Every removal is in the audit log.",
+      "state": "done"
+    },
+    {
+      "id": "L4",
+      "text": "Guests",
+      "default": "Teacher or Branch Admin invites staff (any branch or head office) per class. Students cannot be guests.",
+      "state": "done"
+    },
+    {
+      "id": "L5",
+      "text": "Class room look",
+      "default": "Dark room with gallery and speaker views; video tiles keep the video shape and pick the best layout for the screen.",
       "state": "done"
     }
   ]
