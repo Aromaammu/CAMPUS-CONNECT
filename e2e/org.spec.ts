@@ -59,6 +59,7 @@ test('Branch Admin adds a student and uploads students from Excel', async ({ pag
   await dlg.getByLabel(/^Mobile/).fill('9744000101');
   await dlg.getByLabel('Email').fill('nandana@demo.cc');
   await dlg.getByLabel('Date of birth').fill('2004-07-21');
+  await expect(dlg.getByLabel(/^Home branch/)).not.toHaveValue(''); // their only branch is picked for them
   await dlg.getByRole('button', { name: 'Add student' }).click();
   await expect(page.getByText(/Nandana Suresh added/)).toBeVisible();
 

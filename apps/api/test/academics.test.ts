@@ -151,7 +151,8 @@ describe('sessions', () => {
     expect(await prisma().session.count({ where: { batchId: b.id } })).toBe(before + 1);
     const rahul = await emp(DEMO.rahul);
     expect((await api.post(`/api/batches/sessions/${s3.id}/substitute`, { teacherId: rahul.id })).status).toBe(201);
-    const arjunNotes = await prisma().notification.findMany({ where: { user: { email: DEMO.arjun }, type: 'N5' } });
+    // Diya stays active in this batch (other test files may complete Arjun's course).
+    const arjunNotes = await prisma().notification.findMany({ where: { user: { email: DEMO.diya }, type: 'N5' } });
     expect(arjunNotes.length).toBeGreaterThanOrEqual(3);
     const sms = await prisma().outboundMessage.findFirst({ where: { template: 'N5', channel: 'SMS', body: { contains: 'cancelled' } } });
     expect(sms).toBeTruthy();

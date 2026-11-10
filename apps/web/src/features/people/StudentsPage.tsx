@@ -91,12 +91,18 @@ export function StudentFormModal({ open, onClose, student, presetBranchId, onSav
   const toast = useToast();
   const qc = useQueryClient();
   const f = useForm<Form>({ resolver: zodResolver(studentSchema) });
+  // Reset only when the form opens (or switches student) — never while someone is typing.
   useEffect(() => {
     if (!open) return;
     f.reset(student ? {
       name: student.user.name, email: student.user.email ?? '', mobile: student.user.mobile ?? '', branchId: student.branchId, dob: student.dob?.slice(0, 10) ?? '',
       address: student.address ?? '', guardianName: student.guardianName ?? '', guardianPhone: student.guardianPhone ?? '',
     } : { name: '', email: '', mobile: '', branchId: presetBranchId ?? '', dob: '', address: '', guardianName: '', guardianPhone: '' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, student, f]);
+  // The page's branch filter may settle after the form opened: just fill in the branch.
+  useEffect(() => {
+    if (open && !student && presetBranchId && !f.getValues('branchId')) f.setValue('branchId', presetBranchId);
   }, [open, student, presetBranchId, f]);
   const save = f.handleSubmit(async (v) => {
     try {
@@ -118,7 +124,7 @@ export function StudentFormModal({ open, onClose, student, presetBranchId, onSav
         <Input label="Mobile" required inputMode="tel" {...f.register('mobile')} error={e.mobile?.message} />
         <Input label="Email" type="email" help="Used to log in and for the welcome link" {...f.register('email')} error={e.email?.message} />
         <Input label="Date of birth" type="date" help="Students under 18 need a guardian's consent" {...f.register('dob')} error={e.dob?.message} />
-        <BranchSelect label="Home branch" perm="students.manage" value={f.watch('branchId') ?? ''} onChange={(v) => f.setValue('branchId', v)} required error={e.branchId?.message} />
+        <BranchSelect label="Home branch" perm="students.manage" value={f.watch('branchId') ?? ''} onChange={(v) => f.setValue('branchId', v, { shouldValidate: !!f.formState.errors.branchId })} required error={e.branchId?.message} />
         <Input label="Address" {...f.register('address')} error={e.address?.message} />
         <Input label="Parent / guardian name" {...f.register('guardianName')} error={e.guardianName?.message} />
         <Input label="Parent / guardian mobile" inputMode="tel" {...f.register('guardianPhone')} error={e.guardianPhone?.message} />

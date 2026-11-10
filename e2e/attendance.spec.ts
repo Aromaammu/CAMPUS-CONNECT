@@ -87,7 +87,7 @@ test('a student requests attendance with a screenshot and the teacher approves i
   await expect(classes.getByText(/Request: Waiting for teacher/)).toBeVisible();
 
   await page.goto('/');
-  await page.getByRole('link', { name: 'Attendance requests' }).click();
+  await page.getByRole('link', { name: 'Attendance requests', exact: true }).click();
   const card = page.getByRole('region', { name: 'Request from Diya Menon' });
   await expect(card.getByText('Power cut in Kakkanad')).toBeVisible();
   await expect(card.getByRole('button', { name: 'View screenshot' })).toBeVisible();

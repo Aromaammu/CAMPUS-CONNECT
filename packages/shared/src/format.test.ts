@@ -38,3 +38,12 @@ describe('dates from forms and Excel', () => {
     expect(dateKeySchema.safeParse('2026-11-08').success).toBe(true);
   });
 });
+
+describe('firstName', () => {
+  it('takes the first word, skipping titles', async () => {
+    const { firstName } = await import('./format');
+    expect(firstName('Anita Joseph')).toBe('Anita');
+    expect(firstName('Dr. Thomas Mathew')).toBe('Thomas');
+    expect(firstName('  Suresh   Iyer ')).toBe('Suresh');
+  });
+});

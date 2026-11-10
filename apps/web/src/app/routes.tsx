@@ -20,6 +20,9 @@ import { LivePage } from '@/features/live/LivePage';
 import '@/features/live/register';
 import '@/features/attendance/register';
 import '@/features/recordings/register';
+import '@/features/learning/register';
+import { StudentPerformancePage, StudentProjectsPage } from '@/features/learning/StudentLearningPages';
+import { MyMaterialsPage, ProjectDetailPage, ProjectQueuePage, TeacherFeedbackPage } from '@/features/learning/StaffLearningPages';
 import { RecordingsPage } from '@/features/recordings/RecordingsPage';
 import { RecordingPlayerPage } from '@/features/recordings/RecordingPlayerPage';
 import { SessionPage } from '@/features/attendance/SessionPage';
@@ -60,6 +63,14 @@ export const APP_ROUTES: AppRoute[] = [
   { path: '/attendance', element: <OverviewPage /> },
   { path: '/recordings', element: <RecordingsPage /> },
   { path: '/recordings/:id', element: <RecordingPlayerPage /> },
+  // Phase 5
+  { path: '/learn/performance', element: <StudentPerformancePage /> },
+  { path: '/learn/projects', element: <StudentProjectsPage /> },
+  { path: '/teach/projects', element: <ProjectQueuePage stage="review" /> },
+  { path: '/project-approvals', element: <ProjectQueuePage stage="approve" /> },
+  { path: '/projects/:id', element: <ProjectDetailPage /> },
+  { path: '/teach/feedback', element: <TeacherFeedbackPage /> },
+  { path: '/teach/materials', element: <MyMaterialsPage /> },
 ];
 
 /** Pages that take the whole screen (live class room, recording player). */

@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ATTENDANCE_STATUS, ATT_REQUEST_REASONS, ATT_REQUEST_STATUS, AttStatus, formatTime, formatWeekdayDate } from '@cc/shared';
-import { ClipboardCheck, Paperclip } from 'lucide-react';
+import { ClipboardCheck, Download, Paperclip } from 'lucide-react';
 import { useState } from 'react';
 import { Badge, Button, Card, Empty, ErrorBox, Modal, PageHeader, Select, Spinner, Textarea, useToast } from '@/components/ui';
-import { ApiError, get, post, upload } from '@/lib/api';
+import { ApiError, download, get, post, upload } from '@/lib/api';
 import { STATUS_TONE, formatMinutes } from './types';
 
 interface MySession {
@@ -21,11 +21,13 @@ interface MyBatch {
 
 /** S5 Attendance & requests. */
 export function StudentAttendancePage() {
+  const toast = useToast();
   const q = useQuery({ queryKey: ['my-attendance'], queryFn: () => get<{ requestDays: number; batches: MyBatch[] }>('/me/attendance') });
   const [asking, setAsking] = useState<{ batch: MyBatch; s: MySession } | null>(null);
   return (
     <>
-      <PageHeader title="Attendance" subtitle="Your attendance in every batch. Missed being marked? Send a request to your teacher." />
+      <PageHeader title="Attendance" subtitle="Your attendance in every batch. Missed being marked? Send a request to your teacher."
+        actions={<Button variant="secondary" icon={<Download className="h-4 w-4" />} onClick={() => void download('/reports/students/me/attendance.pdf').catch((e) => toast((e as Error).message, 'bad'))}>Download report (PDF)</Button>} />
       {q.isLoading ? <Spinner /> : q.error ? <ErrorBox error={q.error} retry={q.refetch} /> : !q.data?.batches.length ? (
         <Card><Empty title="No attendance yet" icon={<ClipboardCheck className="h-8 w-8" />}>Your attendance appears here after your first class.</Empty></Card>
       ) : (

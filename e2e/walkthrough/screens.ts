@@ -19,16 +19,19 @@ export const TOURS: Tour[] = [
     { path: '/courses', name: 'Courses', expect: 'Courses' }, { path: '/batches', name: 'Batches', expect: 'Batches' }, { path: '/batches/new', name: 'New batch', expect: 'New batch' },
     { path: '/timetable', name: 'Timetable', expect: 'Timetable' },
     { path: '/attendance', name: 'Attendance overview', expect: 'Attendance' }, { path: '/teach/attendance-requests', name: 'Attendance requests', expect: 'Attendance requests' },
-    { path: '/recordings', name: 'Recordings', expect: 'Recordings' },
+    { path: '/recordings', name: 'Recordings', expect: 'Recordings' }, { path: '/project-approvals', name: 'Project approvals', expect: 'Project approvals' },
   ] },
   { role: 'teacher', email: 'anita.trainer@demo.cc', stops: [
     { path: '/', name: 'Dashboard', expect: /Good/ }, { path: '/teach/batches', name: 'My batches', expect: 'My batches' }, { path: '/timetable', name: 'Timetable', expect: 'Timetable' },
     { path: '/teach/attendance-requests', name: 'Attendance requests', expect: 'Attendance requests' },
+    { path: '/teach/projects', name: 'Project reviews', expect: 'Project reviews' }, { path: '/teach/feedback', name: 'Feedback', expect: 'Feedback' },
+    { path: '/teach/materials', name: 'Materials', expect: 'Materials' },
   ] },
   { role: 'head-of-accounts', email: 'accounts@demo.cc', stops: [{ path: '/', name: 'Dashboard', expect: /Good/ }] },
   { role: 'student', email: 'arjun.student@demo.cc', stops: [
     { path: '/', name: 'Dashboard', expect: /Good/ }, { path: '/learn/courses', name: 'My courses', expect: 'My courses' }, { path: '/timetable', name: 'Timetable', expect: 'Timetable' },
     { path: '/learn/attendance', name: 'Attendance', expect: 'Attendance' },
+    { path: '/learn/performance', name: 'Performance', expect: 'Performance & feedback' }, { path: '/learn/projects', name: 'Final project', expect: 'Final project' },
   ] },
 ];
 

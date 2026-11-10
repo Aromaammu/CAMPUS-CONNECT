@@ -54,7 +54,9 @@ export function ImportDialog({ open, onClose, title, endpoint, branchId, what, o
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const [bid, setBid] = useState(branchId);
-  useEffect(() => { if (open) { setFile(null); setReport(null); setErr(''); setBid(branchId); } }, [open, branchId]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (open) { setFile(null); setReport(null); setErr(''); setBid(branchId); } }, [open]);
+  useEffect(() => { if (open && branchId) setBid((b) => b || branchId); }, [open, branchId]);
   const send = async (commit: boolean) => {
     if (!file) return;
     setBusy(true); setErr('');

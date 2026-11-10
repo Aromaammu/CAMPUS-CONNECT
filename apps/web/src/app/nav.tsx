@@ -46,6 +46,8 @@ export const NAV: NavGroup[] = [
       { to: '/teach/batches', label: 'My batches', icon: Video, kinds: ['EMPLOYEE'], perms: ['sessions.teach'], hidden: true },
       { to: '/teach/attendance-requests', label: 'Attendance requests', icon: ClipboardCheck, kinds: ['EMPLOYEE'], perms: ['sessions.teach', 'attendance.oversee'], hidden: true },
       { to: '/teach/projects', label: 'Project reviews', icon: FolderKanban, kinds: ['EMPLOYEE'], perms: ['projects.review'], hidden: true },
+      { to: '/teach/materials', label: 'Materials', icon: FileText, kinds: ['EMPLOYEE'], perms: ['materials.manage'], hidden: true },
+      { to: '/teach/feedback', label: 'Feedback', icon: Star, kinds: ['EMPLOYEE'], perms: ['sessions.teach'], hidden: true },
       { to: '/meetings', label: 'Staff meetings', icon: Radio, kinds: STAFF, perms: ['meetings.host'], hidden: true },
     ],
   },

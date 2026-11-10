@@ -65,3 +65,8 @@ export function minutesToHours(min: number): string {
   const h = Math.floor(min / 60); const m = min % 60;
   return m ? `${h} h ${m} min` : `${h} h`;
 }
+
+/** First name for greetings, skipping titles such as "Dr." ("Dr. Thomas Mathew" → "Thomas"). */
+export function firstName(name: string): string {
+  return name.trim().split(/\s+/).find((w) => !w.endsWith('.')) ?? name;
+}

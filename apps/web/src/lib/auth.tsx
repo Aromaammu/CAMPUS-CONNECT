@@ -65,9 +65,7 @@ export function useUser(): SessionUser {
 }
 
 /** "Dr. Thomas Mathew" -> "Thomas" */
-export function firstName(name: string) {
-  return name.split(/s+/).find((w) => !w.endsWith('.')) ?? name;
-}
+export { firstName } from '@cc/shared';
 
 export function roleLabel(u: SessionUser): string {
   if (u.kind === 'SUPER_ADMIN') return 'Super Admin';

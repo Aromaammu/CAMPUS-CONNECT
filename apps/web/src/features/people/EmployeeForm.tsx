@@ -48,6 +48,11 @@ export function EmployeeFormModal({ open, onClose, employee, presetBranchId, pre
       departmentId: employee.departmentId ?? '', joiningDate: employee.joiningDate?.slice(0, 10) ?? '', extraBranchIds: employee.extraBranches.map((x) => x.branch.id),
       extraPermissions: employee.extraPermissions, removedPermissions: employee.removedPermissions,
     } : { name: '', email: '', mobile: '', branchId: presetBranchId ?? '', designationId: '', departmentId: '', joiningDate: '', extraBranchIds: [], extraPermissions: [], removedPermissions: [] });
+    // Reset only when the form opens — a branch filter settling later must not wipe what was typed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, employee, f]);
+  useEffect(() => {
+    if (open && !employee && presetBranchId && !f.getValues('branchId')) f.setValue('branchId', presetBranchId);
   }, [open, employee, presetBranchId, f]);
 
   const designation = structure.data?.designations.find((d) => d.id === designationId);
@@ -96,7 +101,7 @@ export function EmployeeFormModal({ open, onClose, employee, presetBranchId, pre
         <Input label="Mobile" required inputMode="tel" {...f.register('mobile')} error={e.mobile?.message} />
         <Input label="Email" type="email" help="Used to log in and for the welcome link" {...f.register('email')} error={e.email?.message} />
         <Input label="Joining date" type="date" {...f.register('joiningDate')} error={e.joiningDate?.message} />
-        <BranchSelect label="Home branch" perm="employees.manage" value={branchId} onChange={(v) => { f.setValue('branchId', v); if (!presetDesignation) f.setValue('designationId', ''); }} required error={e.branchId?.message} />
+        <BranchSelect label="Home branch" perm="employees.manage" value={branchId} onChange={(v) => { f.setValue('branchId', v, { shouldValidate: !!f.formState.errors.branchId }); if (!presetDesignation) f.setValue('designationId', ''); }} required error={e.branchId?.message} />
         <Select label="Designation" required value={designationId} onChange={(ev) => f.setValue('designationId', ev.target.value, { shouldValidate: true })}
           options={(structure.data?.designations ?? []).map((d) => ({ value: d.id, label: d.name }))} placeholder="Choose…" error={e.designationId?.message} />
         <Select label="Department" {...f.register('departmentId')} options={(structure.data?.departments ?? []).map((d) => ({ value: d.id, label: d.name }))} placeholder="Same as designation" />
