@@ -705,6 +705,8 @@ model Meeting {
   startedAt   DateTime?
   endedAt     DateTime?
   record      Boolean              @default(false)
+  state       Json                 @default("{}") // room switches: chat off, locked, whiteboard, pens, removed people
+  cancelledAt DateTime?
   createdAt   DateTime             @default(now())
   host        User                 @relation("MeetingHost", fields: [hostId], references: [id])
   participants MeetingParticipant[]

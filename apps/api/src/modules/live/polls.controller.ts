@@ -6,6 +6,7 @@ import { Zod } from '../../common/http';
 import { PrismaService } from '../../common/prisma.service';
 import { LiveGateway } from './live.gateway';
 import { LiveService } from './live.service';
+import { MeetingsService } from '../meetings/meetings.service';
 
 type PollRow = { id: string; question: string; options: string[]; multi: boolean; status: string; showResults: boolean; createdAt: Date; votes: { userId: string; choices: number[] }[] };
 
@@ -18,7 +19,7 @@ function tally(p: PollRow) {
 /** Live polls: teacher asks, students answer, results live; all saved with the class (PRD §7.2). */
 @Controller('live')
 export class PollsController {
-  constructor(private prisma: PrismaService, private live: LiveService, private gw: LiveGateway) {}
+  constructor(private prisma: PrismaService, private live: LiveService, private gw: LiveGateway, private meetings: MeetingsService) {}
 
   view(p: PollRow, userId: string, host: boolean): PollView {
     const mine = p.votes.find((v) => v.userId === userId);
@@ -29,16 +30,20 @@ export class PollsController {
     };
   }
 
+  /** Who the poll belongs to: a class (teacher hosts) or a meeting (its host hosts). */
   private async pollFor(user: SessionUser, pollId: string) {
     const p = await this.prisma.poll.findUnique({ where: { id: pollId }, include: { votes: true } });
-    if (!p || !p.sessionId) throw new NotFoundException('Poll not found');
-    const a = await this.live.access(user, p.sessionId);
-    return { p, a };
+    if (!p || (!p.sessionId && !p.meetingId)) throw new NotFoundException('Poll not found');
+    if (p.meetingId) {
+      const m = await this.meetings.access(user, p.meetingId);
+      return { p, a: { refusal: m.refusal, role: m.role, isHost: m.isHost }, room: this.meetings.room(p.meetingId), hosts: [m.m.hostId] };
+    }
+    const a = await this.live.access(user, p.sessionId!);
+    return { p, a, room: this.live.roomOf(p.sessionId!), hosts: this.live.teacherUserIds(a.session) };
   }
 
   /** Tell the room something changed: full results to everyone if they may see them, otherwise only to teachers. */
-  private async broadcast(p: PollRow & { sessionId: string | null }, teacherIds: string[], kind: 'poll' | 'poll-update') {
-    const room = this.live.roomOf(p.sessionId!);
+  private async broadcast(p: PollRow, room: string, teacherIds: string[], kind: 'poll' | 'poll-update') {
     const payload = { type: kind, pollId: p.id, status: p.status, counts: tally(p), voters: p.votes.length };
     if (kind === 'poll' || p.showResults) await this.gw.send(room, 'notice', payload).catch(() => undefined);
     else await this.gw.send(room, 'notice', payload, teacherIds).catch(() => undefined);
@@ -63,14 +68,36 @@ export class PollsController {
       if (body.saveTemplate) await tx.pollTemplate.create({ data: { ownerId: user.id, question: body.question, options: body.options, multi: body.multi } });
       return tx.poll.create({ data: { sessionId: id, createdById: user.id, question: body.question, options: body.options, multi: body.multi, showResults: body.showResults }, include: { votes: true } });
     });
-    await this.broadcast(p, this.live.teacherUserIds(a.session), 'poll');
+    await this.broadcast(p, this.live.roomOf(id), this.live.teacherUserIds(a.session), 'poll');
+    return this.view(p, user.id, true);
+  }
+
+  // Meetings use the same polls.
+  @Get('meetings/:id/polls')
+  async meetingList(@CurrentUser() user: SessionUser, @Param('id') id: string) {
+    const a = await this.meetings.access(user, id);
+    const polls = await this.prisma.poll.findMany({ where: { meetingId: id }, include: { votes: true }, orderBy: { createdAt: 'desc' } });
+    return polls.map((p) => this.view(p, user.id, a.isHost));
+  }
+
+  @Post('meetings/:id/polls')
+  async meetingCreate(@CurrentUser() user: SessionUser, @Param('id') id: string, @Body(new Zod(pollSchema)) body: PollInput) {
+    const a = await this.meetings.access(user, id);
+    if (!a.isHost) throw new ForbiddenException('Only the host can start a poll');
+    if (a.m.status !== 'LIVE') throw new BadRequestException('Start the meeting first');
+    const p = await this.prisma.$transaction(async (tx) => {
+      await tx.poll.updateMany({ where: { meetingId: id, status: 'OPEN' }, data: { status: 'CLOSED', closedAt: new Date() } });
+      if (body.saveTemplate) await tx.pollTemplate.create({ data: { ownerId: user.id, question: body.question, options: body.options, multi: body.multi } });
+      return tx.poll.create({ data: { meetingId: id, createdById: user.id, question: body.question, options: body.options, multi: body.multi, showResults: body.showResults }, include: { votes: true } });
+    });
+    await this.broadcast(p, this.meetings.room(id), [a.m.hostId], 'poll');
     return this.view(p, user.id, true);
   }
 
   @Post('polls/:pollId/vote')
   @HttpCode(200)
   async vote(@CurrentUser() user: SessionUser, @Param('pollId') pollId: string, @Body(new Zod(pollVoteSchema)) body: z.infer<typeof pollVoteSchema>) {
-    const { p, a } = await this.pollFor(user, pollId);
+    const { p, a, room, hosts } = await this.pollFor(user, pollId);
     if (a.refusal) throw new ForbiddenException('You are not in this class');
     if (a.role === 'observer' || a.role === 'teacher') throw new ForbiddenException('Only students and guests answer polls');
     if (p.status !== 'OPEN') throw new BadRequestException('This poll has closed');
@@ -79,27 +106,27 @@ export class PollsController {
     if (!p.multi && choices.length !== 1) throw new BadRequestException('Choose one answer');
     await this.prisma.pollVote.upsert({ where: { pollId_userId: { pollId, userId: user.id } }, create: { pollId, userId: user.id, choices }, update: { choices, at: new Date() } });
     const fresh = await this.prisma.poll.findUniqueOrThrow({ where: { id: pollId }, include: { votes: true } });
-    await this.broadcast(fresh, this.live.teacherUserIds(a.session), 'poll-update');
+    await this.broadcast(fresh, room, hosts, 'poll-update');
     return this.view(fresh, user.id, false);
   }
 
   @Post('polls/:pollId/close')
   @HttpCode(200)
   async close(@CurrentUser() user: SessionUser, @Param('pollId') pollId: string) {
-    const { a } = await this.pollFor(user, pollId);
+    const { a, room, hosts } = await this.pollFor(user, pollId);
     if (!a.isHost) throw new ForbiddenException('Only the teacher can close a poll');
     const p = await this.prisma.poll.update({ where: { id: pollId }, data: { status: 'CLOSED', closedAt: new Date() }, include: { votes: true } });
-    await this.broadcast(p, this.live.teacherUserIds(a.session), 'poll');
+    await this.broadcast(p, room, hosts, 'poll');
     return this.view(p, user.id, true);
   }
 
   @Post('polls/:pollId/results')
   @HttpCode(200)
   async results(@CurrentUser() user: SessionUser, @Param('pollId') pollId: string, @Body(new Zod(z.object({ showResults: z.boolean() }))) body: { showResults: boolean }) {
-    const { a } = await this.pollFor(user, pollId);
+    const { a, room, hosts } = await this.pollFor(user, pollId);
     if (!a.isHost) throw new ForbiddenException('Only the teacher can change this');
     const p = await this.prisma.poll.update({ where: { id: pollId }, data: { showResults: body.showResults }, include: { votes: true } });
-    await this.broadcast(p, this.live.teacherUserIds(a.session), 'poll');
+    await this.broadcast(p, room, hosts, 'poll');
     return this.view(p, user.id, true);
   }
 

@@ -133,6 +133,11 @@ export class LiveWebhookController {
       return { ok: true };
     }
     const target = ev.room?.name ? parseLiveRoomName(ev.room.name) : null;
+    if (target?.kind === 'meeting') {
+      // Staff meetings: no attendance; the meeting ends when its room closes.
+      if (ev.event === 'room_finished') await this.prisma.meeting.updateMany({ where: { id: target.id, status: 'LIVE' }, data: { status: 'ENDED', endedAt: new Date() } });
+      return { ok: true };
+    }
     if (!target || target.kind !== 'session') return { ok: true };
     const sessionId = target.id;
     const exists = await this.prisma.session.findUnique({ where: { id: sessionId }, select: { id: true, status: true, endsAt: true, teacherJoinedAt: true } });
