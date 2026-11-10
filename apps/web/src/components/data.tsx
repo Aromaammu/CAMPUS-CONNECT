@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Download, FileSpreadsheet, Upload } from 'lucide-react';
-import { ReactNode, useEffect, useId, useState } from 'react';
+import { ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { Badge, Button, Modal, Notice, Select, clsx } from '@/components/ui';
 import { download, get, upload } from '@/lib/api';
 
@@ -15,11 +15,18 @@ export function BranchSelect({ value, onChange, perm, label = 'Branch', allowAll
 }) {
   const q = useBranchOptions(perm);
   const opts = (q.data ?? []).map((b) => ({ value: b.id, label: `${b.code} · ${b.name}` }));
+  // Pick the only branch automatically. Deferred so a form that resets itself when it opens
+  // (its effects run after ours) cannot wipe the choice while the screen still shows it.
+  const only = !allowAll && q.data?.length === 1 ? q.data[0].id : null;
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
   useEffect(() => {
-    if (!allowAll && !value && q.data && q.data.length === 1) onChange(q.data[0].id);
-  }, [allowAll, value, q.data, onChange]);
+    if (!only || value) return;
+    const t = setTimeout(() => onChangeRef.current(only), 0);
+    return () => clearTimeout(t);
+  }, [only, value]);
   return (
-    <Select id={id} label={label} className={className} value={value} onChange={(e) => onChange(e.target.value)} options={opts} placeholder={allowAll ? allLabel : q.isLoading ? 'Loading…' : (q.data?.length ?? 0) > 1 ? 'Choose a branch' : undefined} required={required} error={error} />
+    <Select id={id} label={label} className={className} value={value} onChange={(e) => onChange(e.target.value)} options={opts} placeholder={allowAll ? allLabel : q.isLoading ? 'Loading…' : !value ? 'Choose a branch' : undefined} required={required} error={error} />
   );
 }
 

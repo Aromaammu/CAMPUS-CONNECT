@@ -60,6 +60,7 @@ test('branch requests a course and head office approves it', async ({ page }) =>
   await dlg.getByLabel(/^Course name/).fill('Flutter App Development');
   await dlg.getByLabel(/^Total hours/).fill('50');
   await dlg.getByLabel('Module 1 title').fill('Dart basics');
+  await expect(dlg.getByLabel('Branch')).not.toHaveValue(''); // their only branch is picked for them
   await dlg.getByRole('button', { name: 'Send request' }).click();
   await expect(page.getByText('Flutter App Development')).toBeVisible();
   await logout(page);
@@ -79,7 +80,7 @@ test('branch requests a course and head office approves it', async ({ page }) =>
 test('a student sees both branches in the timetable and opens a course', async ({ page }) => {
   await login(page, 'arjun.student@demo.cc');
   await page.getByRole('link', { name: 'My courses' }).click();
-  await expect(page.getByText('Kochi – Palarivattom')).toBeVisible();
+  await expect(page.getByText('Kochi – Palarivattom').first()).toBeVisible();
   await expect(page.getByText('Thiruvananthapuram – Technopark')).toBeVisible();
   await page.getByRole('link', { name: /Morning Batch A/ }).click();
   await expect(page.getByRole('heading', { name: /Morning Batch A/ })).toBeVisible();

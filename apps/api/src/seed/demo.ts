@@ -115,7 +115,9 @@ export async function seedOrganisation(prisma: PrismaClient) {
   let k = 0;
   const gen = async (branch: typeof koc, n: number) => {
     for (let i = 0; i < n; i++, k++) {
-      const name = `${FIRST[k % FIRST.length]} ${LAST[(k * 7) % LAST.length]}`;
+      let name = `${FIRST[k % FIRST.length]} ${LAST[(k * 7) % LAST.length]}`;
+      // Never repeat a demo login's name, so the owner can tell people apart.
+      if (['Arjun Nair', 'Diya Menon'].includes(name)) name = `${FIRST[k % FIRST.length]} ${LAST[(k * 7 + 3) % LAST.length]}`;
       await student(branch, name, `student${k + 1}@demo.cc`, null);
     }
   };
