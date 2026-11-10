@@ -131,7 +131,7 @@ describe('batches', () => {
     expect((await (await as(DEMO.arjun)).get(`/api/batches/${java.id}`)).status).toBe(403);
     expect((await (await as(DEMO.arjun)).get(`/api/batches/${kocBatch.id}/enrolments`)).status).toBe(403);
     const mine = await (await as(DEMO.arjun)).get('/api/me/enrolments');
-    expect(mine.body).toHaveLength(2);
+    expect(mine.body.map((e: { batch: { name: string } }) => e.batch.name).sort()).toEqual(['Afternoon Batch', 'Live Demo Class', 'Morning Batch A']);
   });
 });
 

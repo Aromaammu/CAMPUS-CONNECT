@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Badge, Card, Empty, ErrorBox, PageHeader, Spinner, StatusBadge } from '@/components/ui';
 import { get } from '@/lib/api';
 import { HoursBar } from '../academics/BatchDetailPage';
+import { JoinButton, isJoinable } from '../live/JoinButton';
 
 interface MyEnrolment {
   id: string; status: keyof typeof ENROLMENT_STATUS; batchId: string;
@@ -14,7 +15,7 @@ interface MyEnrolment {
     teachers: { role: string; employee: { user: { id: string; name: string } } }[];
   };
   hours: { deliveredMinutes: number; scheduledMinutes: number };
-  nextSession: { startsAt: string; status: string } | null;
+  nextSession: { id: string; startsAt: string; endsAt: string; status: string } | null;
 }
 
 export function MyCoursesPage() {
@@ -29,19 +30,24 @@ export function MyCoursesPage() {
           {q.data.map((e) => {
             const teacher = e.batch.teachers.find((t) => t.role === 'MAIN')?.employee.user.name;
             return (
-              <Link key={e.id} to={`/learn/courses/${e.batch.id}`} className="card flex flex-col gap-3 p-5 transition-colors hover:border-brand/50">
+              <div key={e.id} className="card relative flex flex-col gap-3 p-5 transition-colors hover:border-brand/50">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-[13px] text-muted">{e.batch.branch.name}</span>
                   <span className="flex gap-1.5"><Badge tone="brand" dot={false}>{BATCH_MODES[e.batch.mode]}</Badge><StatusBadge status={e.status} labels={ENROLMENT_STATUS} /></span>
                 </div>
                 <div>
-                  <h2 className="text-[19px] font-bold">{e.batch.course.name}</h2>
+                  <h2 className="text-[19px] font-bold"><Link to={`/learn/courses/${e.batch.id}`} aria-label={`${e.batch.course.name}, ${e.batch.name}`} className="after:absolute after:inset-0 after:content-['']">{e.batch.course.name}</Link></h2>
                   <p className="text-[14.5px] text-muted">{e.batch.name} · {formatDays(e.batch.days)} {formatHHMM(e.batch.startTime)}–{formatHHMM(e.batch.endTime)}{e.batch.room ? ` · ${e.batch.room.name}` : ''}</p>
                   {teacher && <p className="text-[14.5px]">Teacher: {teacher}</p>}
                 </div>
                 <HoursBar delivered={e.hours.deliveredMinutes} scheduled={e.hours.scheduledMinutes} total={e.batch.course.totalMinutes} />
-                {e.nextSession && <p className="text-[14px] font-semibold text-accent">{e.nextSession.status === 'LIVE' ? 'Class is live now' : `Next class ${formatDateTime(e.nextSession.startsAt)}`}</p>}
-              </Link>
+                {e.nextSession && (
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-[14px] font-semibold text-accent">{e.nextSession.status === 'LIVE' ? 'Class is live now' : `Next class ${formatDateTime(e.nextSession.startsAt)}`}</p>
+                    {e.status === 'ACTIVE' && isJoinable(e.nextSession, e.batch.mode) && <span className="relative z-10"><JoinButton sessionId={e.nextSession.id} label="Join class" live={e.nextSession.status === 'LIVE'} /></span>}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>

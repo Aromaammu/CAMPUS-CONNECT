@@ -16,6 +16,8 @@ import { BatchDetailPage } from '@/features/academics/BatchDetailPage';
 import { TimetablePage } from '@/features/academics/TimetablePage';
 import { MyCoursesPage } from '@/features/learn/MyCoursesPage';
 import { BatchRedirect } from '@/features/academics/BatchRedirect';
+import { LivePage } from '@/features/live/LivePage';
+import '@/features/live/register';
 
 export interface AppRoute { path: string; element: ReactElement }
 
@@ -46,4 +48,7 @@ export const APP_ROUTES: AppRoute[] = [
 ];
 
 /** Pages that take the whole screen (live class room, recording player). */
-export const FULLSCREEN_ROUTES: AppRoute[] = [];
+export const FULLSCREEN_ROUTES: AppRoute[] = [
+  // Phase 3
+  { path: '/live/:sessionId', element: <LivePage /> },
+];

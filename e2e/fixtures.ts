@@ -1,17 +1,37 @@
-import { Page, expect, test as base } from '@playwright/test';
+import { Page, expect, test as base, type ViewportSize } from '@playwright/test';
 
 export const PASSWORD = 'Demo@1234';
 
-/** Fails the test on any console error, uncaught exception or failed API request. */
-export const test = base.extend<{ watch: void }>({
+function guard(page: Page, problems: string[], who = '') {
+  const tag = who ? `[${who}] ` : '';
+  page.on('console', (m) => { if (m.type() === 'error' && !/Download the React DevTools|Failed to load resource: the server responded with a status of 4\d\d/.test(m.text())) problems.push(`${tag}console: ${m.text()}`); });
+  page.on('pageerror', (e) => problems.push(`${tag}page error: ${e.message}`));
+  page.on('response', (r) => { if (r.url().includes('/api/') && r.status() >= 500) problems.push(`${tag}API ${r.status()} ${r.url()}`); });
+}
+
+/** Fails the test on any console error, uncaught exception or failed API request, in every browser it opens. */
+export const test = base.extend<{ watch: void; another: (email: string, viewport?: ViewportSize) => Promise<Page> }>({
   watch: [async ({ page }, use) => {
     const problems: string[] = [];
-    page.on('console', (m) => { if (m.type() === 'error' && !/Download the React DevTools|Failed to load resource: the server responded with a status of 4\d\d/.test(m.text())) problems.push(`console: ${m.text()}`); });
-    page.on('pageerror', (e) => problems.push(`page error: ${e.message}`));
-    page.on('response', (r) => { if (r.url().includes('/api/') && r.status() >= 500) problems.push(`API ${r.status()} ${r.url()}`); });
+    guard(page, problems);
     await use();
     expect(problems, problems.join('\n')).toEqual([]);
   }, { auto: true }],
+  /** A second person in their own browser (own cookies, fake camera and microphone), already logged in. */
+  another: async ({ browser, baseURL }, use) => {
+    const problems: string[] = [];
+    const contexts: Awaited<ReturnType<typeof browser.newContext>>[] = [];
+    await use(async (email, viewport) => {
+      const ctx = await browser.newContext({ baseURL, permissions: ['camera', 'microphone'], viewport: viewport ?? { width: 1280, height: 860 } });
+      contexts.push(ctx);
+      const page = await ctx.newPage();
+      guard(page, problems, email);
+      await login(page, email);
+      return page;
+    });
+    await Promise.all(contexts.map((c) => c.close()));
+    expect(problems, problems.join('\n')).toEqual([]);
+  },
 });
 export { expect };
 

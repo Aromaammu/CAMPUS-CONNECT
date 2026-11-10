@@ -14,7 +14,7 @@ export interface BatchRow {
 export interface BatchDetail extends BatchRow {
   hours: { deliveredMinutes: number; scheduledMinutes: number };
   viewerRole: 'student' | 'staff' | 'teacher';
-  canManage: boolean; canEnrol: boolean; canTeach: boolean;
+  canManage: boolean; canEnrol: boolean; canTeach: boolean; isTeacher: boolean;
 }
 
 export interface SessionRow {

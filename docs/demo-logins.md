@@ -26,3 +26,10 @@ Every password is **`Demo@1234`**.
 | Student – Kochi (first login, under 18) | Kevin Mathew | `new.student@demo.cc` | 9000000019 | Must set a password and give guardian consent |
 
 The test mailbox (every email and SMS the app would send) is at http://localhost:5173/dev/mailbox.
+
+## Try a live class
+
+1. Open http://localhost:5173/dev/mailbox and press **Start the demo class now** (moves the Kochi *Live Demo Class* to right now).
+2. Log in as `anita.trainer@demo.cc` (teacher), open the class from the dashboard and press **Start class**.
+3. In a second browser or a private window, log in as `arjun.student@demo.cc` or `diya.student@demo.cc` and press **Join class**.
+4. To see a refusal, try `sanjay.trainer@demo.cc` (a teacher in another branch). To observe silently, use `academics@demo.cc`.

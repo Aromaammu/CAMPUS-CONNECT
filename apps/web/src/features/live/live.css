@@ -1,0 +1,32 @@
+/* Class room tweaks on top of the LiveKit component styles. */
+.cc-live {
+  --lk-bg: #0b1d24;
+  --lk-bg2: #12303a;
+  --lk-bg3: #173640;
+  --lk-accent-bg: #c77c12;
+  --lk-border-radius: 10px;
+  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+}
+.cc-live .lk-participant-tile {
+  height: 100%;
+}
+/* Our gallery grid: sizes come from fitGallery(); centred, scrolls when the class is large. */
+.cc-grid {
+  display: grid;
+  gap: 8px;
+  overflow-y: auto;
+  justify-content: center;
+  align-content: safe center;
+}
+@keyframes cc-float-up {
+  0% { opacity: 0; transform: translateY(12px); }
+  12% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-24px); }
+}
+.cc-float {
+  animation: cc-float-up 4s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-float { animation: none; }
+}

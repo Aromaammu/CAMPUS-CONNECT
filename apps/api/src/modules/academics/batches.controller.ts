@@ -149,6 +149,7 @@ export class BatchesController {
       canManage: can(user, 'batches.manage', b.branchId),
       canEnrol: can(user, 'enrolments.manage', b.branchId),
       canTeach: role === 'teacher' || can(user, 'attendance.oversee', b.branchId),
+      isTeacher: await this.acad.isTeacher(user, id),
     };
   }
 

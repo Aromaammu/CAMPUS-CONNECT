@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
+import { raw } from 'express';
 import helmet from 'helmet';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -14,6 +15,8 @@ export async function createApp() {
   app.set('trust proxy', 1);
   app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
   app.use(cookieParser());
+  // The class server signs the raw body of its events, so keep it untouched for that one route.
+  app.use('/api/livekit/webhook', raw({ type: '*/*', limit: '1mb' }));
   app.useBodyParser('json', { limit: '2mb' });
   app.setGlobalPrefix('api');
 

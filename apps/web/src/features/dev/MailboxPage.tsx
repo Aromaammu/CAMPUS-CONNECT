@@ -3,8 +3,8 @@ import { formatDateTime } from '@cc/shared';
 import { Mail, MessageSquareText } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Card, Empty, ErrorBox, PageHeader, SearchInput, Spinner } from '@/components/ui';
-import { get } from '@/lib/api';
+import { Badge, Button, Card, Empty, ErrorBox, PageHeader, SearchInput, Spinner } from '@/components/ui';
+import { get, post } from '@/lib/api';
 
 interface Msg { id: string; channel: 'EMAIL' | 'SMS'; to: string; subject: string | null; body: string; status: string; template: string | null; createdAt: string }
 
@@ -15,6 +15,7 @@ export function MailboxPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <PageHeader title="Test mailbox" subtitle="Emails and SMS the app would send. Nothing here leaves this computer." actions={<Link to="/" className="font-semibold text-brand hover:underline">Back to the app</Link>} />
+      <DemoClassCard />
       <SearchInput className="mb-4 max-w-sm" value={to} onChange={setTo} placeholder="Filter by email or mobile" />
       {q.isLoading ? <Spinner /> : q.error ? <ErrorBox error={q.error} /> : !q.data?.length ? <Card><Empty title="No messages yet" /></Card> : (
         <div className="grid gap-3">
@@ -34,6 +35,33 @@ export function MailboxPage() {
         </div>
       )}
     </div>
+  );
+}
+
+/** Moves the practice class to "now" so the live class room can be tried at any time. */
+function DemoClassCard() {
+  const [state, setState] = useState<{ busy: boolean; sessionId?: string; error?: string }>({ busy: false });
+  const start = async () => {
+    setState({ busy: true });
+    try {
+      const r = await post<{ sessionId: string }>('/dev/demo-class');
+      setState({ busy: false, sessionId: r.sessionId });
+    } catch (e) {
+      setState({ busy: false, error: (e as Error).message });
+    }
+  };
+  return (
+    <Card className="mb-5" title="Try a live class">
+      <p className="mb-3 text-[14.5px] text-muted">
+        The Kochi <b>Live Demo Class</b> (teacher Anita Joseph; students Arjun Nair, Diya Menon and 4 more) can be moved to right now.
+        Open it as the teacher in one browser and as a student in another (or a private window).
+      </p>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="accent" loading={state.busy} onClick={start}>Start the demo class now</Button>
+        {state.sessionId && <Link to={`/live/${state.sessionId}`} className="font-semibold text-brand hover:underline">Open the class</Link>}
+        {state.error && <span className="text-[14px] text-bad">{state.error}</span>}
+      </div>
+    </Card>
   );
 }
 

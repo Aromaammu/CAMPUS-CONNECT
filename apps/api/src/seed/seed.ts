@@ -16,9 +16,19 @@ async function main() {
   }
   await seedAll(prisma);
   await prisma.$disconnect();
+  const LIVE_HOWTO = [
+    '',
+    '## Try a live class',
+    '',
+    '1. Open http://localhost:5173/dev/mailbox and press **Start the demo class now** (moves the Kochi *Live Demo Class* to right now).',
+    '2. Log in as `anita.trainer@demo.cc` (teacher), open the class from the dashboard and press **Start class**.',
+    '3. In a second browser or a private window, log in as `arjun.student@demo.cc` or `diya.student@demo.cc` and press **Join class**.',
+    '4. To see a refusal, try `sanjay.trainer@demo.cc` (a teacher in another branch). To observe silently, use `academics@demo.cc`.',
+    '',
+  ].join('\n');
   if (!process.env.NO_LOGIN_DOC) {
     const rows = DEMO_LOGINS.map((l) => `| ${l.role} | ${l.name} | \`${l.email}\` | ${l.mobile} | ${l.note ?? ''} |`).join('\n');
-    const doc = `# Demo logins\n\nOpen http://localhost:5173 and log in with the email **or** mobile number.\nEvery password is **\`${DEMO_PASSWORD}\`**.\n\n| Role | Name | Email | Mobile | Note |\n|---|---|---|---|---|\n${rows}\n\nThe test mailbox (every email and SMS the app would send) is at http://localhost:5173/dev/mailbox.\n`;
+    const doc = `# Demo logins\n\nOpen http://localhost:5173 and log in with the email **or** mobile number.\nEvery password is **\`${DEMO_PASSWORD}\`**.\n\n| Role | Name | Email | Mobile | Note |\n|---|---|---|---|---|\n${rows}\n\nThe test mailbox (every email and SMS the app would send) is at http://localhost:5173/dev/mailbox.\n${LIVE_HOWTO}`;
     writeFileSync(join(__dirname, '..', '..', '..', '..', 'docs', 'demo-logins.md'), doc);
   }
   console.log(`Seeded ${DEMO_LOGINS.length} demo logins`);

@@ -41,6 +41,8 @@ export const config = {
   livekitPublicUrl: env.LIVEKIT_PUBLIC_URL || env.LIVEKIT_URL || 'ws://localhost:7880',
   livekitKey: required('LIVEKIT_API_KEY', 'devkey'),
   livekitSecret: required('LIVEKIT_API_SECRET', 'secret_dev_livekit_key_0123456789abcdef'),
+  /** livekit = real class server; fake = in-memory stand-in used by the API integration tests. */
+  liveMode: (env.LIVE_MODE || (env.NODE_ENV === 'test' ? 'fake' : 'livekit')) as 'livekit' | 'fake',
   /** fake = sample recording files (Windows dev); egress = real LiveKit Egress (Linux). */
   recordingMode: (env.RECORDING_MODE || 'fake') as 'fake' | 'egress',
   vapidPublic: env.VAPID_PUBLIC_KEY || '',

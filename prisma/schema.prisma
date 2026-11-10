@@ -447,6 +447,10 @@ model Session {
   teacherJoinedAt DateTime?
   chatDisabled    Boolean       @default(false)
   locked          Boolean       @default(false)
+  micAllowed      Boolean       @default(true) // students may use their microphone
+  camAllowed      Boolean       @default(true) // students may use their camera
+  shareUserIds    String[]      @default([]) // students the teacher let share their screen
+  removedUserIds  String[]      @default([]) // removed by the teacher; refused until let back in
   attendanceFinalizedAt DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -552,6 +556,8 @@ model PresenceInterval {
   userId    String
   joinedAt  DateTime
   leftAt    DateTime?
+  participantSid String? @unique // LiveKit connection id: closes the right interval when one device replaces another
+  role      String? // teacher | student | guest | observer
   session   Session?  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id])
 
