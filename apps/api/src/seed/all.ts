@@ -7,6 +7,7 @@ import { seedRecordings } from './recordings';
 import { seedLearning } from './learning';
 import { seedMessaging } from './messaging';
 import { seedAccounts } from './accounts';
+import { seedHelpdesk } from './helpdesk';
 
 /** Every phase adds its demo data here. */
 export async function seedAll(prisma: PrismaClient) {
@@ -18,5 +19,6 @@ export async function seedAll(prisma: PrismaClient) {
   const demoClass = await ensureDemoClass(prisma);
   await seedMessaging(prisma);
   await seedAccounts(prisma);
+  await seedHelpdesk(prisma);
   return { org, academics, demoClass };
 }

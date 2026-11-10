@@ -47,3 +47,15 @@ describe('payments', () => {
     expect(rupeesInWords(12_345_675)).toBe('One lakh twenty-three thousand four hundred fifty-six rupees and seventy-five paise only');
   });
 });
+
+describe('notifications and help desk helpers', () => {
+  it('fills wording templates and counts business days (Mon–Sat, holidays skipped)', async () => {
+    const { fillTemplate, addBusinessDays } = await import('./notifications');
+    expect(fillTemplate('Hello {name}, {title}', { name: 'Arjun', title: 'Fee due' })).toBe('Hello Arjun, Fee due');
+    // Fri 13-11-2026 10:00 IST + 1 business day = Sat 14; + 2 = Mon 16 (Sunday skipped)
+    const fri = new Date('2026-11-13T04:30:00Z');
+    expect(addBusinessDays(fri, 1).toISOString().slice(0, 10)).toBe('2026-11-14');
+    expect(addBusinessDays(fri, 2).toISOString().slice(0, 10)).toBe('2026-11-16');
+    expect(addBusinessDays(fri, 2, new Set(['2026-11-14'])).toISOString().slice(0, 10)).toBe('2026-11-17');
+  });
+});

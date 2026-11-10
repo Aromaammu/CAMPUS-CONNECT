@@ -37,6 +37,9 @@ export const config = {
   smsMode: (env.SMS_MODE || 'capture') as 'capture' | 'live',
   smsAccessToken: env.SMS_ACCESS_TOKEN || '',
   smsSender: env.SMS_SENDER || '',
+  smsApiUrl: env.SMS_API_URL || '',
+  /** capture = push recorded in the test mailbox; live = sent to browsers (needs VAPID keys). */
+  pushMode: (env.PUSH_MODE || (isProd ? 'live' : 'capture')) as 'capture' | 'live',
   livekitUrl: env.LIVEKIT_URL || 'ws://localhost:7880',
   livekitPublicUrl: env.LIVEKIT_PUBLIC_URL || env.LIVEKIT_URL || 'ws://localhost:7880',
   livekitKey: required('LIVEKIT_API_KEY', 'devkey'),

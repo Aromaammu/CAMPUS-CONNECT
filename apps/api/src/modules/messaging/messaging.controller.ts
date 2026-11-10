@@ -12,6 +12,7 @@ import { PrismaService } from '../../common/prisma.service';
 import { Realtime } from '../../common/realtime.gateway';
 import { SettingsService } from '../../common/settings.service';
 import { MessagingService } from './messaging.service';
+import { PushService } from '../notifications/notifications.controller';
 
 const msgInclude = { sender: { select: { id: true, name: true, kind: true } } } satisfies Prisma.MessageInclude;
 type Msg = Prisma.MessageGetPayload<{ include: typeof msgInclude }>;
@@ -20,7 +21,7 @@ type Msg = Prisma.MessageGetPayload<{ include: typeof msgInclude }>;
 export class MessagingController {
   constructor(
     private prisma: PrismaService, private msg: MessagingService, private files: FilesService, private rt: Realtime,
-    private settings: SettingsService, private audit: AuditService,
+    private settings: SettingsService, private audit: AuditService, private push: PushService,
   ) {}
 
   /** What members see: deleted and hidden messages keep their place but lose their content. */
@@ -182,6 +183,9 @@ export class MessagingController {
     });
     const v = await this.view(m);
     this.rt.toUsers(c.members.map((x) => x.userId), 'message', v);
+    // N16: browser push to the others (no notification-centre row; the unread count shows it).
+    const others = c.members.filter((x) => x.userId !== user.id && !x.muted).map((x) => x.userId);
+    void this.push.toUsersWithPref(others, { title: c.kind === 'DIRECT' ? user.name : `${user.name} in ${c.title ?? 'a group'}`, body: (body.text ?? 'Sent a file').slice(0, 120), link: `/messages/${id}`, type: 'N16' }).catch(() => undefined);
     return v;
   }
 

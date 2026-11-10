@@ -10,6 +10,8 @@ import { LearningModule } from './learning/learning.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { MeetingsModule } from './meetings/meetings.controller';
 import { AccountsModule } from './accounts/accounts.module';
+import { NotificationsModule } from './notifications/notifications.controller';
+import { HelpdeskModule } from './helpdesk/helpdesk.module';
 
 // Feature modules are registered here as each phase adds them.
-export const FEATURE_MODULES: (new (...args: never[]) => unknown)[] = [PublicModule, NotifyModule, OrgModule, AdminModule, AcademicsModule, LiveModule, AttendanceModule, RecordingsModule, LearningModule, MessagingModule, MeetingsModule, AccountsModule];
+export const FEATURE_MODULES: (new (...args: never[]) => unknown)[] = [PublicModule, NotifyModule, OrgModule, AdminModule, AcademicsModule, LiveModule, AttendanceModule, RecordingsModule, LearningModule, MessagingModule, MeetingsModule, AccountsModule, NotificationsModule, HelpdeskModule];

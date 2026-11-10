@@ -7,6 +7,7 @@ import { PrismaService } from '../../common/prisma.service';
 import { SettingsService } from '../../common/settings.service';
 import { AttendanceService } from '../attendance/attendance.service';
 import { RecordingsService } from '../recordings/recordings.service';
+import { NotifyService } from '../notifications/notify.service';
 import { LiveGateway, LiveParticipant, Permission } from './live.gateway';
 
 const sessionInclude = {
@@ -39,7 +40,7 @@ const roleOf = (p: LiveParticipant): LiveRole | null => {
 @Injectable()
 export class LiveService {
   private log = new Logger('Live');
-  constructor(private prisma: PrismaService, private settings: SettingsService, private audit: AuditService, private gw: LiveGateway, private att: AttendanceService, private rec: RecordingsService) {}
+  constructor(private prisma: PrismaService, private settings: SettingsService, private audit: AuditService, private gw: LiveGateway, private att: AttendanceService, private rec: RecordingsService, private notify: NotifyService) {}
 
   load(id: string) {
     return this.prisma.session.findUnique({ where: { id }, include: sessionInclude });
@@ -129,6 +130,11 @@ export class LiveService {
     if (a.role === 'teacher' && s.status !== 'LIVE') {
       const now = new Date();
       await this.prisma.session.update({ where: { id: s.id }, data: { status: 'LIVE', liveStartedAt: s.liveStartedAt ?? now, liveEndedAt: null } });
+      if (!s.liveStartedAt) {
+        // N4: the teacher has started the class.
+        const students = await this.prisma.enrolment.findMany({ where: { batchId: s.batchId, status: 'ACTIVE' }, select: { student: { select: { userId: true } } } });
+        await this.notify.sendMany(students.map((e) => e.student.userId), { type: 'N4', title: `${s.batch.name}: class has started`, body: `${user.name} is in the class room. Join now.`, link: `/live/${s.id}` }).catch(() => undefined);
+      }
     }
     // Auto-record (per batch, default on for online/hybrid): starts when the teacher arrives.
     if (a.role === 'teacher' && s.batch.autoRecord) {

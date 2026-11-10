@@ -10,3 +10,4 @@ export * from './attendance';
 export * from './learning';
 export * from './messaging';
 export * from './accounts';
+export * from './notifications';
