@@ -22,7 +22,7 @@ test('director adds a branch and its Branch Admin, who sets a password from the 
   await emp.getByLabel('Email').fill('tcr.admin@demo.cc');
   await expect(emp.getByLabel('Designation')).toHaveValue(/.+/);
   await emp.getByRole('button', { name: 'Add employee' }).click();
-  await expect(page.getByText('Reshma Paul')).toBeVisible();
+  await expect(page.getByText('Reshma Paul', { exact: true })).toBeVisible();
   const admins = await (await page.request.get('/api/employees?q=Reshma')).json();
   expect(admins.rows[0].branch.code).toBe('TCR01');
 

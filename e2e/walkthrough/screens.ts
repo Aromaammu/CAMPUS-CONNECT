@@ -30,12 +30,18 @@ export const TOURS: Tour[] = [
     { path: '/teach/materials', name: 'Materials', expect: 'Materials' },
     { path: '/messages', name: 'Messages', expect: 'Messages' }, { path: '/meetings', name: 'Staff meetings', expect: 'Staff meetings' },
   ] },
-  { role: 'head-of-accounts', email: 'accounts@demo.cc', stops: [{ path: '/', name: 'Dashboard', expect: /Good/ }] },
+  { role: 'head-of-accounts', email: 'accounts@demo.cc', stops: [
+    { path: '/', name: 'Dashboard', expect: /Good/ }, { path: '/accounts', name: 'Accounts', expect: 'Accounts' },
+    { path: '/accounts/dues', name: 'Dues', expect: 'Dues & reminders' }, { path: '/accounts/receipts', name: 'Receipts', expect: 'Receipts' },
+    { path: '/accounts/approvals', name: 'Approvals', expect: 'Approvals' }, { path: '/accounts/reports', name: 'Reports', expect: 'Collections & sales' },
+    { path: '/accounts/day-close', name: 'Day close', expect: 'Day close' }, { path: '/accounts/fees', name: 'Fees', expect: 'Course & branch fees' },
+  ] },
   { role: 'student', email: 'arjun.student@demo.cc', stops: [
     { path: '/', name: 'Dashboard', expect: /Good/ }, { path: '/learn/courses', name: 'My courses', expect: 'My courses' }, { path: '/timetable', name: 'Timetable', expect: 'Timetable' },
     { path: '/learn/attendance', name: 'Attendance', expect: 'Attendance' },
     { path: '/learn/performance', name: 'Performance', expect: 'Performance & feedback' }, { path: '/learn/projects', name: 'Final project', expect: 'Final project' },
     { path: '/messages', name: 'Messages', expect: 'Messages' }, { path: '/announcements/inbox', name: 'Announcements', expect: 'Announcements' },
+    { path: '/learn/payments', name: 'Payments', expect: 'Payments & dues' },
   ] },
 ];
 

@@ -84,6 +84,9 @@ export const NAV: NavGroup[] = [
     items: [
       { to: '/accounts', label: 'Accounts dashboard', icon: Wallet, perms: ['accounts.view'], hidden: true },
       { to: '/accounts/dues', label: 'Dues & reminders', icon: Receipt, perms: ['accounts.view'], hidden: true },
+      { to: '/accounts/receipts', label: 'Receipts', icon: FileText, perms: ['accounts.view'], hidden: true },
+      { to: '/accounts/day-close', label: 'Day close', icon: ClipboardCheck, perms: ['accounts.view'], hidden: true },
+      { to: '/accounts/fees', label: 'Course & branch fees', icon: Wallet, perms: ['accounts.view', 'fees.manage'], hidden: true },
       { to: '/accounts/approvals', label: 'Approvals', icon: ShieldCheck, perms: ['accounts.approve'], hidden: true },
       { to: '/accounts/reports', label: 'Collections & sales', icon: BarChart3, perms: ['accounts.view'], hidden: true },
     ],

@@ -11,4 +11,6 @@ export const BUILT_ROUTES = new Set<string>([
   '/learn/performance', '/learn/projects', '/teach/projects', '/project-approvals', '/teach/feedback', '/teach/materials',
   // Phase 6
   '/messages', '/announcements', '/announcements/inbox', '/moderation', '/meetings',
+  // Phase 7
+  '/accounts', '/accounts/reports', '/accounts/dues', '/accounts/receipts', '/accounts/approvals', '/accounts/day-close', '/accounts/fees', '/learn/payments',
 ]);

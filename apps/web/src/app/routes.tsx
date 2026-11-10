@@ -22,6 +22,7 @@ import '@/features/attendance/register';
 import '@/features/recordings/register';
 import '@/features/learning/register';
 import { MessagesPage } from '@/features/messages/MessagesPage';
+import { AccountsDashboard, AccountsReportsPage, ApprovalsPage, DayClosePage, DuesPage, FeesPage, ReceiptsPage, StudentPaymentsPage } from '@/features/accounts/AccountsPages';
 import { AnnouncementsInboxPage, AnnouncementsPage, MeetingsPage, ModerationPage } from '@/features/messages/OtherPages';
 import { StudentPerformancePage, StudentProjectsPage } from '@/features/learning/StudentLearningPages';
 import { MyMaterialsPage, ProjectDetailPage, ProjectQueuePage, TeacherFeedbackPage } from '@/features/learning/StaffLearningPages';
@@ -81,6 +82,15 @@ export const APP_ROUTES: AppRoute[] = [
   { path: '/moderation', element: <ModerationPage /> },
   { path: '/moderation/:id', element: <ModerationPage /> },
   { path: '/meetings', element: <MeetingsPage /> },
+  // Phase 7
+  { path: '/accounts', element: <AccountsDashboard /> },
+  { path: '/accounts/reports', element: <AccountsReportsPage /> },
+  { path: '/accounts/dues', element: <DuesPage /> },
+  { path: '/accounts/receipts', element: <ReceiptsPage /> },
+  { path: '/accounts/approvals', element: <ApprovalsPage /> },
+  { path: '/accounts/day-close', element: <DayClosePage /> },
+  { path: '/accounts/fees', element: <FeesPage /> },
+  { path: '/learn/payments', element: <StudentPaymentsPage /> },
 ];
 
 /** Pages that take the whole screen (live class room, recording player). */

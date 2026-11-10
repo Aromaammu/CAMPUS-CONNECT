@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { BATCH_MODES, PROJECT_STATUS, SESSION_STATUS, formatTime, istDateKey } from '@cc/shared';
+import { BATCH_MODES, PROJECT_STATUS, SESSION_STATUS, formatINR, formatTime, istDateKey } from '@cc/shared';
 import { CalendarDays } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge, ButtonLink, Card, Empty, ErrorBox, Spinner, Stat, StatusBadge } from '@/components/ui';
@@ -48,7 +48,10 @@ function StudentSummary() {
   const att = useQuery({ queryKey: ['my-attendance'], queryFn: () => get<{ batches: { enrolmentId: string; percent: number | null; batch: { id: string; name: string; course: string } }[] }>('/me/attendance') });
   const due = useQuery({ queryKey: ['feedback-due'], queryFn: () => get<unknown[]>('/me/feedback-due') });
   const proj = useQuery({ queryKey: ['my-projects'], queryFn: () => get<{ enrolmentId: string; batch: { name: string }; canSubmit: boolean; project: { status: keyof typeof PROJECT_STATUS } | null }[]>('/me/projects') });
+  const fees = useQuery({ queryKey: ['my-fees'], queryFn: () => get<{ totals: { overduePaise: number; balancePaise: number } }[]>('/me/fees') });
+  const overdue = (fees.data ?? []).reduce((a, l) => a + l.totals.overduePaise, 0);
   const todo = [
+    ...(overdue > 0 ? [{ to: '/learn/payments', text: `Fee overdue: ${formatINR(overdue)}. Please pay at your branch.` }] : []),
     ...(due.data?.length ? [{ to: '/learn/performance', text: `Rate ${due.data.length} recent class${due.data.length > 1 ? 'es' : ''}` }] : []),
     ...(proj.data ?? []).filter((p) => p.canSubmit).map((p) => ({ to: '/learn/projects', text: p.project?.status === 'CHANGES_REQUESTED' ? `Your teacher asked for changes to your ${p.batch.name} project` : `Submit your final project for ${p.batch.name}` })),
   ];
