@@ -451,6 +451,8 @@ model Session {
   camAllowed      Boolean       @default(true) // students may use their camera
   shareUserIds    String[]      @default([]) // students the teacher let share their screen
   removedUserIds  String[]      @default([]) // removed by the teacher; refused until let back in
+  boardOpen       Boolean       @default(false) // whiteboard shown to everyone
+  penUserIds      String[]      @default([]) // students the teacher gave the whiteboard pen
   attendanceFinalizedAt DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

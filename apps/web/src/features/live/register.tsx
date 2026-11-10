@@ -1,3 +1,4 @@
+import { BoardsTab } from './BoardsTab';
 import { SESSION_TABS } from '../attendance/SessionPage';
 import { PollsTab } from './PollsTab';
 import { SESSION_ACTIONS } from '../academics/batchTabs';
@@ -18,3 +19,4 @@ TIMETABLE_ACTIONS.push(({ item }) => {
 });
 
 SESSION_TABS.push({ id: 'polls', label: 'Polls', render: (r) => <PollsTab sessionId={r.session.id} /> });
+SESSION_TABS.push({ id: 'boards', label: 'Whiteboards', render: (r) => <BoardsTab sessionId={r.session.id} /> });

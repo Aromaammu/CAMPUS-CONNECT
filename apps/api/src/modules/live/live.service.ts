@@ -47,8 +47,8 @@ export class LiveService {
     return liveRoomName('session', sessionId);
   }
 
-  stateOf(s: { chatDisabled: boolean; locked: boolean; micAllowed: boolean; camAllowed: boolean; shareUserIds: string[] }): LiveRoomState {
-    return { chatDisabled: s.chatDisabled, locked: s.locked, micAllowed: s.micAllowed, camAllowed: s.camAllowed, shareUserIds: s.shareUserIds };
+  stateOf(s: { chatDisabled: boolean; locked: boolean; micAllowed: boolean; camAllowed: boolean; shareUserIds: string[]; boardOpen: boolean; penUserIds: string[] }): LiveRoomState {
+    return { chatDisabled: s.chatDisabled, locked: s.locked, micAllowed: s.micAllowed, camAllowed: s.camAllowed, shareUserIds: s.shareUserIds, board: s.boardOpen, penUserIds: s.penUserIds };
   }
 
   teacherUserIds(s: LoadedSession) {
@@ -152,7 +152,7 @@ export class LiveService {
     };
     const students = (list: LiveParticipant[]) => list.filter((p) => roleOf(p) === 'student');
     const one = async () => (await people()).filter((p) => p.identity === target);
-    const data: Partial<{ chatDisabled: boolean; locked: boolean; micAllowed: boolean; camAllowed: boolean; shareUserIds: string[]; removedUserIds: string[] }> = {};
+    const data: Partial<{ chatDisabled: boolean; locked: boolean; micAllowed: boolean; camAllowed: boolean; shareUserIds: string[]; removedUserIds: string[]; boardOpen: boolean; penUserIds: string[] }> = {};
     let state = this.stateOf(s);
     const refreshPerms = async (list: LiveParticipant[]) => {
       for (const p of list) await this.gw.updateParticipant(room, p.identity, { permission: this.permissionFor('student', state, p.identity) });
@@ -179,12 +179,17 @@ export class LiveService {
       case 'remove': {
         data.removedUserIds = [...new Set([...s.removedUserIds, target!])];
         data.shareUserIds = s.shareUserIds.filter((x) => x !== target);
+        data.penUserIds = s.penUserIds.filter((x) => x !== target);
         if ((await one()).length) await this.gw.remove(room, target!);
         const who = await this.prisma.user.findUnique({ where: { id: target! }, select: { name: true } });
         await this.audit.record({ actorId: user.id, action: 'live.remove', entity: 'Session', entityId: s.id, branchId: s.batch.branchId, summary: `Removed ${who?.name ?? 'a participant'} from ${s.batch.name} class ${s.position}`, ip });
         break;
       }
       case 'let-back': data.removedUserIds = s.removedUserIds.filter((x) => x !== target); break;
+      case 'board-open': data.boardOpen = true; break;
+      case 'board-close': data.boardOpen = false; data.penUserIds = []; break;
+      case 'pen-give': data.penUserIds = [...new Set([...s.penUserIds, target!])]; break;
+      case 'pen-take': data.penUserIds = s.penUserIds.filter((x) => x !== target); break;
       case 'lower-hand': if ((await one()).length) await this.gw.updateParticipant(room, target!, { attributes: { hand: '' } }); break;
       case 'lower-all-hands':
         for (const p of await people()) if (p.attributes.hand) await this.gw.updateParticipant(room, p.identity, { attributes: { hand: '' } });
@@ -210,7 +215,7 @@ export class LiveService {
     }
     const updated = Object.keys(data).length ? await this.prisma.session.update({ where: { id: s.id }, data }) : s;
     const next = this.stateOf(updated);
-    if (['lock', 'unlock', 'chat-off', 'chat-on', 'mic-allow', 'mic-block', 'cam-allow', 'cam-block', 'share-allow', 'share-revoke', 'stop-share', 'remove'].includes(input.action) && updated.status === 'LIVE') {
+    if (['lock', 'unlock', 'chat-off', 'chat-on', 'mic-allow', 'mic-block', 'cam-allow', 'cam-block', 'share-allow', 'share-revoke', 'stop-share', 'remove', 'board-open', 'board-close', 'pen-give', 'pen-take'].includes(input.action) && updated.status === 'LIVE') {
       await this.gw.setRoomMetadata(room, JSON.stringify(next));
     }
     if (input.action === 'lock' || input.action === 'unlock') {

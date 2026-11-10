@@ -106,6 +106,9 @@ export function PeoplePanel({ info, join, state, onClose }: { info: LiveInfo; jo
                       ? <MenuItem onClick={() => act('share-revoke', p.identity, `${p.name} can no longer share`)}>Stop screen sharing</MenuItem>
                       : <MenuItem onClick={() => act('share-allow', p.identity, `${p.name} can now share their screen`)}>Let them share screen</MenuItem>)}
                     {p.attributes?.hand && <MenuItem onClick={() => act('lower-hand', p.identity)}>Lower hand</MenuItem>}
+                    {state.board && role === 'student' && (state.penUserIds.includes(p.identity)
+                      ? <MenuItem onClick={() => act('pen-take', p.identity, `Took back the pen from ${p.name}`)}>Take back the pen</MenuItem>
+                      : <MenuItem onClick={() => act('pen-give', p.identity, `${p.name} can now draw on the whiteboard`)}>Give the whiteboard pen</MenuItem>)}
                     <MenuItem danger onClick={() => remove(p)}>Remove from class</MenuItem>
                   </div>
                 )}

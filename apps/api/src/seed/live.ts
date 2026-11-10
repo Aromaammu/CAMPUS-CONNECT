@@ -37,7 +37,7 @@ export async function ensureDemoClass(prisma: PrismaClient, now = new Date()) {
   const existing = await prisma.session.findFirst({ where: { batchId: batch.id, position: 1 } });
   const fresh = {
     startsAt, endsAt, status: 'SCHEDULED' as const, liveStartedAt: null, liveEndedAt: null, teacherJoinedAt: null, attendanceFinalizedAt: null, cancelReason: null,
-    chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], removedUserIds: [], topic: 'Practice class: try the class room',
+    chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], removedUserIds: [], boardOpen: false, penUserIds: [], topic: 'Practice class: try the class room',
   };
   const session = existing
     ? await prisma.session.update({ where: { id: existing.id }, data: fresh })

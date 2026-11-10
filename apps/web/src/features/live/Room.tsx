@@ -5,10 +5,10 @@ import {
 import { LIVE_REACTIONS, LiveChatMessage, LiveParticipantMeta, LiveRole, parseRoomState } from '@cc/shared';
 import clsx from 'clsx';
 import {
-  BarChart3, ClipboardCheck, Hand, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
+  BarChart3, ClipboardCheck, Hand, PenLine, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
 } from 'lucide-react';
 import { ConnectionState, DisconnectReason, Participant, RoomEvent, Track, type RoomOptions } from 'livekit-client';
-import { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, ReactNode, Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useConfirm, useToast } from '@/components/ui';
 import { post } from '@/lib/api';
 import { ChatPanel, useClassChat } from './ChatPanel';
@@ -21,6 +21,8 @@ import { softenExpectedLiveKitErrors } from './logging';
 import type { DeviceChoices, JoinResult, LeftReason, LiveInfo } from './types';
 
 softenExpectedLiveKitErrors();
+
+const Whiteboard = lazy(() => import('./Whiteboard'));
 
 /** Protocol track-source numbers used in participant permissions. */
 export const SRC = { camera: 1, microphone: 2, screen: 3 } as const;
@@ -184,6 +186,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
       if (p.camAllowed && !state.camAllowed) toast('The teacher turned off student cameras', 'info');
       if (!p.chatDisabled && state.chatDisabled) toast('The teacher turned off chat', 'info');
       if (!p.shareUserIds.includes(join.identity) && state.shareUserIds.includes(join.identity)) toast('The teacher lets you share your screen', 'info');
+      if (!p.penUserIds.includes(join.identity) && state.penUserIds.includes(join.identity)) toast('You have the pen: you can draw on the whiteboard', 'info');
     }
     prev.current = state;
   }, [state, isStudent, join.identity, toast]);
@@ -215,6 +218,10 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
   const leave = async () => {
     onLeave('left');
     await room.disconnect();
+  };
+  const toggleBoard = async () => {
+    try { await post(`/live/sessions/${info.session.id}/control`, { action: state.board ? 'board-close' : 'board-open' }); }
+    catch (e) { toast((e as Error).message, 'bad'); }
   };
   const endClass = async () => {
     const r = await confirm({ title: 'End the class for everyone?', body: 'Everyone will be disconnected and nobody can rejoin this class.', confirmLabel: 'End class', danger: true });
@@ -250,7 +257,16 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
 
       <div className="relative flex min-h-0 flex-1">
         <main className="relative min-w-0 flex-1 p-2" aria-label="Class video">
-          {focus ? <SpeakerView focus={focus} others={visible.filter((t) => t !== focus)} /> : <Gallery tracks={cameras} />}
+          {state.board ? (
+            <div className="flex h-full flex-col gap-2 lg:flex-row">
+              <div className="min-h-0 flex-1">
+                <Suspense fallback={<div className="flex h-full items-center justify-center text-white/70">Opening the whiteboard…</div>}>
+                  <Whiteboard sessionId={info.session.id} state={state} isTeacher={join.role === 'teacher'} myId={join.identity} />
+                </Suspense>
+              </div>
+              <Strip tracks={visible} />
+            </div>
+          ) : focus ? <SpeakerView focus={focus} others={visible.filter((t) => t !== focus)} /> : <Gallery tracks={cameras} />}
           <div className="pointer-events-none absolute bottom-3 left-3 flex flex-col-reverse gap-1" aria-live="polite">
             {reactions.map((r) => (
               <div key={r.id} className="cc-float flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[14px]"><span className="text-[22px] leading-none">{r.emoji}</span>{r.name}</div>
@@ -299,6 +315,9 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         {isHost && info.batch.mode !== 'OFFLINE' && (
           <Ctl label="Attendance" on={panel === 'attendance'} onClick={() => setPanel((p) => (p === 'attendance' ? null : 'attendance'))}><ClipboardCheck className="h-5 w-5" /></Ctl>
         )}
+ {join.role === 'teacher' && (
+          <Ctl className="hidden sm:inline-flex" label={state.board ? 'Close the whiteboard' : 'Open the whiteboard'} on={state.board} onClick={() => void toggleBoard()}><PenLine className="h-5 w-5" /></Ctl>
+        )}
         {isHost && <Ctl className="hidden sm:inline-flex" label="Polls" on={panel === 'polls'} onClick={() => setPanel((p) => (p === 'polls' ? null : 'polls'))}><BarChart3 className="h-5 w-5" /></Ctl>}
         <Ctl className="hidden sm:inline-flex" label={layout === 'gallery' ? 'Switch to speaker view' : 'Switch to gallery view'} onClick={() => setLayout((l) => (l === 'gallery' ? 'speaker' : 'gallery'))}>
           {layout === 'gallery' ? <UserIcon className="h-5 w-5" /> : <LayoutGrid className="h-5 w-5" />}
@@ -323,6 +342,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         onReact={observer ? undefined : sendReaction}
         onEnd={endClass}
         onPolls={isHost ? () => setPanel('polls') : undefined}
+        onBoard={join.role === 'teacher' ? () => void toggleBoard() : undefined}
       />
     </>
   );
@@ -365,6 +385,16 @@ function Gallery({ tracks }: { tracks: TrackReferenceOrPlaceholder[] }) {
   return (
     <div ref={ref} className="cc-grid h-full" style={{ gridTemplateColumns: `repeat(${fit.cols}, ${Math.floor(fit.w)}px)`, gridAutoRows: `${Math.floor(fit.h)}px` } as CSSProperties} aria-label="Gallery view">
       {size.w > 0 && tracks.map((t) => <TrackRefContext.Provider key={keyOf(t)} value={t}><Tile /></TrackRefContext.Provider>)}
+    </div>
+  );
+}
+
+/** A strip of small video tiles beside the whiteboard. */
+function Strip({ tracks }: { tracks: TrackReferenceOrPlaceholder[] }) {
+  if (!tracks.length) return null;
+  return (
+    <div className="flex h-[88px] shrink-0 gap-2 overflow-x-auto lg:h-auto lg:w-[200px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden" aria-label="Video strip">
+      {tracks.map((t) => <div key={keyOf(t)} className="aspect-video h-full shrink-0 lg:h-auto lg:w-full"><TrackRefContext.Provider value={t}><Tile /></TrackRefContext.Provider></div>)}
     </div>
   );
 }

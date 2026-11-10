@@ -1,15 +1,15 @@
 import { LIVE_REACTIONS, LiveControlAction, LiveRoomState } from '@cc/shared';
-import { BarChart3, Camera, CameraOff, Hand, LayoutGrid, Lock, MessageSquare, MessageSquareOff, Mic, MicOff, MonitorUp, PhoneOff, Unlock, User, VolumeX } from 'lucide-react';
+import { BarChart3, Camera, PenLine, CameraOff, Hand, LayoutGrid, Lock, MessageSquare, MessageSquareOff, Mic, MicOff, MonitorUp, PhoneOff, Unlock, User, VolumeX } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { Modal, useToast } from '@/components/ui';
 import { post } from '@/lib/api';
 import type { LiveInfo } from './types';
 
 /** "More options": view, sharing and reactions for everyone; class controls for the teacher. */
-export function HostMenu({ open, onClose, info, isHost, state, layout, onLayout, canShare, sharing, onShare, onReact, onEnd, onPolls }: {
+export function HostMenu({ open, onClose, info, isHost, state, layout, onLayout, canShare, sharing, onShare, onReact, onEnd, onPolls, onBoard }: {
   open: boolean; onClose: () => void; info: LiveInfo; isHost: boolean; state: LiveRoomState;
   layout: 'gallery' | 'speaker'; onLayout: (l: 'gallery' | 'speaker') => void;
-  canShare: boolean; sharing: boolean; onShare: () => void; onReact?: (e: string) => void; onEnd: () => void; onPolls?: () => void;
+  canShare: boolean; sharing: boolean; onShare: () => void; onReact?: (e: string) => void; onEnd: () => void; onPolls?: () => void; onBoard?: () => void;
 }) {
   const toast = useToast();
   const [busy, setBusy] = useState<string | null>(null);
@@ -49,6 +49,7 @@ export function HostMenu({ open, onClose, info, isHost, state, layout, onLayout,
           <section className="grid gap-1.5" aria-label="Class controls">
             <h3 className="text-[13px] font-bold uppercase tracking-wide text-muted">Class controls</h3>
             {onPolls && <Opt icon={<BarChart3 className="h-4 w-4" />} onClick={close(onPolls)}>Polls</Opt>}
+            {onBoard && <Opt icon={<PenLine className="h-4 w-4" />} onClick={close(onBoard)}>{state.board ? 'Close the whiteboard' : 'Open the whiteboard'}</Opt>}
             <Opt icon={<VolumeX className="h-4 w-4" />} busy={busy === 'mute-all'} onClick={() => act('mute-all', 'Everyone was muted')}>Mute everyone</Opt>
             <Opt icon={<Hand className="h-4 w-4" />} busy={busy === 'lower-all-hands'} onClick={() => act('lower-all-hands', 'All hands lowered')}>Lower all hands</Opt>
             {state.locked

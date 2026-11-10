@@ -26,10 +26,12 @@ export interface LiveRoomState {
   micAllowed: boolean;
   camAllowed: boolean;
   shareUserIds: string[];
+  board: boolean;
+  penUserIds: string[];
 }
 
 export function parseRoomState(metadata: string | undefined | null): LiveRoomState {
-  const base: LiveRoomState = { chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [] };
+  const base: LiveRoomState = { chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], board: false, penUserIds: [] };
   if (!metadata) return base;
   try {
     return { ...base, ...(JSON.parse(metadata) as Partial<LiveRoomState>) };
@@ -44,10 +46,11 @@ export interface LiveParticipantMeta { role: LiveRole; code?: string }
 export const LIVE_CONTROL_ACTIONS = [
   'mute', 'camera-off', 'stop-share', 'share-allow', 'share-revoke', 'remove', 'let-back', 'lower-hand',
   'mute-all', 'lower-all-hands', 'lock', 'unlock', 'chat-off', 'chat-on', 'mic-allow', 'mic-block', 'cam-allow', 'cam-block', 'end',
+  'board-open', 'board-close', 'pen-give', 'pen-take',
 ] as const;
 export type LiveControlAction = (typeof LIVE_CONTROL_ACTIONS)[number];
 /** Actions aimed at one person (need `identity`). */
-export const LIVE_PERSON_ACTIONS: LiveControlAction[] = ['mute', 'camera-off', 'stop-share', 'share-allow', 'share-revoke', 'remove', 'let-back', 'lower-hand'];
+export const LIVE_PERSON_ACTIONS: LiveControlAction[] = ['mute', 'camera-off', 'stop-share', 'share-allow', 'share-revoke', 'remove', 'let-back', 'lower-hand', 'pen-give', 'pen-take'];
 
 export const liveControlSchema = z
   .object({ action: z.enum(LIVE_CONTROL_ACTIONS), identity: z.string().min(1).max(64).optional() })
@@ -59,7 +62,7 @@ export const liveHandSchema = z.object({ raised: z.boolean() });
 export const liveGuestSchema = z.object({ userId: z.string().min(1) });
 
 /** Data-channel topics used in the room. */
-export const LIVE_TOPICS = { chat: 'chat', reaction: 'reaction', notice: 'notice' } as const;
+export const LIVE_TOPICS = { chat: 'chat', reaction: 'reaction', notice: 'notice', board: 'wb' } as const;
 export const LIVE_REACTIONS = ['👍', '👏', '😀', '❤️', '🎉', '🤔'] as const;
 
 export interface LiveChatMessage { id: string; userId: string; name: string; role: LiveRole | null; text: string; createdAt: string }
