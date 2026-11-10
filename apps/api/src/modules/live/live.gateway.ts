@@ -19,7 +19,7 @@ export abstract class LiveGateway {
   abstract muteTrack(room: string, identity: string, trackSid: string): Promise<void>;
   abstract updateParticipant(room: string, identity: string, o: { permission?: Permission; attributes?: Record<string, string> }): Promise<void>;
   abstract remove(room: string, identity: string): Promise<void>;
-  abstract send(room: string, topic: string, payload: unknown): Promise<void>;
+  abstract send(room: string, topic: string, payload: unknown, to?: string[]): Promise<void>;
   abstract closeRoom(room: string): Promise<void>;
   abstract receiveWebhook(body: string, auth: string | undefined): Promise<WebhookEvent>;
 }
@@ -99,8 +99,9 @@ export class LiveKitGateway extends LiveGateway {
     await this.call('removeParticipant', () => this.client.removeParticipant(room, identity));
   }
 
-  async send(room: string, topic: string, payload: unknown) {
-    await this.call('sendData', () => this.client.sendData(room, new TextEncoder().encode(JSON.stringify(payload)), DataPacket_Kind.RELIABLE, { topic }));
+  async send(room: string, topic: string, payload: unknown, to?: string[]) {
+    if (to && !to.length) return;
+    await this.call('sendData', () => this.client.sendData(room, new TextEncoder().encode(JSON.stringify(payload)), DataPacket_Kind.RELIABLE, { topic, ...(to ? { destinationIdentities: to } : {}) }));
   }
 
   async closeRoom(room: string) {
@@ -149,7 +150,7 @@ export class FakeLiveGateway extends LiveGateway {
     const r = this.room(room);
     r.participants = r.participants.filter((p) => p.identity !== identity);
   }
-  async send(room: string, topic: string, payload: unknown) { this.calls.push({ fn: 'send', args: [room, topic, payload] }); }
+  async send(room: string, topic: string, payload: unknown, to?: string[]) { this.calls.push({ fn: 'send', args: [room, topic, payload, to] }); }
   async closeRoom(room: string) { this.calls.push({ fn: 'closeRoom', args: [room] }); this.rooms.delete(room); }
   receiveWebhook(body: string, auth: string | undefined) { return this.receiver.receive(body, auth); }
   reset() { this.calls = []; this.rooms.clear(); }

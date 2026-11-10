@@ -88,3 +88,20 @@ export function presenceSeconds(intervals: { joinedAt: Date; leftAt: Date | null
   if (cur) total += cur[1] - cur[0];
   return Math.round(total / 1000);
 }
+
+/** Polls (PRD §7.2). */
+export const pollSchema = z.object({
+  question: z.string().trim().min(3, 'Write the question').max(300),
+  options: z.array(z.string().trim().min(1, 'Fill in this option').max(120)).min(2, 'At least 2 options').max(6, 'At most 6 options'),
+  multi: z.boolean().default(false),
+  showResults: z.boolean().default(true),
+  saveTemplate: z.boolean().default(false),
+});
+export type PollInput = z.infer<typeof pollSchema>;
+export const pollVoteSchema = z.object({ choices: z.array(z.number().int().min(0).max(5)).min(1, 'Choose an answer').max(6) });
+
+export interface PollView {
+  id: string; question: string; options: string[]; multi: boolean; status: 'OPEN' | 'CLOSED'; showResults: boolean; createdAt: string;
+  /** Votes per option; null when the viewer may not see results yet. */
+  counts: number[] | null; voters: number | null; myChoices: number[] | null;
+}

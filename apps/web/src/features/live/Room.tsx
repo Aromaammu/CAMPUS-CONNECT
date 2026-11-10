@@ -5,7 +5,7 @@ import {
 import { LIVE_REACTIONS, LiveChatMessage, LiveParticipantMeta, LiveRole, parseRoomState } from '@cc/shared';
 import clsx from 'clsx';
 import {
-  ClipboardCheck, Hand, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
+  BarChart3, ClipboardCheck, Hand, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
 } from 'lucide-react';
 import { ConnectionState, DisconnectReason, Participant, RoomEvent, Track, type RoomOptions } from 'livekit-client';
 import { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -15,6 +15,7 @@ import { ChatPanel, useClassChat } from './ChatPanel';
 import { PeoplePanel } from './PeoplePanel';
 import { HostMenu } from './HostMenu';
 import { AttendancePanel, CheckinPrompt } from './AttendancePanel';
+import { PollsPanel, StudentPoll } from './Polls';
 import { get } from '@/lib/api';
 import { softenExpectedLiveKitErrors } from './logging';
 import type { DeviceChoices, JoinResult, LeftReason, LiveInfo } from './types';
@@ -93,7 +94,7 @@ export function Room({ info, join, choices, onLeft }: { info: LiveInfo; join: Jo
   );
 }
 
-type Panel = 'chat' | 'people' | 'attendance' | null;
+type Panel = 'chat' | 'people' | 'attendance' | 'polls' | null;
 type FloatingReaction = { id: number; emoji: string; name: string };
 
 function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; onLeave: (reason: LeftReason) => void }) {
@@ -256,13 +257,15 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
             ))}
           </div>
           <StartAudio label="Tap to turn on class sound" className="absolute left-1/2 top-3 -translate-x-1/2 rounded-lg bg-[#C77C12] px-4 py-2 text-[14px] font-bold" />
+          {(isStudent || join.role === 'guest') && <StudentPoll sessionId={info.session.id} />}
           {checkin && <CheckinPrompt sessionId={info.session.id} windowId={checkin.windowId} closesAt={checkin.closesAt} onDone={clearCheckin} />}
         </main>
         {panel && (
-          <aside className="absolute inset-0 z-20 flex flex-col bg-[#0f262e] lg:static lg:z-auto lg:w-[360px] lg:border-l lg:border-white/10" aria-label={panel === 'chat' ? 'Chat' : panel === 'attendance' ? 'Attendance' : 'People'}>
+          <aside className="absolute inset-0 z-20 flex flex-col bg-[#0f262e] lg:static lg:z-auto lg:w-[360px] lg:border-l lg:border-white/10" aria-label={panel === 'chat' ? 'Chat' : panel === 'attendance' ? 'Attendance' : panel === 'polls' ? 'Polls' : 'People'}>
             {panel === 'chat'
               ? <ChatPanel info={info} join={join} chatDisabled={state.chatDisabled} messages={chat.messages} onSent={chat.add} onClose={() => setPanel(null)} />
               : panel === 'attendance' ? <AttendancePanel info={info} onClose={() => setPanel(null)} />
+              : panel === 'polls' ? <PollsPanel sessionId={info.session.id} onClose={() => setPanel(null)} />
               : <PeoplePanel info={info} join={join} state={state} onClose={() => setPanel(null)} />}
           </aside>
         )}
@@ -296,6 +299,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         {isHost && info.batch.mode !== 'OFFLINE' && (
           <Ctl label="Attendance" on={panel === 'attendance'} onClick={() => setPanel((p) => (p === 'attendance' ? null : 'attendance'))}><ClipboardCheck className="h-5 w-5" /></Ctl>
         )}
+        {isHost && <Ctl className="hidden sm:inline-flex" label="Polls" on={panel === 'polls'} onClick={() => setPanel((p) => (p === 'polls' ? null : 'polls'))}><BarChart3 className="h-5 w-5" /></Ctl>}
         <Ctl className="hidden sm:inline-flex" label={layout === 'gallery' ? 'Switch to speaker view' : 'Switch to gallery view'} onClick={() => setLayout((l) => (l === 'gallery' ? 'speaker' : 'gallery'))}>
           {layout === 'gallery' ? <UserIcon className="h-5 w-5" /> : <LayoutGrid className="h-5 w-5" />}
         </Ctl>
@@ -318,6 +322,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         onShare={() => toggle('share', () => localParticipant.setScreenShareEnabled(!isScreenShareEnabled), 'Screen sharing did not start')}
         onReact={observer ? undefined : sendReaction}
         onEnd={endClass}
+        onPolls={isHost ? () => setPanel('polls') : undefined}
       />
     </>
   );

@@ -1,3 +1,5 @@
+import { SESSION_TABS } from '../attendance/SessionPage';
+import { PollsTab } from './PollsTab';
 import { SESSION_ACTIONS } from '../academics/batchTabs';
 import { TIMETABLE_ACTIONS } from '../academics/timetableActions';
 import { JoinButton, isJoinable } from './JoinButton';
@@ -14,3 +16,5 @@ TIMETABLE_ACTIONS.push(({ item }) => {
   if (!isJoinable(item, item.mode)) return null;
   return <JoinButton sessionId={item.id} label="Join" live={item.status === 'LIVE'} />;
 });
+
+SESSION_TABS.push({ id: 'polls', label: 'Polls', render: (r) => <PollsTab sessionId={r.session.id} /> });
