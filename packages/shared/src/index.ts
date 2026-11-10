@@ -9,3 +9,4 @@ export * from './live';
 export * from './attendance';
 export * from './learning';
 export * from './messaging';
+export * from './accounts';
