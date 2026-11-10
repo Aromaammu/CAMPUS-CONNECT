@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-10",
   "mode": "unsupervised",
-  "headline": "Phases 0–3 complete. Phase 4: attendance done (automatic, check-in, roster, requests, alerts); polls, whiteboard and recordings next.",
+  "headline": "Phases 0–4 complete: live classes with attendance, check-ins, requests, polls, whiteboard and recordings. Next: Phase 5 (learning portal).",
   "phases": [
     {
       "id": "0",
@@ -362,57 +362,57 @@
     },
     {
       "p": "4",
-      "s": "dev",
+      "s": "test",
       "a": "Recordings",
       "t": "Recording and player",
       "d": "Auto-record, batch-only access, no download, name watermark, 180-day retention.",
-      "w": "Needs a Linux test server to verify real recordings (D12)."
+      "w": "Real recording needs the Linux test server (D12). Everything else works with a sample video."
     },
     {
       "p": "4",
-      "s": "dev",
+      "s": "done",
       "a": "Recordings",
       "t": "Branch recording controls",
       "d": "Rename, hide, replace, delete (recoverable 7 days), all audited."
     },
     {
       "p": "5",
-      "s": "planned",
+      "s": "dev",
       "a": "Learning",
       "t": "Notes and materials",
       "d": "Files and links per batch, session or module; share across batches."
     },
     {
       "p": "5",
-      "s": "planned",
+      "s": "dev",
       "a": "Learning",
       "t": "Performance in each class",
       "d": "Quick grid for 1–5 marks and remarks; running average for the student."
     },
     {
       "p": "5",
-      "s": "planned",
+      "s": "dev",
       "a": "Learning",
       "t": "Two-way feedback",
       "d": "Teacher feedback to students; star rating after each class; end-of-course forms."
     },
     {
       "p": "5",
-      "s": "planned",
+      "s": "dev",
       "a": "Learning",
       "t": "Final project approval",
       "d": "Student submits, teacher reviews (changes or approve), Branch Admin gives final approval → Completed."
     },
     {
       "p": "5",
-      "s": "planned",
+      "s": "dev",
       "a": "Learning",
       "t": "Student reports (PDF)",
       "d": "Attendance, performance, payment and dues statements."
     },
     {
       "p": "5",
-      "s": "planned",
+      "s": "dev",
       "a": "Learning",
       "t": "Student and teacher dashboards",
       "d": "Next class with Join button, today's timetable, attendance %, dues, unread messages."
@@ -1242,6 +1242,48 @@
       "id": "L5",
       "text": "Class room look",
       "default": "Dark room with gallery and speaker views; video tiles keep the video shape and pick the best layout for the screen.",
+      "state": "done"
+    },
+    {
+      "id": "A1",
+      "text": "When does the class time for attendance start?",
+      "default": "From the later of the start time and the moment the teacher opens the class, so students are not marked late when the teacher is late.",
+      "state": "done"
+    },
+    {
+      "id": "A2",
+      "text": "Classes the teacher never started online",
+      "default": "Saved as Absent with the note \"The class did not run online\"; the teacher or Branch Admin can correct them.",
+      "state": "done"
+    },
+    {
+      "id": "A3",
+      "text": "Who can change attendance after the 48-hour lock",
+      "default": "Branch Admins, and Senior Trainers (their designation includes \"Change any attendance\"). Change it per designation in Departments & designations.",
+      "state": "done"
+    },
+    {
+      "id": "A4",
+      "text": "Attendance request screenshots",
+      "default": "Images or PDF up to 5 MB, checked by content; only the student, the teacher and the Branch Admin can open them, through links that expire after 10 minutes.",
+      "state": "done"
+    },
+    {
+      "id": "R1",
+      "text": "Recording while there is no Linux server",
+      "default": "A sample video stands in for each recording so the whole flow (list, player, branch controls, 180-day keeping, 7-day restore) can be tried now. Real recording switches on with the Linux server (D12).",
+      "state": "done"
+    },
+    {
+      "id": "R2",
+      "text": "Recording player",
+      "default": "Watched in the app only: no download button, no picture-in-picture, the viewer's name drifts across as a faint watermark; the video link lasts 4 hours.",
+      "state": "done"
+    },
+    {
+      "id": "W1",
+      "text": "Whiteboard",
+      "default": "Excalidraw (MIT licence). Fonts are served from our own site. The teacher draws and can give students the pen; saved boards go to the batch materials.",
       "state": "done"
     }
   ]
