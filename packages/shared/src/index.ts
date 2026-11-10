@@ -8,3 +8,4 @@ export * from './academics';
 export * from './live';
 export * from './attendance';
 export * from './learning';
+export * from './messaging';

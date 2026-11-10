@@ -10,9 +10,10 @@ import { OutboxModule } from './modules/outbox/outbox.service';
 import { MailboxModule } from './modules/outbox/mailbox.controller';
 import { AuthModule } from './modules/auth/auth.controller';
 import { FEATURE_MODULES } from './modules';
+import { RealtimeModule } from './common/realtime.gateway';
 
 @Module({
-  imports: [PrismaModule, SettingsModule, AuditModule, CommonModule, OutboxModule, MailboxModule, AuthModule, ...FEATURE_MODULES],
+  imports: [PrismaModule, SettingsModule, AuditModule, CommonModule, OutboxModule, MailboxModule, AuthModule, RealtimeModule, ...FEATURE_MODULES],
   providers: [
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
