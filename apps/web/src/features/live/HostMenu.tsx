@@ -3,6 +3,7 @@ import { BarChart3, Camera, CircleDot, PenLine, CameraOff, Hand, LayoutGrid, Loc
 import { ReactNode, useState } from 'react';
 import { Modal, useToast } from '@/components/ui';
 import { post } from '@/lib/api';
+import { liveBase } from './types';
 import type { LiveInfo } from './types';
 
 /** "More options": view, sharing and reactions for everyone; class controls for the teacher. */
@@ -16,7 +17,7 @@ export function HostMenu({ open, onClose, info, isHost, state, layout, onLayout,
   const act = async (action: LiveControlAction, done: string) => {
     setBusy(action);
     try {
-      await post(`/live/sessions/${info.session.id}/control`, { action });
+      await post(`${liveBase(info)}/control`, { action });
       toast(done);
     } catch (e) {
       toast((e as Error).message, 'bad');
@@ -65,7 +66,7 @@ export function HostMenu({ open, onClose, info, isHost, state, layout, onLayout,
             {state.camAllowed
               ? <Opt icon={<CameraOff className="h-4 w-4" />} busy={busy === 'cam-block'} onClick={() => act('cam-block', 'Students can no longer use their cameras')}>Block student cameras</Opt>
               : <Opt icon={<Camera className="h-4 w-4" />} busy={busy === 'cam-allow'} onClick={() => act('cam-allow', 'Students can use their cameras')}>Allow student cameras</Opt>}
-            <Opt danger icon={<PhoneOff className="h-4 w-4" />} onClick={close(onEnd)}>End class for everyone</Opt>
+            <Opt danger icon={<PhoneOff className="h-4 w-4" />} onClick={close(onEnd)}>{info.kind === 'meeting' ? 'End meeting for everyone' : 'End class for everyone'}</Opt>
           </section>
         )}
       </div>

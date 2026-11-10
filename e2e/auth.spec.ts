@@ -2,7 +2,7 @@ import { expect, lastMessageTo, login, logout, test } from './fixtures';
 
 test('director logs in, sees the dashboard and logs out', async ({ page }) => {
   await login(page, 'director@demo.cc');
-  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening), Dr\./ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening), Thomas$/ })).toBeVisible(); // title "Dr." skipped
   await expect(page.getByText('Super Admin').first()).toBeVisible();
   await logout(page);
   await page.goto('/');

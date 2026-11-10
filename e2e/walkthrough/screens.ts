@@ -11,6 +11,8 @@ export const TOURS: Tour[] = [
     { path: '/courses', name: 'Courses', expect: 'Courses' }, { path: '/course-requests', name: 'Course requests', expect: 'Course requests' },
     { path: '/batches', name: 'Batches', expect: 'Batches' }, { path: '/timetable', name: 'Timetable', expect: 'Timetable' },
     { path: '/attendance', name: 'Attendance overview', expect: 'Attendance' }, { path: '/recordings', name: 'Recordings', expect: 'Recordings' },
+    { path: '/announcements', name: 'Send announcements', expect: 'Send announcements' }, { path: '/moderation', name: 'Chat moderation', expect: 'Chat moderation' },
+    { path: '/messages', name: 'Messages', expect: 'Messages' },
   ] },
   { role: 'branch-admin', email: 'kochi.admin@demo.cc', stops: [
     { path: '/', name: 'Dashboard', expect: /Good/ }, { path: '/branches', name: 'Branches', expect: 'Branches' },
@@ -26,12 +28,14 @@ export const TOURS: Tour[] = [
     { path: '/teach/attendance-requests', name: 'Attendance requests', expect: 'Attendance requests' },
     { path: '/teach/projects', name: 'Project reviews', expect: 'Project reviews' }, { path: '/teach/feedback', name: 'Feedback', expect: 'Feedback' },
     { path: '/teach/materials', name: 'Materials', expect: 'Materials' },
+    { path: '/messages', name: 'Messages', expect: 'Messages' }, { path: '/meetings', name: 'Staff meetings', expect: 'Staff meetings' },
   ] },
   { role: 'head-of-accounts', email: 'accounts@demo.cc', stops: [{ path: '/', name: 'Dashboard', expect: /Good/ }] },
   { role: 'student', email: 'arjun.student@demo.cc', stops: [
     { path: '/', name: 'Dashboard', expect: /Good/ }, { path: '/learn/courses', name: 'My courses', expect: 'My courses' }, { path: '/timetable', name: 'Timetable', expect: 'Timetable' },
     { path: '/learn/attendance', name: 'Attendance', expect: 'Attendance' },
     { path: '/learn/performance', name: 'Performance', expect: 'Performance & feedback' }, { path: '/learn/projects', name: 'Final project', expect: 'Final project' },
+    { path: '/messages', name: 'Messages', expect: 'Messages' }, { path: '/announcements/inbox', name: 'Announcements', expect: 'Announcements' },
   ] },
 ];
 

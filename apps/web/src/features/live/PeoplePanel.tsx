@@ -8,6 +8,7 @@ import { Avatar, useConfirm, useToast } from '@/components/ui';
 import { get, post } from '@/lib/api';
 import { GuestManager } from './GuestManager';
 import { roleOf, useRoomVersion } from './Room';
+import { liveBase } from './types';
 import type { JoinResult, LiveInfo, PeopleResult } from './types';
 
 export function PeoplePanel({ info, join, state, onClose }: { info: LiveInfo; join: JoinResult; state: LiveRoomState; onClose: () => void }) {
@@ -19,7 +20,7 @@ export function PeoplePanel({ info, join, state, onClose }: { info: LiveInfo; jo
   const isHost = join.isHost;
   const people = useQuery({
     queryKey: ['live-people', info.session.id],
-    queryFn: () => get<PeopleResult>(`/live/sessions/${info.session.id}/people`),
+    queryFn: () => get<PeopleResult>(`${liveBase(info)}/people`),
     enabled: isHost || info.canManageGuests,
     refetchInterval: 10_000,
   });
@@ -34,7 +35,7 @@ export function PeoplePanel({ info, join, state, onClose }: { info: LiveInfo; jo
   const act = async (action: LiveControlAction, identity?: string, done?: string) => {
     setMenu(null);
     try {
-      await post(`/live/sessions/${info.session.id}/control`, { action, identity });
+      await post(`${liveBase(info)}/control`, { action, identity });
       if (done) toast(done);
       if (action === 'remove' || action === 'let-back') void people.refetch();
     } catch (e) {
@@ -119,7 +120,7 @@ export function PeoplePanel({ info, join, state, onClose }: { info: LiveInfo; jo
 
         {(isHost || info.canManageGuests) && (
           <>
-            <h3 className="mb-1.5 mt-4 text-[13px] font-bold uppercase tracking-wide text-white/60">Not in the class ({away.length})</h3>
+            <h3 className="mb-1.5 mt-4 text-[13px] font-bold uppercase tracking-wide text-white/60">{info.kind === 'meeting' ? 'Invited, not here' : 'Not in the class'} ({away.length})</h3>
             {people.isLoading ? <p className="text-[13px] text-white/60">Loading…</p> : away.length === 0 ? <p className="text-[13px] text-white/60">Every enrolled student is here.</p> : (
               <ul className="grid gap-1" aria-label="Not in the class">
                 {away.map((s) => (

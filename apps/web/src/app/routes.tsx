@@ -21,6 +21,8 @@ import '@/features/live/register';
 import '@/features/attendance/register';
 import '@/features/recordings/register';
 import '@/features/learning/register';
+import { MessagesPage } from '@/features/messages/MessagesPage';
+import { AnnouncementsInboxPage, AnnouncementsPage, MeetingsPage, ModerationPage } from '@/features/messages/OtherPages';
 import { StudentPerformancePage, StudentProjectsPage } from '@/features/learning/StudentLearningPages';
 import { MyMaterialsPage, ProjectDetailPage, ProjectQueuePage, TeacherFeedbackPage } from '@/features/learning/StaffLearningPages';
 import { RecordingsPage } from '@/features/recordings/RecordingsPage';
@@ -71,10 +73,20 @@ export const APP_ROUTES: AppRoute[] = [
   { path: '/projects/:id', element: <ProjectDetailPage /> },
   { path: '/teach/feedback', element: <TeacherFeedbackPage /> },
   { path: '/teach/materials', element: <MyMaterialsPage /> },
+  // Phase 6
+  { path: '/messages', element: <MessagesPage /> },
+  { path: '/messages/:id', element: <MessagesPage /> },
+  { path: '/announcements', element: <AnnouncementsPage /> },
+  { path: '/announcements/inbox', element: <AnnouncementsInboxPage /> },
+  { path: '/moderation', element: <ModerationPage /> },
+  { path: '/moderation/:id', element: <ModerationPage /> },
+  { path: '/meetings', element: <MeetingsPage /> },
 ];
 
 /** Pages that take the whole screen (live class room, recording player). */
 export const FULLSCREEN_ROUTES: AppRoute[] = [
   // Phase 3
   { path: '/live/:sessionId', element: <LivePage /> },
+  // Phase 6
+  { path: '/meet/:sessionId', element: <LivePage kind="meeting" /> },
 ];

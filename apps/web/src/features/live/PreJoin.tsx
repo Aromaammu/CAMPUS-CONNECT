@@ -93,18 +93,18 @@ export function PreJoin({ info, onJoin, joining, joinError }: { info: LiveInfo; 
 
   const s = info.session;
   const canEnter = !info.refusal;
-  const joinLabel = observer ? 'Enter silently' : info.role === 'teacher' && s.status !== 'LIVE' ? 'Start class' : 'Join class';
+  const joinLabel = observer ? 'Enter silently' : info.kind === 'meeting' ? (info.isHost && s.status !== 'LIVE' ? 'Start meeting' : 'Join meeting') : info.role === 'teacher' && s.status !== 'LIVE' ? 'Start class' : 'Join class';
 
   return (
     <div className="mx-auto grid w-full max-w-5xl gap-5 px-4 py-6 lg:grid-cols-[1.3fr_1fr]">
       <div className="grid content-start gap-4">
         <div>
           <p className="text-[13px] text-muted">{info.batch.branch.name} · {info.batch.course}</p>
-          <h1 className="text-[22px] font-bold leading-tight">{info.batch.name} · Class {s.position}</h1>
+          <h1 className="text-[22px] font-bold leading-tight">{info.kind === 'meeting' ? info.batch.name : `${info.batch.name} · Class ${s.position}`}</h1>
           <p className="text-[14.5px] text-muted">{formatWeekdayDate(s.startsAt)}, {formatTime(s.startsAt)}–{formatTime(s.endsAt)}{info.teacher ? ` · ${info.teacher}` : ''}</p>
           {s.topic && <p className="mt-1 text-[14.5px]">{s.topic}</p>}
           <div className="mt-2 flex flex-wrap gap-2">
-            <Badge tone="brand">You are joining as {LIVE_ROLE_LABELS[info.role]}</Badge>
+            <Badge tone="brand">You are joining as {info.kind === 'meeting' ? (info.isHost ? 'Host' : 'Participant') : LIVE_ROLE_LABELS[info.role]}</Badge>
             {s.status === 'LIVE' && <Badge tone="bad">Live now</Badge>}
           </div>
         </div>
@@ -162,7 +162,7 @@ export function PreJoin({ info, onJoin, joining, joinError }: { info: LiveInfo; 
         <Card>
           {canEnter ? (
             <div className="grid gap-3">
-              <p className="text-[14.5px]">{s.status === 'LIVE' ? 'The class is running. Join when you are ready.' : info.role === 'teacher' ? 'Students can join from 10 minutes before the start. Start the class when you are ready.' : 'The class is open. The teacher will start soon.'}</p>
+              <p className="text-[14.5px]">{info.kind === 'meeting' ? (s.status === 'LIVE' ? 'The meeting is running. Join when you are ready.' : info.isHost ? 'Start the meeting when you are ready. Invited people can join right away.' : 'The meeting is open. The host will start soon.') : s.status === 'LIVE' ? 'The class is running. Join when you are ready.' : info.role === 'teacher' ? 'Students can join from 10 minutes before the start. Start the class when you are ready.' : 'The class is open. The teacher will start soon.'}</p>
               <Button size="md" variant="accent" loading={joining} onClick={() => onJoin({ ...choices, audio: wantAudio, video: wantVideo })}>{joinLabel}</Button>
               {joinError && <Notice tone="bad">{joinError}</Notice>}
             </div>

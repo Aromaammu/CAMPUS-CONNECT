@@ -28,7 +28,7 @@ const enc = new TextEncoder();
  * Shared whiteboard (PRD §7.2). The teacher and anyone given the pen draw; everyone else watches.
  * Changes travel over the class connection; someone joining late asks for the current board.
  */
-export default function Whiteboard({ sessionId, state, isTeacher, myId }: { sessionId: string; state: LiveRoomState; isTeacher: boolean; myId: string }) {
+export default function Whiteboard({ sessionId, state, isTeacher, myId, canSave = true }: { sessionId: string; state: LiveRoomState; isTeacher: boolean; myId: string; canSave?: boolean }) {
   const room = useRoomContext();
   const toast = useToast();
   const api = useRef<Api | null>(null);
@@ -124,7 +124,7 @@ export default function Whiteboard({ sessionId, state, isTeacher, myId }: { sess
     <div className="relative flex h-full flex-col overflow-hidden rounded-lg bg-white text-[#1b1b1b]" aria-label="Whiteboard">
       <div className="flex items-center justify-between gap-2 border-b border-black/10 bg-[#f5f7f8] px-3 py-1.5 text-[13px]">
         <span className="font-semibold">{canDraw ? (isTeacher ? 'Whiteboard: you are drawing' : 'You have the pen') : 'Whiteboard: the teacher is drawing'}</span>
-        {isTeacher && (
+        {isTeacher && canSave && (
           <button type="button" disabled={saving} onClick={() => void save()} className="inline-flex items-center gap-1.5 rounded-md bg-[#0E3B47] px-2.5 py-1 font-semibold text-white disabled:opacity-50">
             <Save className="h-3.5 w-3.5" />Save to class materials
           </button>

@@ -18,6 +18,7 @@ import { AttendancePanel, CheckinPrompt } from './AttendancePanel';
 import { PollsPanel, StudentPoll } from './Polls';
 import { get } from '@/lib/api';
 import { softenExpectedLiveKitErrors } from './logging';
+import { liveBase } from './types';
 import type { DeviceChoices, JoinResult, LeftReason, LiveInfo } from './types';
 
 softenExpectedLiveKitErrors();
@@ -116,6 +117,8 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
   const [hostOpen, setHostOpen] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const isHost = join.isHost;
+  const base = liveBase(info);
+  const isMeeting = info.kind === 'meeting';
   const isStudent = join.role === 'student';
   const observer = join.role === 'observer';
   const myHand = localParticipant.attributes?.hand;
@@ -127,7 +130,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
     if (panelRef.current !== 'chat' && m.userId !== join.identity) setUnread((u) => u + 1);
   }, [join.identity]);
   useEffect(() => { if (panel === 'chat') setUnread(0); }, [panel]);
-  const chat = useClassChat(info.session.id, onChatMessage);
+  const chat = useClassChat(base, onChatMessage);
 
   const onLeaveRef = useRef(onLeave);
   onLeaveRef.current = onLeave;
@@ -135,11 +138,11 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
   // Check-ins: a student sees "Mark your attendance" while one is open (also after joining late or refreshing).
   const [checkin, setCheckin] = useState<{ windowId: string; closesAt: string } | null>(null);
   useEffect(() => {
-    if (!isStudent) return;
+    if (!isStudent || isMeeting) return;
     get<{ open: { windowId: string; closesAt: string; answered: boolean } | null }>(`/attendance/sessions/${info.session.id}/checkin`)
       .then((r) => { if (r.open && !r.open.answered) setCheckin({ windowId: r.open.windowId, closesAt: r.open.closesAt }); })
       .catch(() => undefined);
-  }, [isStudent, info.session.id]);
+  }, [isStudent, isMeeting, info.session.id]);
   const clearCheckin = useCallback(() => setCheckin(null), []);
 
   // Reactions and teacher notices over the data channel.
@@ -214,24 +217,25 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
     setReactions((x) => [...x.slice(-12), r]);
     setTimeout(() => setReactions((x) => x.filter((y) => y.id !== r.id)), 4000);
   };
-  const raiseHand = () => toggle('hand', () => post(`/live/sessions/${info.session.id}/hand`, { raised: !myHand }), 'Could not reach the class server');
+  const raiseHand = () => toggle('hand', () => post(`${base}/hand`, { raised: !myHand }), 'Could not reach the class server');
   const leave = async () => {
     onLeave('left');
     await room.disconnect();
   };
   const toggleRecording = async () => {
-    try { await post(`/live/sessions/${info.session.id}/recording`, { action: state.recording ? 'stop' : 'start' }); toast(state.recording ? 'Recording stopped. It will appear in the batch shortly.' : 'Recording started'); }
+    try { await post(`${base}/recording`, { action: state.recording ? 'stop' : 'start' }); toast(state.recording ? 'Recording stopped. It will appear in the batch shortly.' : 'Recording started'); }
     catch (e) { toast((e as Error).message, 'bad'); }
   };
   const toggleBoard = async () => {
-    try { await post(`/live/sessions/${info.session.id}/control`, { action: state.board ? 'board-close' : 'board-open' }); }
+    try { await post(`${base}/control`, { action: state.board ? 'board-close' : 'board-open' }); }
     catch (e) { toast((e as Error).message, 'bad'); }
   };
   const endClass = async () => {
-    const r = await confirm({ title: 'End the class for everyone?', body: 'Everyone will be disconnected and nobody can rejoin this class.', confirmLabel: 'End class', danger: true });
+    const what = isMeeting ? 'meeting' : 'class';
+    const r = await confirm({ title: `End the ${what} for everyone?`, body: `Everyone will be disconnected and nobody can rejoin this ${what}.`, confirmLabel: `End ${what}`, danger: true });
     if (!r.ok) return;
     try {
-      await post(`/live/sessions/${info.session.id}/control`, { action: 'end' });
+      await post(`${base}/control`, { action: 'end' });
       // Don't wait for the class server to close the room: leave straight away.
       onLeave('ended');
       await room.disconnect();
@@ -246,7 +250,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 rounded bg-[#d64545] px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide">Live</span>
-            <h1 className="truncate text-[15px] font-bold">{info.batch.name} · Class {info.session.position}</h1>
+            <h1 className="truncate text-[15px] font-bold">{isMeeting ? info.batch.name : `${info.batch.name} · Class ${info.session.position}`}</h1>
           </div>
           <p className="truncate text-[12.5px] text-white/60">{info.batch.course}{observer ? ' · You are observing silently' : ''}</p>
         </div>
@@ -266,7 +270,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
             <div className="flex h-full flex-col gap-2 lg:flex-row">
               <div className="min-h-0 flex-1">
                 <Suspense fallback={<div className="flex h-full items-center justify-center text-white/70">Opening the whiteboard…</div>}>
-                  <Whiteboard sessionId={info.session.id} state={state} isTeacher={join.role === 'teacher'} myId={join.identity} />
+                  <Whiteboard sessionId={info.session.id} state={state} isTeacher={join.role === 'teacher'} myId={join.identity} canSave={!isMeeting} />
                 </Suspense>
               </div>
               <Strip tracks={visible} />
@@ -278,7 +282,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
             ))}
           </div>
           <StartAudio label="Tap to turn on class sound" className="absolute left-1/2 top-3 -translate-x-1/2 rounded-lg bg-[#C77C12] px-4 py-2 text-[14px] font-bold" />
-          {(isStudent || join.role === 'guest') && <StudentPoll sessionId={info.session.id} />}
+          {(isStudent || join.role === 'guest') && <StudentPoll base={base} />}
           {checkin && <CheckinPrompt sessionId={info.session.id} windowId={checkin.windowId} closesAt={checkin.closesAt} onDone={clearCheckin} />}
         </main>
         {panel && (
@@ -286,7 +290,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
             {panel === 'chat'
               ? <ChatPanel info={info} join={join} chatDisabled={state.chatDisabled} messages={chat.messages} onSent={chat.add} onClose={() => setPanel(null)} />
               : panel === 'attendance' ? <AttendancePanel info={info} onClose={() => setPanel(null)} />
-              : panel === 'polls' ? <PollsPanel sessionId={info.session.id} onClose={() => setPanel(null)} />
+              : panel === 'polls' ? <PollsPanel base={base} onClose={() => setPanel(null)} />
               : <PeoplePanel info={info} join={join} state={state} onClose={() => setPanel(null)} />}
           </aside>
         )}
@@ -317,10 +321,10 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         )}
         <Ctl label="Chat" on={panel === 'chat'} onClick={() => setPanel((p) => (p === 'chat' ? null : 'chat'))} badge={unread}><MessageSquare className="h-5 w-5" /></Ctl>
         <Ctl label="People" on={panel === 'people'} onClick={() => setPanel((p) => (p === 'people' ? null : 'people'))}><Users className="h-5 w-5" /></Ctl>
-        {isHost && info.batch.mode !== 'OFFLINE' && (
+        {isHost && !isMeeting && info.batch.mode !== 'OFFLINE' && (
           <Ctl label="Attendance" on={panel === 'attendance'} onClick={() => setPanel((p) => (p === 'attendance' ? null : 'attendance'))}><ClipboardCheck className="h-5 w-5" /></Ctl>
         )}
- {join.role === 'teacher' && (
+ {join.role === 'teacher' && !isMeeting && (
           <Ctl className="hidden sm:inline-flex" label={state.recording ? 'Stop recording' : 'Start recording'} on={state.recording} danger={state.recording} onClick={() => void toggleRecording()}><CircleDot className="h-5 w-5" /></Ctl>
         )}
         {join.role === 'teacher' && (
@@ -351,7 +355,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         onEnd={endClass}
         onPolls={isHost ? () => setPanel('polls') : undefined}
         onBoard={join.role === 'teacher' ? () => void toggleBoard() : undefined}
-        onRecord={join.role === 'teacher' ? () => void toggleRecording() : undefined}
+        onRecord={join.role === 'teacher' && !isMeeting ? () => void toggleRecording() : undefined}
       />
     </>
   );

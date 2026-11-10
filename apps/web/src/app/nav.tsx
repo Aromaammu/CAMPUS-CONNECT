@@ -27,6 +27,7 @@ export const NAV: NavGroup[] = [
       { to: '/', label: 'Dashboard', icon: LayoutDashboard },
       { to: '/messages', label: 'Messages', icon: MessageSquare, hidden: true },
       { to: '/timetable', label: 'Timetable', icon: CalendarDays, hidden: true },
+      { to: '/announcements/inbox', label: 'Announcements', icon: Megaphone, hidden: true },
     ],
   },
   {
@@ -90,7 +91,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Communication',
     items: [
-      { to: '/announcements', label: 'Announcements', icon: Megaphone, perms: ['announcements.send'], hidden: true },
+      { to: '/announcements', label: 'Send announcements', icon: Megaphone, perms: ['announcements.send'], hidden: true },
       { to: '/moderation', label: 'Chat moderation', icon: ShieldCheck, perms: ['moderation.review'], hidden: true },
       { to: '/helpdesk', label: 'Help desk', icon: LifeBuoy, kinds: STAFF, perms: ['helpdesk.handle'], hidden: true },
     ],

@@ -4,10 +4,11 @@ import { Send, X } from 'lucide-react';
 import { RoomEvent } from 'livekit-client';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { get, post } from '@/lib/api';
+import { liveBase } from './types';
 import type { JoinResult, LiveInfo } from './types';
 
 /** Class chat: history from the server, new messages over the class connection. */
-export function useClassChat(sessionId: string, onNew: (m: LiveChatMessage) => void) {
+export function useClassChat(base: string, onNew: (m: LiveChatMessage) => void) {
   const room = useRoomContext();
   const [messages, setMessages] = useState<LiveChatMessage[]>([]);
   const add = useCallback((m: LiveChatMessage) => setMessages((list) => (list.some((x) => x.id === m.id) ? list : [...list, m])), []);
@@ -15,7 +16,7 @@ export function useClassChat(sessionId: string, onNew: (m: LiveChatMessage) => v
   onNewRef.current = onNew;
   useEffect(() => {
     let alive = true;
-    get<LiveChatMessage[]>(`/live/sessions/${sessionId}/chat`).then((h) => { if (alive) setMessages((cur) => [...h, ...cur.filter((c) => !h.some((x) => x.id === c.id))]); }).catch(() => undefined);
+    get<LiveChatMessage[]>(`${base}/chat`).then((h) => { if (alive) setMessages((cur) => [...h, ...cur.filter((c) => !h.some((x) => x.id === c.id))]); }).catch(() => undefined);
     const onData = (payload: Uint8Array, _p?: unknown, _k?: unknown, topic?: string) => {
       if (topic !== 'chat') return;
       try {
@@ -26,7 +27,7 @@ export function useClassChat(sessionId: string, onNew: (m: LiveChatMessage) => v
     };
     room.on(RoomEvent.DataReceived, onData);
     return () => { alive = false; room.off(RoomEvent.DataReceived, onData); };
-  }, [room, sessionId, add]);
+  }, [room, base, add]);
   return { messages, add };
 }
 
@@ -47,7 +48,7 @@ export function ChatPanel({ info, join, chatDisabled, messages, onSent, onClose 
     setSending(true);
     setError(null);
     try {
-      onSent(await post<LiveChatMessage>(`/live/sessions/${info.session.id}/chat`, { text: t }));
+      onSent(await post<LiveChatMessage>(`${liveBase(info)}/chat`, { text: t }));
       setText('');
     } catch (err) {
       setError((err as Error).message);

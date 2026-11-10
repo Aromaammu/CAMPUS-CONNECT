@@ -8,11 +8,11 @@ import { useToast } from '@/components/ui';
 import { get, post } from '@/lib/api';
 
 /** Polls for this class, kept fresh from class-room notices. */
-export function usePolls(sessionId: string) {
+export function usePolls(base: string) {
   const room = useRoomContext();
   const qc = useQueryClient();
-  const key = ['live-polls', sessionId];
-  const q = useQuery({ queryKey: key, queryFn: () => get<PollView[]>(`/live/sessions/${sessionId}/polls`) });
+  const key = ['live-polls', base];
+  const q = useQuery({ queryKey: key, queryFn: () => get<PollView[]>(`${base}/polls`) });
   useEffect(() => {
     const onData = (payload: Uint8Array, _p?: unknown, _k?: unknown, topic?: string) => {
       if (topic !== 'notice') return;
@@ -27,7 +27,7 @@ export function usePolls(sessionId: string) {
     room.on(RoomEvent.DataReceived, onData);
     return () => { room.off(RoomEvent.DataReceived, onData); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [room, sessionId, qc]);
+  }, [room, base, qc]);
   return q;
 }
 
@@ -51,10 +51,10 @@ function Results({ p }: { p: PollView }) {
 }
 
 /** Teacher: create polls (or reuse saved ones), watch results, close, share results. */
-export function PollsPanel({ sessionId, onClose }: { sessionId: string; onClose: () => void }) {
+export function PollsPanel({ base, onClose }: { base: string; onClose: () => void }) {
   const toast = useToast();
   const qc = useQueryClient();
-  const polls = usePolls(sessionId);
+  const polls = usePolls(base);
   const templates = useQuery({ queryKey: ['poll-templates'], queryFn: () => get<{ id: string; question: string; options: string[]; multi: boolean }[]>('/live/poll-templates') });
   const [creating, setCreating] = useState(false);
   const [question, setQuestion] = useState('');
@@ -63,12 +63,12 @@ export function PollsPanel({ sessionId, onClose }: { sessionId: string; onClose:
   const [showResults, setShowResults] = useState(true);
   const [save, setSave] = useState(false);
   const [busy, setBusy] = useState(false);
-  const refresh = () => qc.invalidateQueries({ queryKey: ['live-polls', sessionId] });
+  const refresh = () => qc.invalidateQueries({ queryKey: ['live-polls', base] });
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
-      await post(`/live/sessions/${sessionId}/polls`, { question, options: options.filter((o) => o.trim()), multi, showResults, saveTemplate: save });
+      await post(`${base}/polls`, { question, options: options.filter((o) => o.trim()), multi, showResults, saveTemplate: save });
       toast('Poll sent to the class');
       setCreating(false); setQuestion(''); setOptions(['', '']); setSave(false);
       void refresh();
@@ -142,10 +142,10 @@ export function PollsPanel({ sessionId, onClose }: { sessionId: string; onClose:
 }
 
 /** Student: the open poll pops up; after answering, results show if the teacher shares them. */
-export function StudentPoll({ sessionId }: { sessionId: string }) {
+export function StudentPoll({ base }: { base: string }) {
   const toast = useToast();
   const qc = useQueryClient();
-  const polls = usePolls(sessionId);
+  const polls = usePolls(base);
   const [dismissed, setDismissed] = useState<string | null>(null);
   const [picked, setPicked] = useState<number[]>([]);
   const [busy, setBusy] = useState(false);
@@ -157,7 +157,7 @@ export function StudentPoll({ sessionId }: { sessionId: string }) {
     setBusy(true);
     try {
       const v = await post<PollView>(`/live/polls/${p.id}/vote`, { choices: picked });
-      qc.setQueryData<PollView[]>(['live-polls', sessionId], (list) => list?.map((x) => (x.id === v.id ? v : x)));
+      qc.setQueryData<PollView[]>(['live-polls', base], (list) => list?.map((x) => (x.id === v.id ? v : x)));
       toast('Answer sent');
     } catch (err) { toast((err as Error).message, 'bad'); } finally { setBusy(false); }
   };
