@@ -4,6 +4,7 @@ import { JobsService } from '../../common/jobs.service';
 import { PrismaService } from '../../common/prisma.service';
 import { SettingsService } from '../../common/settings.service';
 import { NotifyService } from '../notifications/notify.service';
+import { RecordingsService } from '../recordings/recordings.service';
 import { AttendanceController, AttendanceOverviewController } from './attendance.controller';
 import { AttendanceService } from './attendance.service';
 import { AttendanceRequestsController } from './requests.controller';
@@ -22,7 +23,7 @@ export function isoWeek(d: Date) {
 @Module({ controllers: [AttendanceController, AttendanceOverviewController, AttendanceRequestsController], providers: [AttendanceService], exports: [AttendanceService] })
 export class AttendanceModule implements OnModuleInit {
   private log = new Logger('Attendance');
-  constructor(private jobs: JobsService, private prisma: PrismaService, private att: AttendanceService, private settings: SettingsService, private notify: NotifyService) {}
+  constructor(private jobs: JobsService, private prisma: PrismaService, private att: AttendanceService, private settings: SettingsService, private notify: NotifyService, private rec: RecordingsService) {}
 
   onModuleInit() {
     this.jobs.register('attendance.finalize', 60_000, () => this.finalizeEnded());
@@ -41,6 +42,7 @@ export class AttendanceModule implements OnModuleInit {
       if (s.status === 'LIVE') {
         if (s.endsAt.getTime() > now.getTime() - 60 * 60_000) continue; // still running over time: wait up to an hour
         await this.prisma.presenceInterval.updateMany({ where: { sessionId: s.id, leftAt: null }, data: { leftAt: now } });
+        await this.rec.stop(s.id).catch(() => undefined);
       }
       if (s.status !== 'COMPLETED') await this.prisma.session.update({ where: { id: s.id }, data: { status: 'COMPLETED', ...(s.status === 'LIVE' ? { liveEndedAt: now } : {}) } });
       await this.att.finalize(s.id);

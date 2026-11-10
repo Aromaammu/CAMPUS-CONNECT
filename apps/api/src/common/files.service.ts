@@ -103,8 +103,8 @@ export class FilesService {
   }
 
   /** A link that works for a few minutes, for one person. */
-  signedUrl(fileId: string, userId: string, o: { download?: boolean } = {}) {
-    const exp = Math.floor(Date.now() / 1000) + LINK_MINUTES * 60;
+  signedUrl(fileId: string, userId: string, o: { download?: boolean; minutes?: number } = {}) {
+    const exp = Math.floor(Date.now() / 1000) + (o.minutes ?? LINK_MINUTES) * 60;
     const payload = `${fileId}.${userId}.${exp}.${o.download ? 1 : 0}`;
     return `/api/files/${fileId}?u=${userId}&e=${exp}&d=${o.download ? 1 : 0}&s=${this.sign(payload)}`;
   }

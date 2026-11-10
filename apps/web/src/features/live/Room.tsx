@@ -5,7 +5,7 @@ import {
 import { LIVE_REACTIONS, LiveChatMessage, LiveParticipantMeta, LiveRole, parseRoomState } from '@cc/shared';
 import clsx from 'clsx';
 import {
-  BarChart3, ClipboardCheck, Hand, PenLine, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
+  BarChart3, CircleDot, ClipboardCheck, Hand, PenLine, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
 } from 'lucide-react';
 import { ConnectionState, DisconnectReason, Participant, RoomEvent, Track, type RoomOptions } from 'livekit-client';
 import { CSSProperties, ReactNode, Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -219,6 +219,10 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
     onLeave('left');
     await room.disconnect();
   };
+  const toggleRecording = async () => {
+    try { await post(`/live/sessions/${info.session.id}/recording`, { action: state.recording ? 'stop' : 'start' }); toast(state.recording ? 'Recording stopped. It will appear in the batch shortly.' : 'Recording started'); }
+    catch (e) { toast((e as Error).message, 'bad'); }
+  };
   const toggleBoard = async () => {
     try { await post(`/live/sessions/${info.session.id}/control`, { action: state.board ? 'board-close' : 'board-open' }); }
     catch (e) { toast((e as Error).message, 'bad'); }
@@ -246,6 +250,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
           </div>
           <p className="truncate text-[12.5px] text-white/60">{info.batch.course}{observer ? ' · You are observing silently' : ''}</p>
         </div>
+        {state.recording && <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-[#ff8a8a]" role="status" aria-label="This class is being recorded"><span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#ff4d4d]" />REC</span>}
         {state.locked && <span className="hidden items-center gap-1 text-[13px] text-white/80 sm:inline-flex" title="The class is locked"><Lock className="h-4 w-4" />Locked</span>}
         {isHost && hands > 0 && <button type="button" onClick={() => setPanel('people')} className="inline-flex items-center gap-1 rounded-full bg-[#C77C12] px-2 py-0.5 text-[13px] font-bold" aria-label={`${hands} raised hands`}><Hand className="h-4 w-4" />{hands}</button>}
         <span className="inline-flex items-center gap-1 text-[13px] text-white/80" aria-label={`${inRoom} in class`}><Users className="h-4 w-4" />{inRoom}</span>
@@ -316,6 +321,9 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
           <Ctl label="Attendance" on={panel === 'attendance'} onClick={() => setPanel((p) => (p === 'attendance' ? null : 'attendance'))}><ClipboardCheck className="h-5 w-5" /></Ctl>
         )}
  {join.role === 'teacher' && (
+          <Ctl className="hidden sm:inline-flex" label={state.recording ? 'Stop recording' : 'Start recording'} on={state.recording} danger={state.recording} onClick={() => void toggleRecording()}><CircleDot className="h-5 w-5" /></Ctl>
+        )}
+        {join.role === 'teacher' && (
           <Ctl className="hidden sm:inline-flex" label={state.board ? 'Close the whiteboard' : 'Open the whiteboard'} on={state.board} onClick={() => void toggleBoard()}><PenLine className="h-5 w-5" /></Ctl>
         )}
         {isHost && <Ctl className="hidden sm:inline-flex" label="Polls" on={panel === 'polls'} onClick={() => setPanel((p) => (p === 'polls' ? null : 'polls'))}><BarChart3 className="h-5 w-5" /></Ctl>}
@@ -343,6 +351,7 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         onEnd={endClass}
         onPolls={isHost ? () => setPanel('polls') : undefined}
         onBoard={join.role === 'teacher' ? () => void toggleBoard() : undefined}
+        onRecord={join.role === 'teacher' ? () => void toggleRecording() : undefined}
       />
     </>
   );

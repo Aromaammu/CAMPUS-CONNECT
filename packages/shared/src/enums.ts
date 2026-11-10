@@ -29,7 +29,6 @@ export const TICKET_CATEGORIES = { CLASS: 'Class', TECHNICAL: 'Technical', FEES:
 export const TICKET_STATUS = { OPEN: 'Open', IN_PROGRESS: 'In progress', WAITING: 'Waiting on student', RESOLVED: 'Resolved', CLOSED: 'Closed' } as const;
 
 export const CONVERSATION_KIND = { DIRECT: 'Direct', BATCH: 'Batch group', GROUP: 'Staff group' } as const;
-export const RECORDING_STATUS = { PROCESSING: 'Processing', READY: 'Ready', FAILED: 'Failed' } as const;
 export const FEEDBACK_KIND = {
   TEACHER_NOTE: 'Teacher feedback', TEACHER_MID: 'Mid-course feedback', TEACHER_END: 'End-of-course feedback',
   STUDENT_SESSION: 'Class rating', STUDENT_COURSE: 'Course feedback',

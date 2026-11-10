@@ -9,6 +9,7 @@ import { PrismaService } from '../../common/prisma.service';
 import { AuditService } from '../../common/audit.service';
 import { LiveGateway } from './live.gateway';
 import { LiveService } from './live.service';
+import { RecordingsService } from '../recordings/recordings.service';
 
 @Controller('live')
 export class LiveController {
@@ -113,7 +114,7 @@ export class LiveController {
 @Controller('livekit')
 export class LiveWebhookController {
   private log = new Logger('LiveWebhook');
-  constructor(private gw: LiveGateway, private prisma: PrismaService) {}
+  constructor(private gw: LiveGateway, private prisma: PrismaService, private recordings: RecordingsService) {}
 
   @Public()
   @Post('webhook')
@@ -125,6 +126,11 @@ export class LiveWebhookController {
       ev = await this.gw.receiveWebhook(raw, auth);
     } catch {
       throw new UnauthorizedException('Bad signature');
+    }
+    // Real recordings (Linux servers): the recorder reports the finished file here.
+    if (ev.event === 'egress_ended' && ev.egressInfo) {
+      await this.recordings.egressEnded(ev.egressInfo.egressId, ev.egressInfo.fileResults?.[0]?.location ?? null, Number(ev.egressInfo.fileResults?.[0]?.duration ?? 0) / 1e9);
+      return { ok: true };
     }
     const target = ev.room?.name ? parseLiveRoomName(ev.room.name) : null;
     if (!target || target.kind !== 'session') return { ok: true };

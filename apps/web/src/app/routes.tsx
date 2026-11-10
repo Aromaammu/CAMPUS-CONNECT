@@ -19,6 +19,9 @@ import { BatchRedirect } from '@/features/academics/BatchRedirect';
 import { LivePage } from '@/features/live/LivePage';
 import '@/features/live/register';
 import '@/features/attendance/register';
+import '@/features/recordings/register';
+import { RecordingsPage } from '@/features/recordings/RecordingsPage';
+import { RecordingPlayerPage } from '@/features/recordings/RecordingPlayerPage';
 import { SessionPage } from '@/features/attendance/SessionPage';
 import { StudentAttendancePage } from '@/features/attendance/StudentAttendancePage';
 import { RequestsPage } from '@/features/attendance/RequestsPage';
@@ -55,6 +58,8 @@ export const APP_ROUTES: AppRoute[] = [
   { path: '/learn/attendance', element: <StudentAttendancePage /> },
   { path: '/teach/attendance-requests', element: <RequestsPage /> },
   { path: '/attendance', element: <OverviewPage /> },
+  { path: '/recordings', element: <RecordingsPage /> },
+  { path: '/recordings/:id', element: <RecordingPlayerPage /> },
 ];
 
 /** Pages that take the whole screen (live class room, recording player). */

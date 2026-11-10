@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import {
   LIVE_REFUSALS, LiveChatMessage, LiveControlInput, LiveParticipantMeta, LiveRefusal, LiveRole, LiveRoomState, SessionUser, can, liveRoomName, presenceSeconds,
 } from '@cc/shared';
@@ -6,6 +6,7 @@ import { AuditService } from '../../common/audit.service';
 import { PrismaService } from '../../common/prisma.service';
 import { SettingsService } from '../../common/settings.service';
 import { AttendanceService } from '../attendance/attendance.service';
+import { RecordingsService } from '../recordings/recordings.service';
 import { LiveGateway, LiveParticipant, Permission } from './live.gateway';
 
 const sessionInclude = {
@@ -37,7 +38,8 @@ const roleOf = (p: LiveParticipant): LiveRole | null => {
 
 @Injectable()
 export class LiveService {
-  constructor(private prisma: PrismaService, private settings: SettingsService, private audit: AuditService, private gw: LiveGateway, private att: AttendanceService) {}
+  private log = new Logger('Live');
+  constructor(private prisma: PrismaService, private settings: SettingsService, private audit: AuditService, private gw: LiveGateway, private att: AttendanceService, private rec: RecordingsService) {}
 
   load(id: string) {
     return this.prisma.session.findUnique({ where: { id }, include: sessionInclude });
@@ -47,8 +49,8 @@ export class LiveService {
     return liveRoomName('session', sessionId);
   }
 
-  stateOf(s: { chatDisabled: boolean; locked: boolean; micAllowed: boolean; camAllowed: boolean; shareUserIds: string[]; boardOpen: boolean; penUserIds: string[] }): LiveRoomState {
-    return { chatDisabled: s.chatDisabled, locked: s.locked, micAllowed: s.micAllowed, camAllowed: s.camAllowed, shareUserIds: s.shareUserIds, board: s.boardOpen, penUserIds: s.penUserIds };
+  stateOf(s: { chatDisabled: boolean; locked: boolean; micAllowed: boolean; camAllowed: boolean; shareUserIds: string[]; boardOpen: boolean; penUserIds: string[]; recordingActive: boolean }): LiveRoomState {
+    return { chatDisabled: s.chatDisabled, locked: s.locked, micAllowed: s.micAllowed, camAllowed: s.camAllowed, shareUserIds: s.shareUserIds, board: s.boardOpen, penUserIds: s.penUserIds, recording: s.recordingActive };
   }
 
   teacherUserIds(s: LoadedSession) {
@@ -127,6 +129,10 @@ export class LiveService {
     if (a.role === 'teacher' && s.status !== 'LIVE') {
       const now = new Date();
       await this.prisma.session.update({ where: { id: s.id }, data: { status: 'LIVE', liveStartedAt: s.liveStartedAt ?? now, liveEndedAt: null } });
+    }
+    // Auto-record (per batch, default on for online/hybrid): starts when the teacher arrives.
+    if (a.role === 'teacher' && s.batch.autoRecord) {
+      await this.rec.start(s.id, user.id).catch((e: Error) => this.log.warn(`auto-record did not start: ${e.message}`));
     }
     const meta: LiveParticipantMeta = { role: a.role, ...(a.studentCode ? { code: a.studentCode } : {}) };
     const token = await this.gw.token({
@@ -226,6 +232,7 @@ export class LiveService {
 
   private async end(user: SessionUser, a: LiveAccess, ip?: string) {
     const s = a.session;
+    await this.rec.stop(s.id).catch((e: Error) => this.log.warn(`stopping the recording failed: ${e.message}`));
     const now = new Date();
     const updated = await this.prisma.$transaction(async (tx) => {
       await tx.presenceInterval.updateMany({ where: { sessionId: s.id, leftAt: null }, data: { leftAt: now } });

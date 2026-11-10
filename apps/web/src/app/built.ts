@@ -6,5 +6,5 @@ export const BUILT_ROUTES = new Set<string>([
   // Phase 2
   '/courses', '/course-requests', '/batches', '/teach/batches', '/timetable', '/learn/courses',
   // Phase 4
-  '/learn/attendance', '/teach/attendance-requests', '/attendance',
+  '/learn/attendance', '/teach/attendance-requests', '/attendance', '/recordings',
 ]);

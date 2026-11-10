@@ -28,10 +28,11 @@ export interface LiveRoomState {
   shareUserIds: string[];
   board: boolean;
   penUserIds: string[];
+  recording: boolean;
 }
 
 export function parseRoomState(metadata: string | undefined | null): LiveRoomState {
-  const base: LiveRoomState = { chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], board: false, penUserIds: [] };
+  const base: LiveRoomState = { chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], board: false, penUserIds: [], recording: false };
   if (!metadata) return base;
   try {
     return { ...base, ...(JSON.parse(metadata) as Partial<LiveRoomState>) };
@@ -108,3 +109,6 @@ export interface PollView {
   /** Votes per option; null when the viewer may not see results yet. */
   counts: number[] | null; voters: number | null; myChoices: number[] | null;
 }
+
+export const RECORDING_STATUS = { RECORDING: 'Recording', PROCESSING: 'Processing', READY: 'Ready', FAILED: 'Failed' } as const;
+export const recordingUpdateSchema = z.object({ title: z.string().trim().min(3, 'Give it a title').max(200).optional(), hidden: z.boolean().optional() });

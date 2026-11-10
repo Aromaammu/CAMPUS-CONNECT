@@ -37,12 +37,13 @@ export async function ensureDemoClass(prisma: PrismaClient, now = new Date()) {
   const existing = await prisma.session.findFirst({ where: { batchId: batch.id, position: 1 } });
   const fresh = {
     startsAt, endsAt, status: 'SCHEDULED' as const, liveStartedAt: null, liveEndedAt: null, teacherJoinedAt: null, attendanceFinalizedAt: null, cancelReason: null,
-    chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], removedUserIds: [], boardOpen: false, penUserIds: [], topic: 'Practice class: try the class room',
+    chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], removedUserIds: [], boardOpen: false, penUserIds: [], recordingActive: false, topic: 'Practice class: try the class room',
   };
   const session = existing
     ? await prisma.session.update({ where: { id: existing.id }, data: fresh })
     : await prisma.session.create({ data: { batchId: batch.id, position: 1, ...fresh } });
   await prisma.presenceInterval.deleteMany({ where: { sessionId: session.id } });
+  await prisma.recording.updateMany({ where: { sessionId: session.id, status: 'RECORDING' }, data: { status: 'FAILED', endedAt: now } });
   await prisma.classChatMessage.deleteMany({ where: { sessionId: session.id } });
   await prisma.sessionGuest.deleteMany({ where: { sessionId: session.id } });
   await prisma.attendance.deleteMany({ where: { sessionId: session.id } });
