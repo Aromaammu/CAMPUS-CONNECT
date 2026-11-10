@@ -2,9 +2,9 @@
   "product": "Campus Connect",
   "tagline": "Live classes, attendance, messaging and branch control for our institute and its franchise branches. Everything planned, built and waiting, in one place.",
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
-  "statusDate": "2026-11-10",
+  "statusDate": "2026-11-11",
   "mode": "unsupervised",
-  "headline": "Phases 0–5 complete: live classes, attendance, recordings, materials, marks, feedback and final projects. Next: Phase 6 (messaging & staff meetings).",
+  "headline": "Phases 0–6 complete: classes, attendance, recordings, learning portal, messaging and staff meetings. Next: Phase 7 (accounts).",
   "phases": [
     {
       "id": "0",
@@ -419,84 +419,84 @@
     },
     {
       "p": "6",
-      "s": "dev",
+      "s": "done",
       "a": "Messaging",
       "t": "1-to-1 chat",
       "d": "Student ↔ teacher/staff, staff ↔ staff across branches; no student-to-student DMs."
     },
     {
       "p": "6",
-      "s": "dev",
+      "s": "done",
       "a": "Messaging",
       "t": "Batch groups and staff groups",
       "d": "Auto group per batch (can be announcements-only); staff create their own groups."
     },
     {
       "p": "6",
-      "s": "dev",
+      "s": "done",
       "a": "Messaging",
       "t": "Files, replies, read receipts, search",
       "d": "Everything you'd expect from Teams-style chat."
     },
     {
       "p": "6",
-      "s": "dev",
+      "s": "done",
       "a": "Messaging",
       "t": "Announcements",
       "d": "Head office → branches, Branch Admin → branch or batches, with read counts."
     },
     {
       "p": "6",
-      "s": "dev",
+      "s": "done",
       "a": "Messaging",
       "t": "Chat moderation",
       "d": "Admins review chats with students and hide messages, with a reason; audited."
     },
     {
       "p": "6",
-      "s": "dev",
+      "s": "done",
       "a": "Meetings",
       "t": "Staff meetings",
       "d": "Instant or scheduled meetings for staff, and calls started from a chat."
     },
     {
       "p": "7",
-      "s": "planned",
+      "s": "dev",
       "a": "Accounts",
       "t": "Course and branch fees",
       "d": "Default fee from head office, branch prices, Head of Accounts can lock them."
     },
     {
       "p": "7",
-      "s": "planned",
+      "s": "dev",
       "a": "Accounts",
       "t": "Fee plans and instalments",
       "d": "Per enrolment; discounts above 10% need Head of Accounts approval."
     },
     {
       "p": "7",
-      "s": "planned",
+      "s": "dev",
       "a": "Accounts",
       "t": "Record a payment and receipt PDF",
       "d": "Cash, UPI, bank, card, cheque, DD; receipt number never repeats or skips; emailed to student."
     },
     {
       "p": "7",
-      "s": "planned",
+      "s": "dev",
       "a": "Accounts",
       "t": "Voids, refunds and approvals",
       "d": "Payments are never edited; voids need approval; everything audited."
     },
     {
       "p": "7",
-      "s": "planned",
+      "s": "dev",
       "a": "Accounts",
       "t": "Dues and reminders",
       "d": "Due soon, due today, overdue; automatic and one-click reminders."
     },
     {
       "p": "7",
-      "s": "planned",
+      "s": "dev",
       "a": "Accounts",
       "t": "Sales and collections reports",
       "d": "By branch, course, batch, date, method; day-close report; Excel export."
@@ -684,7 +684,7 @@
     },
     {
       "p": "7",
-      "s": "planned",
+      "s": "dev",
       "a": "Accounts",
       "t": "Payment and dues statements (PDF)",
       "d": "Added to the student's reports once fees and payments exist."
@@ -695,6 +695,13 @@
       "a": "Testing",
       "t": "Phase 5 checks: 8 learning tests + 4 browser journeys",
       "d": "Found and fixed: greetings cut names short (\"Anita Jo\"), and the Add student / Add employee forms could lose what was typed when the page's branch filter loaded late."
+    },
+    {
+      "p": "6",
+      "s": "done",
+      "a": "Testing",
+      "t": "Phase 6 checks: 11 messaging and meeting tests + 6 browser journeys",
+      "d": "Two browsers chatting live (unread badge, reply, read receipt, file), teachers-only groups, announcements with read counts, moderation, a staff meeting. Fixed: the director's greeting expectation, and meeting wording."
     }
   ],
   "screens": [
@@ -1298,6 +1305,24 @@
       "id": "W1",
       "text": "Whiteboard",
       "default": "Excalidraw (MIT licence). Fonts are served from our own site. The teacher draws and can give students the pen; saved boards go to the batch materials.",
+      "state": "done"
+    },
+    {
+      "id": "M1",
+      "text": "Message notifications",
+      "default": "New messages show as an unread count and a live pop-up, not as emails or SMS (PRD). Browser push for messages comes with Phase 8.",
+      "state": "done"
+    },
+    {
+      "id": "M2",
+      "text": "Staff meetings and recording",
+      "default": "Meetings use the class room (video, screen share, chat, polls, whiteboard). Recording meetings is not switched on in v1; saving the whiteboard is for classes only.",
+      "state": "done"
+    },
+    {
+      "id": "M3",
+      "text": "Calls with students",
+      "default": "A teacher can start a call from a chat with a student; only the people in that chat can join. Other meetings are staff-only.",
       "state": "done"
     }
   ]
