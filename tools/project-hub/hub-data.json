@@ -4,7 +4,7 @@
   "artifactUrl": "https://claude.ai/artifact/CZifSik3DvYZHEa92aj8ah",
   "statusDate": "2026-11-10",
   "mode": "unsupervised",
-  "headline": "Phases 0–4 complete: live classes with attendance, check-ins, requests, polls, whiteboard and recordings. Next: Phase 5 (learning portal).",
+  "headline": "Phases 0–5 complete: live classes, attendance, recordings, materials, marks, feedback and final projects. Next: Phase 6 (messaging & staff meetings).",
   "phases": [
     {
       "id": "0",
@@ -377,84 +377,84 @@
     },
     {
       "p": "5",
-      "s": "dev",
+      "s": "done",
       "a": "Learning",
       "t": "Notes and materials",
       "d": "Files and links per batch, session or module; share across batches."
     },
     {
       "p": "5",
-      "s": "dev",
+      "s": "done",
       "a": "Learning",
       "t": "Performance in each class",
       "d": "Quick grid for 1–5 marks and remarks; running average for the student."
     },
     {
       "p": "5",
-      "s": "dev",
+      "s": "done",
       "a": "Learning",
       "t": "Two-way feedback",
       "d": "Teacher feedback to students; star rating after each class; end-of-course forms."
     },
     {
       "p": "5",
-      "s": "dev",
+      "s": "done",
       "a": "Learning",
       "t": "Final project approval",
       "d": "Student submits, teacher reviews (changes or approve), Branch Admin gives final approval → Completed."
     },
     {
       "p": "5",
-      "s": "dev",
+      "s": "done",
       "a": "Learning",
       "t": "Student reports (PDF)",
       "d": "Attendance, performance, payment and dues statements."
     },
     {
       "p": "5",
-      "s": "dev",
+      "s": "done",
       "a": "Learning",
       "t": "Student and teacher dashboards",
       "d": "Next class with Join button, today's timetable, attendance %, dues, unread messages."
     },
     {
       "p": "6",
-      "s": "planned",
+      "s": "dev",
       "a": "Messaging",
       "t": "1-to-1 chat",
       "d": "Student ↔ teacher/staff, staff ↔ staff across branches; no student-to-student DMs."
     },
     {
       "p": "6",
-      "s": "planned",
+      "s": "dev",
       "a": "Messaging",
       "t": "Batch groups and staff groups",
       "d": "Auto group per batch (can be announcements-only); staff create their own groups."
     },
     {
       "p": "6",
-      "s": "planned",
+      "s": "dev",
       "a": "Messaging",
       "t": "Files, replies, read receipts, search",
       "d": "Everything you'd expect from Teams-style chat."
     },
     {
       "p": "6",
-      "s": "planned",
+      "s": "dev",
       "a": "Messaging",
       "t": "Announcements",
       "d": "Head office → branches, Branch Admin → branch or batches, with read counts."
     },
     {
       "p": "6",
-      "s": "planned",
+      "s": "dev",
       "a": "Messaging",
       "t": "Chat moderation",
       "d": "Admins review chats with students and hide messages, with a reason; audited."
     },
     {
       "p": "6",
-      "s": "planned",
+      "s": "dev",
       "a": "Meetings",
       "t": "Staff meetings",
       "d": "Instant or scheduled meetings for staff, and calls started from a chat."
@@ -681,6 +681,20 @@
       "a": "Testing",
       "t": "Found and fixed: databases on this computer couldn't store ₹ or Malayalam",
       "d": "A browser test caught it; all local databases are now Unicode, with a test that saves Malayalam, Hindi, emoji and ₹."
+    },
+    {
+      "p": "7",
+      "s": "planned",
+      "a": "Accounts",
+      "t": "Payment and dues statements (PDF)",
+      "d": "Added to the student's reports once fees and payments exist."
+    },
+    {
+      "p": "5",
+      "s": "done",
+      "a": "Testing",
+      "t": "Phase 5 checks: 8 learning tests + 4 browser journeys",
+      "d": "Found and fixed: greetings cut names short (\"Anita Jo\"), and the Add student / Add employee forms could lose what was typed when the page's branch filter loaded late."
     }
   ],
   "screens": [
