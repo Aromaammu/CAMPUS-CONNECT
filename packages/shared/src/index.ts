@@ -6,3 +6,4 @@ export * from './enums';
 export * from './org-schemas';
 export * from './academics';
 export * from './live';
+export * from './attendance';

@@ -18,6 +18,11 @@ import { MyCoursesPage } from '@/features/learn/MyCoursesPage';
 import { BatchRedirect } from '@/features/academics/BatchRedirect';
 import { LivePage } from '@/features/live/LivePage';
 import '@/features/live/register';
+import '@/features/attendance/register';
+import { SessionPage } from '@/features/attendance/SessionPage';
+import { StudentAttendancePage } from '@/features/attendance/StudentAttendancePage';
+import { RequestsPage } from '@/features/attendance/RequestsPage';
+import { OverviewPage } from '@/features/attendance/OverviewPage';
 
 export interface AppRoute { path: string; element: ReactElement }
 
@@ -45,6 +50,11 @@ export const APP_ROUTES: AppRoute[] = [
   { path: '/timetable/batch/:id', element: <BatchRedirect /> },
   { path: '/learn/courses', element: <MyCoursesPage /> },
   { path: '/learn/courses/:id', element: <BatchDetailPage backTo="/learn/courses" backLabel="My courses" /> },
+  // Phase 4
+  { path: '/sessions/:id', element: <SessionPage /> },
+  { path: '/learn/attendance', element: <StudentAttendancePage /> },
+  { path: '/teach/attendance-requests', element: <RequestsPage /> },
+  { path: '/attendance', element: <OverviewPage /> },
 ];
 
 /** Pages that take the whole screen (live class room, recording player). */

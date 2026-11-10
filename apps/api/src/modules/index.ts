@@ -4,6 +4,7 @@ import { AdminModule } from './admin/admin.controllers';
 import { NotifyModule } from './notifications/notify.service';
 import { AcademicsModule } from './academics/academics.module';
 import { LiveModule } from './live/live.module';
+import { AttendanceModule } from './attendance/attendance.module';
 
 // Feature modules are registered here as each phase adds them.
-export const FEATURE_MODULES: (new () => unknown)[] = [PublicModule, NotifyModule, OrgModule, AdminModule, AcademicsModule, LiveModule];
+export const FEATURE_MODULES: (new (...args: never[]) => unknown)[] = [PublicModule, NotifyModule, OrgModule, AdminModule, AcademicsModule, LiveModule, AttendanceModule];

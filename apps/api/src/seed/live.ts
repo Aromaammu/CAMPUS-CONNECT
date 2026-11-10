@@ -36,7 +36,7 @@ export async function ensureDemoClass(prisma: PrismaClient, now = new Date()) {
   }
   const existing = await prisma.session.findFirst({ where: { batchId: batch.id, position: 1 } });
   const fresh = {
-    startsAt, endsAt, status: 'SCHEDULED' as const, liveStartedAt: null, liveEndedAt: null, teacherJoinedAt: null, cancelReason: null,
+    startsAt, endsAt, status: 'SCHEDULED' as const, liveStartedAt: null, liveEndedAt: null, teacherJoinedAt: null, attendanceFinalizedAt: null, cancelReason: null,
     chatDisabled: false, locked: false, micAllowed: true, camAllowed: true, shareUserIds: [], removedUserIds: [], topic: 'Practice class: try the class room',
   };
   const session = existing
@@ -45,5 +45,8 @@ export async function ensureDemoClass(prisma: PrismaClient, now = new Date()) {
   await prisma.presenceInterval.deleteMany({ where: { sessionId: session.id } });
   await prisma.classChatMessage.deleteMany({ where: { sessionId: session.id } });
   await prisma.sessionGuest.deleteMany({ where: { sessionId: session.id } });
+  await prisma.attendance.deleteMany({ where: { sessionId: session.id } });
+  await prisma.attendanceRequest.deleteMany({ where: { sessionId: session.id } });
+  await prisma.checkinWindow.deleteMany({ where: { sessionId: session.id } });
   return { batchId: batch.id, sessionId: session.id };
 }

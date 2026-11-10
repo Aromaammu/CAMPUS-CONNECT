@@ -5,6 +5,7 @@ import {
 import { AuditService } from '../../common/audit.service';
 import { PrismaService } from '../../common/prisma.service';
 import { SettingsService } from '../../common/settings.service';
+import { AttendanceService } from '../attendance/attendance.service';
 import { LiveGateway, LiveParticipant, Permission } from './live.gateway';
 
 const sessionInclude = {
@@ -36,7 +37,7 @@ const roleOf = (p: LiveParticipant): LiveRole | null => {
 
 @Injectable()
 export class LiveService {
-  constructor(private prisma: PrismaService, private settings: SettingsService, private audit: AuditService, private gw: LiveGateway) {}
+  constructor(private prisma: PrismaService, private settings: SettingsService, private audit: AuditService, private gw: LiveGateway, private att: AttendanceService) {}
 
   load(id: string) {
     return this.prisma.session.findUnique({ where: { id }, include: sessionInclude });
@@ -229,6 +230,7 @@ export class LiveService {
     });
     await this.gw.send(this.roomOf(s.id), 'notice', { type: 'ended', by: user.name }).catch(() => undefined);
     await this.gw.closeRoom(this.roomOf(s.id));
+    await this.att.finalize(s.id);
     return { state: this.stateOf(updated), removedUserIds: updated.removedUserIds, ended: true };
   }
 

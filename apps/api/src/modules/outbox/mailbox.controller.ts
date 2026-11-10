@@ -1,6 +1,7 @@
 import { Controller, Get, HttpCode, Module, NotFoundException, Post, Query } from '@nestjs/common';
 import { ensureDemoClass } from '../../seed/live';
 import { LiveGateway } from '../live/live.gateway';
+import { JobsService } from '../../common/jobs.service';
 import { liveRoomName } from '@cc/shared';
 import { Public } from '../../common/auth';
 import { PrismaService } from '../../common/prisma.service';
@@ -26,7 +27,7 @@ export class MailboxController {
 /** Developer tools (never in production): move the demo class to "now" so the class room can be tried any time. */
 @Controller('dev')
 export class DevToolsController {
-  constructor(private prisma: PrismaService, private live: LiveGateway) {}
+  constructor(private prisma: PrismaService, private live: LiveGateway, private jobs: JobsService) {}
 
   @Public()
   @Post('demo-class')
@@ -36,6 +37,16 @@ export class DevToolsController {
     const r = await ensureDemoClass(this.prisma);
     await this.live.closeRoom(liveRoomName('session', r.sessionId)); // start from an empty room
     return r;
+  }
+
+  /** Runs the background jobs now (attendance, escalations, clean-up) instead of waiting for their timers. */
+  @Public()
+  @Post('run-jobs')
+  @HttpCode(200)
+  async runJobs() {
+    if (config.isProd) throw new NotFoundException();
+    await this.jobs.runAll();
+    return { ok: true };
   }
 }
 

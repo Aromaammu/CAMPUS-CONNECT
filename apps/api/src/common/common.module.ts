@@ -1,7 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { SessionUserService } from './auth';
+import { FilesController, FilesService, LocalDiskStorage, Storage } from './files.service';
 import { IdService } from './ids.service';
+import { JobsService } from './jobs.service';
 
 @Global()
-@Module({ providers: [SessionUserService, IdService], exports: [SessionUserService, IdService] })
+@Module({
+  controllers: [FilesController],
+  providers: [SessionUserService, IdService, FilesService, JobsService, { provide: Storage, useClass: LocalDiskStorage }],
+  exports: [SessionUserService, IdService, FilesService, JobsService, Storage],
+})
 export class CommonModule {}

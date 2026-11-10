@@ -13,8 +13,6 @@ export const REQUEST_STATUS = { PENDING: 'Pending', APPROVED: 'Approved', REJECT
 export const ATTENDANCE_STATUS = { PRESENT: 'Present', LATE: 'Late', ABSENT: 'Absent', EXCUSED: 'Excused' } as const;
 export type AttendanceStatus = keyof typeof ATTENDANCE_STATUS;
 export const ATTENDANCE_SOURCE = { AUTO: 'Automatic', CHECKIN: 'Check-in', MANUAL: 'Teacher', REQUEST: 'Request', ROSTER: 'Roster', NONE: 'Not marked' } as const;
-export const ATT_REQUEST_STATUS = { PENDING: 'Pending', APPROVED: 'Approved', REJECTED: 'Rejected', ESCALATED: 'Escalated' } as const;
-export const ATT_REQUEST_REASONS = ['Internet dropped', 'Missed the check-in', 'Joined from another device', 'Attended in the classroom', 'Other'] as const;
 
 export const PROJECT_STATUS = {
   NOT_SUBMITTED: 'Not submitted', SUBMITTED: 'Submitted', CHANGES_REQUESTED: 'Changes requested',

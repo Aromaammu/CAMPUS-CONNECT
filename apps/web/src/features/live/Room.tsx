@@ -5,7 +5,7 @@ import {
 import { LIVE_REACTIONS, LiveChatMessage, LiveParticipantMeta, LiveRole, parseRoomState } from '@cc/shared';
 import clsx from 'clsx';
 import {
-  Hand, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
+  ClipboardCheck, Hand, LayoutGrid, LogOut, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, Lock, Smile, Users, Video, VideoOff, User as UserIcon, WifiOff,
 } from 'lucide-react';
 import { ConnectionState, DisconnectReason, Participant, RoomEvent, Track, type RoomOptions } from 'livekit-client';
 import { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -14,6 +14,8 @@ import { post } from '@/lib/api';
 import { ChatPanel, useClassChat } from './ChatPanel';
 import { PeoplePanel } from './PeoplePanel';
 import { HostMenu } from './HostMenu';
+import { AttendancePanel, CheckinPrompt } from './AttendancePanel';
+import { get } from '@/lib/api';
 import { softenExpectedLiveKitErrors } from './logging';
 import type { DeviceChoices, JoinResult, LeftReason, LiveInfo } from './types';
 
@@ -52,7 +54,8 @@ export function canPublishSource(p: Participant | undefined, src: number) {
 }
 
 export function Room({ info, join, choices, onLeft }: { info: LiveInfo; join: JoinResult; choices: DeviceChoices; onLeft: (r: LeftReason) => void }) {
-  const leaving = useRef(false);
+  const leaving = useRef<LeftReason | null>(null);
+  const setLeaving = useCallback((r: LeftReason) => { leaving.current = r; }, []);
   const options = useMemo<RoomOptions>(() => ({
     adaptiveStream: true,
     dynacast: true,
@@ -62,7 +65,7 @@ export function Room({ info, join, choices, onLeft }: { info: LiveInfo; join: Jo
   const onDisconnected = useCallback((reason?: DisconnectReason) => {
     if (reason === DisconnectReason.CLIENT_INITIATED) {
       // Also fires when React re-mounts in development; only a real "Leave" press counts.
-      if (leaving.current) onLeft('left');
+      if (leaving.current) onLeft(leaving.current);
       return;
     }
     if (reason === DisconnectReason.DUPLICATE_IDENTITY) onLeft('duplicate');
@@ -84,16 +87,16 @@ export function Room({ info, join, choices, onLeft }: { info: LiveInfo; join: Jo
       data-lk-theme="default"
       className="cc-live flex h-dvh flex-col overflow-hidden bg-[#0b1d24] text-white"
     >
-      <ClassRoom info={info} join={join} onLeave={() => { leaving.current = true; }} />
+      <ClassRoom info={info} join={join} onLeave={setLeaving} />
       <RoomAudioRenderer />
     </LiveKitRoom>
   );
 }
 
-type Panel = 'chat' | 'people' | null;
+type Panel = 'chat' | 'people' | 'attendance' | null;
 type FloatingReaction = { id: number; emoji: string; name: string };
 
-function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; onLeave: () => void }) {
+function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; onLeave: (reason: LeftReason) => void }) {
   const room = useRoomContext();
   const toast = useToast();
   const confirm = useConfirm();
@@ -123,9 +126,30 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
   useEffect(() => { if (panel === 'chat') setUnread(0); }, [panel]);
   const chat = useClassChat(info.session.id, onChatMessage);
 
+  const onLeaveRef = useRef(onLeave);
+  onLeaveRef.current = onLeave;
+
+  // Check-ins: a student sees "Mark your attendance" while one is open (also after joining late or refreshing).
+  const [checkin, setCheckin] = useState<{ windowId: string; closesAt: string } | null>(null);
+  useEffect(() => {
+    if (!isStudent) return;
+    get<{ open: { windowId: string; closesAt: string; answered: boolean } | null }>(`/attendance/sessions/${info.session.id}/checkin`)
+      .then((r) => { if (r.open && !r.open.answered) setCheckin({ windowId: r.open.windowId, closesAt: r.open.closesAt }); })
+      .catch(() => undefined);
+  }, [isStudent, info.session.id]);
+  const clearCheckin = useCallback(() => setCheckin(null), []);
+
   // Reactions and teacher notices over the data channel.
   useEffect(() => {
     const onData = (payload: Uint8Array, p?: Participant, _k?: unknown, topic?: string) => {
+      if (topic === 'notice') {
+        try {
+          const n = JSON.parse(new TextDecoder().decode(payload)) as { type: string; windowId?: string; closesAt?: string };
+          if (n.type === 'ended') { onLeaveRef.current('ended'); void room.disconnect(); return; }
+          if (n.type === 'checkin' && n.windowId && n.closesAt && roleOf(room.localParticipant) === 'student') setCheckin({ windowId: n.windowId, closesAt: n.closesAt });
+        } catch { /* ignore */ }
+        return;
+      }
       if (topic !== 'reaction') return;
       try {
         const { emoji } = JSON.parse(new TextDecoder().decode(payload)) as { emoji: string };
@@ -188,13 +212,18 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
   };
   const raiseHand = () => toggle('hand', () => post(`/live/sessions/${info.session.id}/hand`, { raised: !myHand }), 'Could not reach the class server');
   const leave = async () => {
-    onLeave();
+    onLeave('left');
     await room.disconnect();
   };
   const endClass = async () => {
     const r = await confirm({ title: 'End the class for everyone?', body: 'Everyone will be disconnected and nobody can rejoin this class.', confirmLabel: 'End class', danger: true });
     if (!r.ok) return;
-    try { await post(`/live/sessions/${info.session.id}/control`, { action: 'end' }); } catch (e) { toast((e as Error).message, 'bad'); }
+    try {
+      await post(`/live/sessions/${info.session.id}/control`, { action: 'end' });
+      // Don't wait for the class server to close the room: leave straight away.
+      onLeave('ended');
+      await room.disconnect();
+    } catch (e) { toast((e as Error).message, 'bad'); }
   };
   const hands = Array.from(room.remoteParticipants.values()).filter((p) => p.attributes?.hand).length + (myHand ? 1 : 0);
   const inRoom = 1 + Array.from(room.remoteParticipants.values()).filter((p) => roleOf(p) !== 'observer').length - (observer ? 1 : 0);
@@ -227,11 +256,13 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
             ))}
           </div>
           <StartAudio label="Tap to turn on class sound" className="absolute left-1/2 top-3 -translate-x-1/2 rounded-lg bg-[#C77C12] px-4 py-2 text-[14px] font-bold" />
+          {checkin && <CheckinPrompt sessionId={info.session.id} windowId={checkin.windowId} closesAt={checkin.closesAt} onDone={clearCheckin} />}
         </main>
         {panel && (
-          <aside className="absolute inset-0 z-20 flex flex-col bg-[#0f262e] lg:static lg:z-auto lg:w-[360px] lg:border-l lg:border-white/10" aria-label={panel === 'chat' ? 'Chat' : 'People'}>
+          <aside className="absolute inset-0 z-20 flex flex-col bg-[#0f262e] lg:static lg:z-auto lg:w-[360px] lg:border-l lg:border-white/10" aria-label={panel === 'chat' ? 'Chat' : panel === 'attendance' ? 'Attendance' : 'People'}>
             {panel === 'chat'
               ? <ChatPanel info={info} join={join} chatDisabled={state.chatDisabled} messages={chat.messages} onSent={chat.add} onClose={() => setPanel(null)} />
+              : panel === 'attendance' ? <AttendancePanel info={info} onClose={() => setPanel(null)} />
               : <PeoplePanel info={info} join={join} state={state} onClose={() => setPanel(null)} />}
           </aside>
         )}
@@ -262,6 +293,9 @@ function ClassRoom({ info, join, onLeave }: { info: LiveInfo; join: JoinResult; 
         )}
         <Ctl label="Chat" on={panel === 'chat'} onClick={() => setPanel((p) => (p === 'chat' ? null : 'chat'))} badge={unread}><MessageSquare className="h-5 w-5" /></Ctl>
         <Ctl label="People" on={panel === 'people'} onClick={() => setPanel((p) => (p === 'people' ? null : 'people'))}><Users className="h-5 w-5" /></Ctl>
+        {isHost && info.batch.mode !== 'OFFLINE' && (
+          <Ctl label="Attendance" on={panel === 'attendance'} onClick={() => setPanel((p) => (p === 'attendance' ? null : 'attendance'))}><ClipboardCheck className="h-5 w-5" /></Ctl>
+        )}
         <Ctl className="hidden sm:inline-flex" label={layout === 'gallery' ? 'Switch to speaker view' : 'Switch to gallery view'} onClick={() => setLayout((l) => (l === 'gallery' ? 'speaker' : 'gallery'))}>
           {layout === 'gallery' ? <UserIcon className="h-5 w-5" /> : <LayoutGrid className="h-5 w-5" />}
         </Ctl>

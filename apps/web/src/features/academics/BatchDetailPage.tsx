@@ -95,7 +95,8 @@ function SessionsTab({ batch }: { batch: BatchDetail }) {
           {rows.map((s) => (
             <li key={s.id} className={clsx('flex flex-wrap items-center gap-3 px-4 py-3', s.status === 'CANCELLED' && 'opacity-60')}>
               <span className="w-10 shrink-0 font-mono text-[13px] text-muted">#{s.position}</span>
-              <span className="min-w-0 flex-1">
+              {/* Phones: date and teacher take the full row; buttons wrap underneath. */}
+              <span className="min-w-0 flex-1 basis-[calc(100%-4rem)] sm:basis-0">
                 <span className={clsx('block font-semibold', s.status === 'CANCELLED' && 'line-through')}>{formatWeekdayDate(s.startsAt)} · {formatTime(s.startsAt)}–{formatTime(s.endsAt)}</span>
                 <span className="block text-[13px] text-muted">
                   {s.teacher ? <span className="font-semibold text-accent">Substitute: {s.teacher.user.name}</span> : mainTeacher(batch)?.user.name}
